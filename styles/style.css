@@ -1,0 +1,115 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+html {
+  @apply text-sm;
+  @apply text-gray-900;
+  @apply bg-lightgray;
+  @apply font-sans;
+  scroll-behavior: smooth;
+}
+
+article.NewsContent h2 {
+  @apply text-xl;
+  @apply font-bold;
+  @apply text-dark;
+  padding-top: 20px;
+  padding-bottom: 10px;
+}
+article.NewsContent p {
+  padding-bottom: 10px;
+  @apply font-light;
+}
+article.NewsContent a {
+  @apply font-bold;
+  @apply text-secondary;
+  @apply underline;
+}
+article.NewsContent a:hover {
+  @apply text-dark;
+  @apply no-underline;
+}
+article.NewsContent .adsInline .band {
+    position: relative;
+    display: flex;
+    height: 1.6rem;
+    margin-bottom: 1rem;
+}
+article.NewsContent .adsInline .band span {
+    position: relative;
+    flex: 1;
+    @apply text-sm;
+    display: inline-block;
+    @apply text-center;
+    @apply text-midgray;
+    padding: 0 1rem;
+    z-index: 1;
+}
+article.NewsContent .adsInline .band:before, article.NewsContent .adsInline .band:after {
+    content: "";
+    flex: 2;
+    margin: .7rem auto;
+    @apply border-t;
+    @apply border-midgray;
+}
+article.NewsContent .table {
+  @apply border;
+  @apply overflow-hidden border rounded;
+  margin-bottom: 10px;
+}
+article.NewsContent table {
+  text-align: left;
+  @apply table-auto min-w-full;
+}
+article.NewsContent table thead tr td, article.NewsContent table thead tr th, article.NewsContent table tbody tr td, article.NewsContent table tbody tr th {
+  padding: 5px 10px;
+  @apply border;
+}
+article.NewsContent table thead tr td, article.NewsContent table thead tr th {
+  @apply bg-darkgray;
+  @apply border-darkgray;
+  @apply text-lightgray;
+}
+article.NewsContent table tbody tr:nth-child(2n+1) td, article.NewsContent table tbody tr:nth-child(2n+1) th {
+  @apply bg-lightgray/50;
+}
+article.NewsContent table tbody tr:hover td, article.NewsContent table tbody tr:hover th {
+  @apply bg-lightgray;
+}
+.ql-container {
+  font-family: 'Dosis', sans-serif;
+}
+.ql-toolbar.ql-snow + .ql-container.ql-snow .ql-editor {
+  min-height: 120px;
+  transition: all ease-in 0.1s 0s;
+  @apply text-base;
+  @apply font-sans;
+}
+/* .ql-toolbar.ql-snow + .ql-container.ql-snow .ql-editor:focus {
+  min-height: 150px;
+} */
+.ql-editor ol, .ql-editor ul {
+  padding-left: 0;
+}
+.commentSection .ql-container.ql-snow {
+    @apply border-midgray;
+}
+.commentSection .ql-toolbar.ql-snow {
+    @apply border-midgray;
+    @apply font-sans;
+}
+.slick-active button {
+    @apply bg-secondary;
+    @apply text-white;
+  }
+@media screen and (min-width: 640px) {
+  html {
+
+  }
+}
+
+@media screen and (min-width: 768px) {
+  html {
+
+  }
+}
