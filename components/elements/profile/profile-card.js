@@ -63,8 +63,8 @@ export default function ProfileCard({ children, user }) {
           <Popover className="relative">
             {({ open }) => (
               <div
-                onMouseEnter={() => onHover(open, "onMouseEnter")}
-                onMouseLeave={() => onHover(open, "onMouseLeave")}
+                //onMouseEnter={() => onHover(open, "onMouseEnter")}
+                //onMouseLeave={() => onHover(open, "onMouseLeave")}
                 className="flex flex-col"
               >
                 <Popover.Button
@@ -97,9 +97,8 @@ export default function ProfileCard({ children, user }) {
                       <div className="flex">
                         <div className="w-full">
                           <p className="mb-1 text-base font-semibold leading-none text-gray-900 dark:text-white">
-                            {user.attributes.name +
-                              " " +
-                              user.attributes.surname}
+                            {user.attributes.name && user.attributes.name}{" "}
+                            {user.attributes.surname && user.attributes.surname}
                           </p>
                           <p className="flex items-center gap-1 mb-3 text-sm font-normal">
                             {user.attributes.city.data && (
@@ -157,16 +156,10 @@ export default function ProfileCard({ children, user }) {
               </div>
             )}
           </Popover>
+        ) : user.attributes.name ? (
+          user.attributes.name + " " + user.attributes.surname
         ) : (
-          <Link
-            href={`/hesap/profil/${
-              user.attributes.username ? user.attributes.username : user.id
-            }`}
-          >
-            {user.attributes.name
-              ? user.attributes.name + " " + user.attributes.surname
-              : "Ziyaretçi"}
-          </Link>
+          "Ziyaretçi"
         )}
       </div>
     </>

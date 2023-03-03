@@ -270,7 +270,7 @@ const PriceCalculator = ({ product, city, pricetype }) => {
                             errors.productType && touched.productType
                               ? "border-danger"
                               : "border-midgray",
-                            "mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                            "mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-secondary focus:outline-none focus:ring-secondary sm:text-sm"
                           )}
                         >
                           <option value={""} disabled defaultValue>

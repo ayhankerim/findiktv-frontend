@@ -22,7 +22,7 @@ import {
   FaTwitter,
   FaLinkedinIn,
 } from "react-icons/fa"
-import Avatar from "@/components/elements/avatar"
+import Avatar from "@/components/elements/profile/avatar"
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ")
@@ -34,7 +34,7 @@ const reactionsList = (reactionData) => {
     <>
       <ul className="flex flex-col gap-2">
         {reactionData.data.slice(0, limit).map((reaction, i) => (
-          <li key={i}>
+          <li className="leading-[30px]" key={i}>
             <Link
               href={`/haber/${reaction.attributes.article.data.id}/${reaction.attributes.article.data.attributes.slug}`}
               title={reaction.attributes.article.data.attributes.title}
@@ -53,7 +53,9 @@ const reactionsList = (reactionData) => {
               height={30}
               className="inline-block"
             />{" "}
-            ifadesi bıraktınız.
+            {reaction.attributes.Value > 0
+              ? "ifadesi bıraktınız."
+              : "şeklinde bıraktığınız ifadeyi kaldırdınız."}
           </li>
         ))}
       </ul>
@@ -72,7 +74,7 @@ const commentList = (commentData) => {
     <>
       <ul className="flex flex-col gap-2">
         {commentData.data.slice(0, limit).map((comment, i) => (
-          <li key={i}>
+          <li className="leading-[30px]" key={i}>
             <Link
               href={
                 (comment.attributes.article.data &&
@@ -102,13 +104,65 @@ const commentList = (commentData) => {
   )
 }
 
+const ProfileCover = (username) => {
+  const [defaultImage, setDefaultImage] = useState([])
+
+  useEffect(() => {
+    fetchAPI("/profile-images", {
+      filters: {
+        Default: {
+          $eq: true,
+        },
+        Status: {
+          $eq: true,
+        },
+      },
+      fields: ["*"],
+      populate: {
+        Image: {
+          populate: ["*"],
+        },
+      },
+      sort: ["id:desc"],
+      pagination: {
+        start: 0,
+        limit: 1,
+      },
+    }).then((data) => {
+      setDefaultImage(data)
+    })
+  }, [])
+  return (
+    <>
+      {defaultImage.data && (
+        <Image
+          src={defaultImage.data[0].attributes.Image.data.attributes.url}
+          alt={username}
+          className="absolute inset-0 h-full w-full object-cover rounded-t-xl"
+          priority={true}
+          fill
+        />
+      )}
+    </>
+  )
+}
+
 const DynamicUsers = ({ userContent, advertisement, global, userContext }) => {
   const { data: session } = useSession()
   const [tabs] = useState([
     {
       id: 1,
       title: "Hakkımda",
-      content: <div dangerouslySetInnerHTML={{ __html: userContent.about }} />,
+      content: (
+        <div
+          dangerouslySetInnerHTML={{
+            __html:
+              userContent.about === ""
+                ? userContent.about
+                : "Henüz bir içerik girilmemiş.",
+          }}
+        />
+      ),
     },
     {
       id: 2,
@@ -159,6 +213,7 @@ const DynamicUsers = ({ userContent, advertisement, global, userContext }) => {
     ...global.attributes.metadata,
     ...metadata,
   }
+  //console.log(userContent)
   return (
     <Layout global={global} pageContext={userContext}>
       {/* Add meta tags for SEO*/}
@@ -170,16 +225,19 @@ const DynamicUsers = ({ userContent, advertisement, global, userContext }) => {
           <div className="flex flex-col flex-1 w-full gap-3">
             <div className="flex flex-col items-end justify-between border rounded-xl border-lightgray">
               <div className="relative w-full left-0 top-0 h-[200px] sm:h-[300px] overflow-y-hidden lg:flex flex-col">
-                {userContent && (
+                {userContent.profile_cover.data ? (
                   <Image
                     src={
-                      "/uploads/birch_branches_spring_14ac9638df.jpg?updated_at=2023-02-23T00:56:25.205Z"
+                      userContent.profile_cover.data.attributes.Image.data
+                        .attributes.formats.large.url
                     }
-                    alt={userContent.role.data.attributes.name}
+                    alt={userContent.username}
                     className="absolute inset-0 h-full w-full object-cover rounded-t-xl"
                     priority={true}
                     fill
                   />
+                ) : (
+                  <ProfileCover username={userContent.username} />
                 )}
               </div>
               <div className="flex flex-col sm:flex-row w-full gap-2 p-4">
@@ -219,7 +277,7 @@ const DynamicUsers = ({ userContent, advertisement, global, userContext }) => {
                     {session && session.id == userContent.id && (
                       <div className="relative text-right">
                         <Link
-                          href="/hesap/profil/duzenle"
+                          href={`/hesap/profil/${userContent.username}/duzenle`}
                           className="flex w-full border items-center rounded-md px-2 py-1 text-sm hover:shadow-lg"
                         >
                           <RiEditBoxLine
@@ -351,7 +409,6 @@ export async function getStaticPaths(context) {
       const localeUsers = await fetchAPI("/users", {
         fields: ["username"],
       })
-      console.log("localeUsers", localeUsers)
       return [...currentUsers, ...localeUsers]
     },
     Promise.resolve([])
@@ -396,6 +453,7 @@ export async function getStaticProps(context) {
     city,
     SocialAccounts,
     SystemAvatar,
+    profile_cover,
     reactions,
     comments,
   } = userData.attributes
@@ -411,6 +469,7 @@ export async function getStaticProps(context) {
     city,
     SocialAccounts,
     SystemAvatar,
+    profile_cover,
     reactions,
     comments,
   }

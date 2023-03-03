@@ -3,7 +3,7 @@ import { useSession } from "next-auth/react"
 import { fetchAPI } from "utils/api"
 import { useSWRConfig } from "swr"
 import { useSelector } from "react-redux"
-import ProfileCard from "@/components/elements/profile-card"
+import ProfileCard from "@/components/elements/profile/profile-card"
 import Tooltip from "@/components/elements/tooltip"
 import { Menu, Transition } from "@headlessui/react"
 import { MdClose, MdOutlineDateRange } from "react-icons/md"
@@ -89,10 +89,10 @@ const CommentHeader = ({ comment, slug, address, position = "bottom" }) => {
                 "not-italic"
               )}
             >
-              {" "}
-              {comment.attributes.user.data.attributes.name +
-                " " +
-                comment.attributes.user.data.attributes.surname}{" "}
+              {comment.attributes.user.data.attributes.name &&
+                comment.attributes.user.data.attributes.name}{" "}
+              {comment.attributes.user.data.attributes.surname &&
+                comment.attributes.user.data.attributes.surname}
             </cite>
           </ProfileCard>
         ) : (
@@ -165,7 +165,7 @@ const CommentHeader = ({ comment, slug, address, position = "bottom" }) => {
                     <Menu.Item>
                       <Link
                         href={`https://api.whatsapp.com/send?text=Şu%20yoruma%20bir%20bak%20${slug}comment-${comment.id}&url=${slug}comment-${comment.id}`}
-                        className="block w-full text-left hover:bg-lightgray px-4 py-2 text-sm text-gray-700"
+                        className="block w-full text-left hover:bg-lightgray px-4 py-2 text-sm text-midgray"
                         target="_blank"
                         rel="nofollow"
                       >
@@ -180,7 +180,7 @@ const CommentHeader = ({ comment, slug, address, position = "bottom" }) => {
                             `${slug}#comment-${comment.id}`
                           )
                         }}
-                        className="block w-full text-left hover:bg-lightgray px-4 py-2 text-sm text-gray-700"
+                        className="block w-full text-left hover:bg-lightgray px-4 py-2 text-sm text-midgray"
                       >
                         Yorum bağlantısını kopyala
                       </button>

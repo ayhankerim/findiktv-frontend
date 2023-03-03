@@ -1252,6 +1252,19 @@ export async function getUserData({ username }) {
                     }
                   }
                 }
+                profile_cover {
+                  data {
+                    id
+                    attributes {
+                      Title
+                      Image {
+                        ...FileParts
+                      }
+                      Status
+                      Default
+                    }
+                  }
+                }
                 SocialAccounts {
                   id
                   Account
@@ -1261,6 +1274,7 @@ export async function getUserData({ username }) {
                   data {
                     id
                     attributes {
+                      Value
                       ReactionType {
                         data {
                           id

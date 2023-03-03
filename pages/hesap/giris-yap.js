@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import Image from "next/image"
-import { signIn } from "next-auth/react"
+import { signIn, getSession } from "next-auth/react"
 import * as yup from "yup"
 import { Formik, Form, Field } from "formik"
 import toast, { Toaster } from "react-hot-toast"
@@ -259,14 +259,32 @@ export default function SignIn({ global }) {
   )
 }
 
-export async function getStaticProps(context) {
-  const { locale } = context
+export async function getServerSideProps(context) {
+  const { params, locale, locales, defaultLocale } = context
+  const session = await getSession(context)
+
   const globalLocale = await getGlobalData(locale)
 
+  const userContext = {
+    locale,
+    locales,
+    defaultLocale,
+  }
+
+  if (session != null) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: true,
+      },
+    }
+  }
   return {
     props: {
       global: globalLocale.data,
+      userContext: {
+        ...userContext,
+      },
     },
-    revalidate: 15,
   }
 }

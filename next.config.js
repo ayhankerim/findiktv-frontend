@@ -84,6 +84,7 @@ const nextConfig = {
 
   images: {
     formats: ["image/avif", "image/webp"],
+    domains: ['imagedelivery.net'],
   },
   swcMinify: true,
   productionBrowserSourceMaps: true,

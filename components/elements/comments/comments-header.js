@@ -57,7 +57,7 @@ const CommentsHeader = () => {
                           href="/hesap/profil"
                           className={classNames(
                             active ? "bg-gray-100" : "",
-                            "block w-full text-left px-4 py-2 text-sm text-gray-700"
+                            "block w-full text-left px-4 py-2 text-sm text-midgray"
                           )}
                         >
                           Profilim
@@ -70,7 +70,7 @@ const CommentsHeader = () => {
                           href="/hesap/ayarlar"
                           className={classNames(
                             active ? "bg-gray-100" : "",
-                            "block w-full text-left px-4 py-2 text-sm text-gray-700"
+                            "block w-full text-left px-4 py-2 text-sm text-midgray"
                           )}
                         >
                           Ayarlar
@@ -84,7 +84,7 @@ const CommentsHeader = () => {
                           onClick={signOut}
                           className={classNames(
                             active ? "bg-gray-100" : "",
-                            "block w-full text-left px-4 py-2 text-sm text-gray-700"
+                            "block w-full text-left px-4 py-2 text-sm text-midgray"
                           )}
                         >
                           Çıkış yap

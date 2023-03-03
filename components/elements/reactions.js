@@ -131,7 +131,7 @@ const Reactions = ({ article }) => {
               })
           return (
             <div className="flex flex-col" key={emoji.id}>
-              <div className="flex flex-col h-[50px] justify-end mx-1 text-center">
+              <div className="flex flex-col h-[50px] justify-end mx-1 lg:mx-2 text-center">
                 <span className="h-[20px]">
                   {reactionsData?.data ? sum : 0}
                 </span>

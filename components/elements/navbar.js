@@ -11,7 +11,7 @@ import { mediaPropTypes, linkPropTypes, buttonLinkPropTypes } from "utils/types"
 import {
   MdMenu,
   MdLogin,
-  MdLogout,
+  MdOutlineAccountCircle,
   MdForum,
   MdOutlineSearch,
   MdLibraryBooks,
@@ -59,7 +59,6 @@ const Navbar = ({ navbar, pageContext }) => {
       })()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, session])
-
   return (
     <>
       {/* The actual navbar */}
@@ -94,51 +93,61 @@ const Navbar = ({ navbar, pageContext }) => {
             {/* CTA button on desktop */}
             {navbar.button && (
               <div className="hidden md:block">
-                <ul className="grid grid-cols-3 gap-2">
-                  <li className="transition duration-150 ease-out hover:ease-in hover:bg-dark shadow-sm hover:shadow-2xl hover:shadow-primary text-darkgray hover:text-white border border-darkgray rounded">
+                <ul className="flex gap-2">
+                  <li className="flex items-center transition duration-150 ease-out hover:ease-in hover:bg-dark shadow-sm hover:shadow-2xl hover:shadow-primary text-darkgray hover:text-white border border-darkgray rounded">
                     <Link
                       href="/urunler"
                       className="flex flex-col items-center text-center"
                       passHref
                     >
-                      <MdForum className="text-xxl m-4" />
+                      <MdForum className="text-lg lg:text-xl xxl:text-xxl m-4" />
                       <span className="inline-flex font-semibold m-2">
                         Forum
                       </span>
                     </Link>
                   </li>
-                  <li className="transition duration-150 ease-out hover:ease-in hover:bg-dark shadow-sm hover:shadow-2xl hover:shadow-primary text-darkgray hover:text-white border border-darkgray rounded">
+                  <li className="flex items-center transition duration-150 ease-out hover:ease-in hover:bg-dark shadow-sm hover:shadow-2xl hover:shadow-primary text-darkgray hover:text-white border border-darkgray rounded">
                     <Link
                       href="/giris-yap"
                       className="flex flex-col items-center text-center"
                       passHref
                     >
-                      <MdLibraryBooks className="text-xxl m-4" />
+                      <MdLibraryBooks className="text-lg lg:text-xl xxl:text-xxl m-4" />
                       <span className="inline-flex font-semibold m-2">
                         Rehber
                       </span>
                     </Link>
                   </li>
-                  <li className="transition duration-150 ease-out hover:ease-in hover:bg-primary shadow-sm hover:shadow-2xl hover:shadow-dark text-center text-primary hover:text-white border border-primary rounded">
+                  <li className="flex items-center">
                     {session ? (
-                      <Link
-                        onClick={signOut}
-                        href="#"
-                        className="flex flex-col items-center"
-                        passHref
-                      >
-                        <MdLogout className="text-xxl m-4" />
-                        <span className="inline-flex font-semibold m-2">
-                          Çıkış Yap
-                        </span>
-                      </Link>
+                      <div className="flex flex-col gap-1">
+                        <Link
+                          onClick={signOut}
+                          href="#"
+                          className="flex items-center justify-center p-2 transition duration-150 ease-out hover:ease-in hover:bg-danger shadow-sm hover:shadow-2xl hover:shadow-dark text-xs text-center text-danger hover:text-white border border-danger rounded"
+                          passHref
+                        >
+                          <span className="inline-flex font-semibold">
+                            Çıkış Yap
+                          </span>
+                        </Link>
+                        <Link
+                          href={`/hesap/profil/${userData.username}`}
+                          className="flex flex-col p-2 transition duration-150 ease-out hover:ease-in hover:bg-primary shadow-sm hover:shadow-2xl hover:shadow-dark text-center text-primary hover:text-white items-center border border-primary rounded"
+                        >
+                          <MdOutlineAccountCircle className="text-xl" />
+                          <span className="inline-flex font-semibold">
+                            Hesabım
+                          </span>
+                        </Link>
+                      </div>
                     ) : (
                       <Link
                         href="/hesap/giris-yap"
-                        className="flex flex-col items-center"
+                        className="flex flex-col items-center transition duration-150 ease-out hover:ease-in hover:bg-primary shadow-sm hover:shadow-2xl hover:shadow-dark text-center text-primary hover:text-white border border-primary rounded"
                         passHref
                       >
-                        <MdLogin className="text-xxl m-4" />
+                        <MdLogin className="text-lg lg:text-xl xxl:text-xxl m-4" />
                         <span className="inline-flex font-semibold m-2">
                           Giriş Yap
                         </span>

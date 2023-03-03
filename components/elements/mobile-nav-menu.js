@@ -1,5 +1,6 @@
 import PropTypes from "prop-types"
 import { signOut, useSession } from "next-auth/react"
+import { useSelector } from "react-redux"
 import { mediaPropTypes, linkPropTypes, buttonLinkPropTypes } from "utils/types"
 import { useLockBodyScroll } from "utils/hooks"
 import { getButtonAppearance } from "utils/button"
@@ -11,7 +12,7 @@ import {
   MdClose,
   MdChevronRight,
   MdLogin,
-  MdLogout,
+  MdOutlineAccountCircle,
   MdForum,
   MdLibraryBooks,
 } from "react-icons/md"
@@ -20,6 +21,7 @@ import { FiYoutube } from "react-icons/fi"
 const MobileNavMenu = ({ navbar, closeSelf }) => {
   // Prevent window scroll while mobile nav menu is open
   const { data: session } = useSession()
+  const userData = useSelector((state) => state.user.userData)
   useLockBodyScroll()
 
   return (
@@ -51,41 +53,49 @@ const MobileNavMenu = ({ navbar, closeSelf }) => {
         </div>
 
         <ul className="grid grid-cols-3 gap-2">
-          <li className="transition duration-150 ease-out hover:ease-in hover:bg-dark shadow-sm hover:shadow-2xl hover:shadow-primary text-darkgray hover:text-white border border-darkgray rounded">
+          <li className="flex items-center transition duration-150 ease-out hover:ease-in hover:bg-dark shadow-sm hover:shadow-2xl hover:shadow-primary text-darkgray hover:text-white border border-darkgray rounded">
             <Link
               href="/giris-yap"
-              className="flex flex-col items-center text-center"
+              className="flex flex-col w-full items-center text-center"
               passHref
             >
               <MdForum className="text-xxl m-4" />
               <span className="inline-flex font-semibold m-2">Forum</span>
             </Link>
           </li>
-          <li className="transition duration-150 ease-out hover:ease-in hover:bg-dark shadow-sm hover:shadow-2xl hover:shadow-primary text-darkgray hover:text-white border border-darkgray rounded">
+          <li className="flex items-center transition duration-150 ease-out hover:ease-in hover:bg-dark shadow-sm hover:shadow-2xl hover:shadow-primary text-darkgray hover:text-white border border-darkgray rounded">
             <Link
               href="/giris-yap"
-              className="flex flex-col items-center text-center"
+              className="flex flex-col w-full items-center text-center"
               passHref
             >
               <MdLibraryBooks className="text-xxl m-4" />
               <span className="inline-flex font-semibold m-2">Rehber</span>
             </Link>
           </li>
-          <li className="transition duration-150 ease-out hover:ease-in hover:bg-primary shadow-sm hover:shadow-2xl hover:shadow-dark text-center text-primary hover:text-white border border-primary rounded">
+          <li className="flex items-center">
             {session ? (
-              <Link
-                onClick={signOut}
-                href="#"
-                className="flex flex-col items-center"
-                passHref
-              >
-                <MdLogout className="text-xxl m-4" />
-                <span className="inline-flex font-semibold m-2">Çıkış Yap</span>
-              </Link>
+              <div className="flex w-full flex-col gap-1">
+                <Link
+                  onClick={signOut}
+                  href="#"
+                  className="flex w-full items-center justify-center p-2 transition duration-150 ease-out hover:ease-in hover:bg-danger shadow-sm hover:shadow-2xl hover:shadow-dark text-center text-danger hover:text-white border border-danger rounded"
+                  passHref
+                >
+                  <span className="inline-flex font-semibold">Çıkış Yap</span>
+                </Link>
+                <Link
+                  href={`/hesap/profil/${userData.username}`}
+                  className="flex w-full flex-col p-2 transition duration-150 ease-out hover:ease-in hover:bg-primary shadow-sm hover:shadow-2xl hover:shadow-dark text-center text-primary hover:text-white items-center border border-primary rounded"
+                >
+                  <MdOutlineAccountCircle className="text-xl" />
+                  <span className="inline-flex font-semibold">Hesabım</span>
+                </Link>
+              </div>
             ) : (
               <Link
                 href="/hesap/giris-yap"
-                className="flex flex-col items-center"
+                className="flex flex-col items-center transition duration-150 ease-out hover:ease-in hover:bg-primary shadow-sm hover:shadow-2xl hover:shadow-dark text-center text-primary hover:text-white border border-primary rounded"
                 passHref
               >
                 <MdLogin className="text-xxl m-4" />
