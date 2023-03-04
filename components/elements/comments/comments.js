@@ -376,16 +376,17 @@ const Comments = ({ article, product, slug, city }) => {
             <div className="flex flex-col gap-4">
               {CommentItems(commentsAsTree)}
             </div>
-            {commentArray && commentArray.meta.pagination.total > commentLimit && (
-              <div className="flex flex-col items-end gap-2 text-center">
-                <Link
-                  className="text-secondary hover:underline"
-                  href={`${slug}/yorumlar`}
-                >
-                  Tüm yorumları gör
-                </Link>
-              </div>
-            )}
+            {commentArray &&
+              commentArray.meta.pagination.total > commentLimit && (
+                <div className="flex flex-col items-end gap-2 text-center">
+                  <Link
+                    className="text-secondary hover:underline"
+                    href={`${slug}/yorumlar`}
+                  >
+                    Tüm yorumları gör
+                  </Link>
+                </div>
+              )}
           </div>
         ) : (
           <div className="flex flex-col items-center gap-2 mt-4 text-center">

@@ -43,7 +43,7 @@ const Navbar = ({ navbar, pageContext }) => {
       (async () => {
         try {
           const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_SITE_URL}/api/users/me?populate=avatar,city`,
+            `${process.env.NEXT_PUBLIC_SITE_URL}/api/users/me?populate=avatar,city,SystemAvatar,profile_cover`,
             {
               headers: {
                 Authorization: `Bearer ${session.jwt}`,
@@ -124,7 +124,7 @@ const Navbar = ({ navbar, pageContext }) => {
                         <Link
                           onClick={signOut}
                           href="#"
-                          className="flex items-center justify-center p-2 transition duration-150 ease-out hover:ease-in hover:bg-danger shadow-sm hover:shadow-2xl hover:shadow-dark text-xs text-center text-danger hover:text-white border border-danger rounded"
+                          className="flex items-center justify-center p-2 transition duration-150 ease-out hover:ease-in hover:bg-warning shadow-sm hover:shadow-2xl hover:shadow-dark text-xs text-center text-warning hover:text-white border border-warning rounded"
                           passHref
                         >
                           <span className="inline-flex font-semibold">

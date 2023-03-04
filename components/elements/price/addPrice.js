@@ -85,10 +85,10 @@ const AddPrice = ({ product, cities, cityData }) => {
   //console.log("cityData", cityData)
   return (
     <>
-      <div className="flex flex-row items-center justify-between border-b relative">
+      <div className="flex flex-row items-center justify-between border-b border-secondary/20 relative">
         <h4 className="font-semibold text-base text-midgray">FİYAT GİR</h4>
         <MdAddChart className="text-lg text-midgray" />
-        <span className="absolute h-[5px] w-2/5 max-w-[180px] left-0 bottom-[-5px] bg-secondary"></span>
+        <span className="absolute h-[5px] w-2/5 max-w-[180px] left-0 bottom-[-5px] bg-secondary/60"></span>
       </div>
 
       <Formik

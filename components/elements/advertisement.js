@@ -14,7 +14,6 @@ const Advertisement = ({ position, adformat = "auto" }) => {
   if (!AllAdvertisements && !AllAdvertisements?.length === 0) {
     return null
   }
-  console.log(AllAdvertisements)
   if (AllAdvertisements?.length > 0) {
     const adData = AllAdvertisements.filter(
       (ads) => ads.attributes.placeholder === position

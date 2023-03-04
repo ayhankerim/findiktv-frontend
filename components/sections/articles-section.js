@@ -46,12 +46,12 @@ const ArticleSection = ({ data, position = "bottom" }) => {
   return (
     <div className="container gap-2 align-top pb-2">
       {data.SectionTitle && (
-        <div className="flex flex-row items-center justify-between border-b relative mb-2">
+        <div className="flex flex-row items-center justify-between border-b border-secondary/20 relative mb-2">
           <h4 className="font-semibold text-base text-midgray">
             {data.SectionTitle}
           </h4>
           <MdOutlineWatchLater className="text-xl" />
-          <span className="absolute h-[5px] w-2/5 left-0 bottom-[-5px] bg-secondary"></span>
+          <span className="absolute h-[5px] w-2/5 left-0 bottom-[-5px] bg-secondary/60"></span>
         </div>
       )}
       <div className="flex flex-col md:flex-row w-full gap-2">

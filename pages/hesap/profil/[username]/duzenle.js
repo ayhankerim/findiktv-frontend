@@ -2,11 +2,14 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/router"
 import ErrorPage from "next/error"
 import { getSession, useSession } from "next-auth/react"
+import { useSelector, useDispatch } from "react-redux"
 import { getUserData, getAdsData, fetchAPI, getGlobalData } from "@/utils/api"
-import Link from "next/link"
 import Image from "next/image"
 import Layout from "@/components/layout"
 import ProfileUpdateForm from "@/components/elements/profile/profile-update-form"
+import ProfileCoverAvatarChange from "@/components/elements/profile/profile-cover-avatar-change"
+import SocialAccountsUpdate from "@/components/elements/profile/social-accounts-update"
+import ProfileBasicPass from "@/components/elements/profile/profile-basic-pass"
 import Tooltip from "@/components/elements/tooltip"
 import Seo from "@/components/elements/seo"
 import LatestComments from "@/components/elements/comments/latest-comments"
@@ -72,6 +75,7 @@ const ProfileCover = (username) => {
 
 const DynamicUsers = ({ userContent, advertisement, global, userContext }) => {
   const { data: session } = useSession()
+  const userData = useSelector((state) => state.user.userData)
   const [tabs] = useState([
     {
       id: 1,
@@ -81,35 +85,21 @@ const DynamicUsers = ({ userContent, advertisement, global, userContext }) => {
     {
       id: 2,
       title: "Görseller",
-      content: (
-        <div
-          dangerouslySetInnerHTML={{
-            __html: "Henüz bir içerik girilmemiş.",
-          }}
-        />
-      ),
+      content: <ProfileCoverAvatarChange />,
     },
     {
       id: 3,
       title: "Sosyal Medya",
       content: (
-        <div
-          dangerouslySetInnerHTML={{
-            __html: "Henüz bir içerik girilmemiş.",
-          }}
+        <SocialAccountsUpdate
+          accounts={userContent && userContent.SocialAccounts}
         />
       ),
     },
     {
       id: 4,
       title: "Şifre & Hesap",
-      content: (
-        <div
-          dangerouslySetInnerHTML={{
-            __html: "Henüz bir içerik girilmemiş.",
-          }}
-        />
-      ),
+      content: <ProfileBasicPass />,
     },
   ])
   const router = useRouter()
@@ -136,7 +126,6 @@ const DynamicUsers = ({ userContent, advertisement, global, userContext }) => {
     ...global.attributes.metadata,
     ...metadata,
   }
-  //console.log(userContent)
   return (
     <Layout global={global} pageContext={userContext}>
       {/* Add meta tags for SEO*/}
@@ -202,7 +191,7 @@ const DynamicUsers = ({ userContent, advertisement, global, userContext }) => {
               </div>
             </div>
             {tabs && (
-              <div className="flex flex-col border rounded-xl border-lightgray p-4">
+              <div className="flex flex-col p-4">
                 <div className="w-full">
                   <Tab.Group>
                     <Tab.List className="flex space-x-1 rounded-xl bg-lightgray p-1">
@@ -224,10 +213,7 @@ const DynamicUsers = ({ userContent, advertisement, global, userContext }) => {
                     </Tab.List>
                     <Tab.Panels className="mt-2">
                       {tabs.map((tab, idx) => (
-                        <Tab.Panel
-                          key={idx}
-                          className={classNames("rounded-xl bg-white p-3")}
-                        >
+                        <Tab.Panel key={idx} className={classNames("bg-white")}>
                           {tab.content}
                         </Tab.Panel>
                       ))}

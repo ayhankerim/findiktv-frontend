@@ -52,10 +52,10 @@ const LatestComments = ({ size, position, offset = 0 }) => {
 
   return (
     <>
-      <div className="flex flex-row items-center justify-between border-b relative">
+      <div className="flex flex-row items-center justify-between border-b border-secondary/20 relative">
         <h4 className="font-semibold text-base text-midgray">SON YORUMLAR</h4>
         <AiOutlineComment className="text-lg text-midgray" />
-        <span className="absolute h-[5px] w-2/5 max-w-[180px] left-0 bottom-[-5px] bg-secondary"></span>
+        <span className="absolute h-[5px] w-2/5 max-w-[180px] left-0 bottom-[-5px] bg-secondary/60"></span>
       </div>
       <div className="flex flex-wrap pt-2 my-2">
         {Comments &&

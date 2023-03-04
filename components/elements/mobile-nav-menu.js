@@ -79,7 +79,7 @@ const MobileNavMenu = ({ navbar, closeSelf }) => {
                 <Link
                   onClick={signOut}
                   href="#"
-                  className="flex w-full items-center justify-center p-2 transition duration-150 ease-out hover:ease-in hover:bg-danger shadow-sm hover:shadow-2xl hover:shadow-dark text-center text-danger hover:text-white border border-danger rounded"
+                  className="flex w-full items-center justify-center p-2 transition duration-150 ease-out hover:ease-in hover:bg-warning shadow-sm hover:shadow-2xl hover:shadow-dark text-center text-warning hover:text-white border border-warning rounded"
                   passHref
                 >
                   <span className="inline-flex font-semibold">Çıkış Yap</span>

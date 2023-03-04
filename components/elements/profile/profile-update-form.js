@@ -41,9 +41,7 @@ const ProfileUpdateForm = () => {
       },
     }).then((data) => {
       setCityList(data)
-      console.log(data)
     })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const validCities = cities.data
@@ -80,7 +78,6 @@ const ProfileUpdateForm = () => {
     about: yup.string().max(200, "Çok uzun, lütfen kontrol ediniz!"),
     city: yup.string().oneOf(validCities, "Geçersiz bir seçim yaptınız!"),
   })
-  console.log(validCities, userData)
   return (
     <>
       <Toaster position="top-right" reverseOrder={false} />
@@ -113,7 +110,7 @@ const ProfileUpdateForm = () => {
 
             try {
               const response = await axios.get(
-                `${process.env.NEXT_PUBLIC_SITE_URL}/api/users/me?populate=avatar,city`,
+                `${process.env.NEXT_PUBLIC_SITE_URL}/api/users/me?populate=avatar,city,SystemAvatar,profile_cover`,
                 {
                   headers: {
                     Authorization: `Bearer ${session.jwt}`,
@@ -139,7 +136,7 @@ const ProfileUpdateForm = () => {
         }}
       >
         {({ errors, touched, isSubmitting, setFieldValue }) => (
-          <div className="mt-5 md:col-span-2 md:mt-0 mb-8">
+          <div className="bg-lightgray border rounded-xl p-3 border-lightgray mt-5 md:col-span-2 md:mt-0 mb-8">
             <Form className="">
               <div className="grid md:grid-cols-2 gap-2 mb-2">
                 <div className="flex flex-col col-span-2 sm:col-span-1 gap-2">
@@ -200,7 +197,7 @@ const ProfileUpdateForm = () => {
                       errors.city && touched.city
                         ? "border-danger"
                         : "border-midgray",
-                      "mt-1 block w-full border border-midgray bg-white py-2 px-3 shadow-sm focus:border-secondary focus:outline-none focus:ring-secondary sm:text-sm"
+                      "mt-1 block w-full border border-midgray bg-white py-2 px-3 shadow-sm focus:border-secondary focus:outline-none focus:ring-secondary"
                     )}
                   >
                     <option value={""}>Lütfen seçiniz</option>

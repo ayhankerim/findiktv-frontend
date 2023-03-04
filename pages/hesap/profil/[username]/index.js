@@ -21,6 +21,7 @@ import {
   FaFacebookF,
   FaTwitter,
   FaLinkedinIn,
+  FaYoutube,
 } from "react-icons/fa"
 import Avatar from "@/components/elements/profile/avatar"
 
@@ -348,6 +349,16 @@ const DynamicUsers = ({ userContent, advertisement, global, userContext }) => {
                               <FaTelegramPlane />
                             </Link>
                           )}
+                          {item.Account === "Youtube" && (
+                            <Link
+                              href={item.Link}
+                              title={item.Account}
+                              rel="nofollow"
+                              className="text-midgray border rounded px-3 py-1 text-base hover:text-white hover:border-[#FF0000] hover:bg-[#FF0000]"
+                            >
+                              <FaYoutube />
+                            </Link>
+                          )}
                         </Tooltip>
                       ))}
                     </div>
@@ -356,7 +367,7 @@ const DynamicUsers = ({ userContent, advertisement, global, userContext }) => {
               </div>
             </div>
             {tabs && (
-              <div className="flex flex-col border rounded-xl border-lightgray p-4">
+              <div className="flex flex-col">
                 <div className="w-full">
                   <Tab.Group>
                     <Tab.List className="flex space-x-1 rounded-xl bg-lightgray p-1">
@@ -380,7 +391,9 @@ const DynamicUsers = ({ userContent, advertisement, global, userContext }) => {
                       {tabs.map((tab, idx) => (
                         <Tab.Panel
                           key={idx}
-                          className={classNames("rounded-xl bg-white p-3")}
+                          className={classNames(
+                            "min-h-[250px] bg-lightgray border rounded-xl p-3 border-lightgray"
+                          )}
                         >
                           {tab.content}
                         </Tab.Panel>

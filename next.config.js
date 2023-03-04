@@ -55,6 +55,10 @@ const nextConfig = {
         destination: `${process.env.STRAPI_API_URL}/api/auth/forgot-password`,
       },
       {
+        source: "/api/auth/change-password",
+        destination: `${process.env.STRAPI_API_URL}/api/auth/change-password`,
+      },
+      {
         source: "/api/auth/email-confirmation",
         destination: `${process.env.STRAPI_API_URL}/api/auth/email-confirmation`,
       },
@@ -84,7 +88,7 @@ const nextConfig = {
 
   images: {
     formats: ["image/avif", "image/webp"],
-    domains: ['imagedelivery.net'],
+    domains: ["imagedelivery.net"],
   },
   swcMinify: true,
   productionBrowserSourceMaps: true,
