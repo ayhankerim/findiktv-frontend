@@ -36,6 +36,30 @@ const securityHeaders = [
 ]
 const nextConfig = {
   reactStrictMode: true,
+  async redirects() {
+    return [
+      {
+        source: "/urunler/findik-fiyatlari/:slug\\-findik-fiyatlari\\",
+        destination: "/urunler/findik/:slug/fiyati",
+        permanent: true,
+      },
+      {
+        source: "/urunler/findik-fiyatlari",
+        destination: "/urunler/findik/fiyatlari",
+        permanent: true,
+      },
+      {
+        source: "/findik-fiyatlari.html",
+        destination: "/urunler/findik/fiyatlari",
+        permanent: true,
+      },
+      {
+        source: "/\\findik-fiyatlari.html\\/:slug",
+        destination: "/urunler/findik/fiyatlari",
+        permanent: true,
+      },
+    ]
+  },
   async rewrites() {
     return [
       {
@@ -82,7 +106,7 @@ const nextConfig = {
     ]
   },
   i18n: {
-    locales: ["en", "tr"],
+    locales: ["tr"],
     defaultLocale: "tr",
   },
 

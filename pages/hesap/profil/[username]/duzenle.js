@@ -277,7 +277,6 @@ export const getServerSideProps = async (context) => {
     reactions,
     comments,
   }
-  console.log(session)
   // Check if session exists or not, if not, redirect
   if (session == null) {
     return {

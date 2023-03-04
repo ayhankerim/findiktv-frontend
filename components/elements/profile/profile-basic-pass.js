@@ -366,7 +366,7 @@ const ProfileBasicPass = () => {
                       >
                         info@findiktv.com
                       </Link>
-                      'a e-posta atabilirsiniz.
+                      `a e-posta atabilirsiniz.
                     </p>
                   </div>
                   {errors.api && (

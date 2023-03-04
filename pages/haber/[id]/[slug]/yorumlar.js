@@ -1,5 +1,8 @@
 import React, { useEffect } from "react"
 import ErrorPage from "next/error"
+import Image from "next/image"
+import { useRouter } from "next/router"
+import { useSelector, useDispatch } from "react-redux"
 import {
   getArticleData,
   getAdsData,
@@ -7,25 +10,27 @@ import {
   fetchAPI,
   getGlobalData,
 } from "@/utils/api"
+import { updateAds } from "@/store/advertisements"
+import { contentWithAds } from "@/utils/content-with-ads"
 import Seo from "@/components/elements/seo"
-import NextImage from "@/components/elements/image"
 import Breadcrumb from "@/components/elements/breadcrumb"
 import Advertisement from "@/components/elements/advertisement"
 import ArticleDates from "@/components/elements/date"
 import ViewCounter from "@/components/elements/pageviews"
 import ArticleShare from "@/components/elements/share"
 import ArticleReactions from "@/components/elements/reactions"
-import ArticleComments from "@/components/elements/comments/comments-infinite"
-import ArticleSidebar from "@/components/elements/article/article-sidebar"
-import { useRouter } from "next/router"
+import ArticleComments from "@/components/elements/comments/comments"
 import Layout from "@/components/layout"
 import { getLocalizedPaths } from "@/utils/localize"
+import ArticleRelations from "@/components/elements/article/article-relations"
+import LatestArticles from "@/components/elements/latest-articles"
+import ArticleSidebar from "@/components/elements/article/article-sidebar"
 
 // The file is called [[...slug]].js because we're using Next's
 // optional catch all routes feature. See the related docs:
 // https://nextjs.org/docs/routing/dynamic-routes#optional-catch-all-routes
 
-const DynamicArticle = ({
+const DynamicArticleComments = ({
   articleContent,
   advertisement,
   metadata,
@@ -34,6 +39,10 @@ const DynamicArticle = ({
   articleContext,
 }) => {
   const router = useRouter()
+  const dispatch = useDispatch()
+  useEffect(() => {
+    advertisement && dispatch(updateAds(advertisement))
+  }, [advertisement, dispatch])
   // Check if the required data was provided
   if (!router.isFallback && !articleContent.content?.length) {
     return <ErrorPage statusCode={404} />
@@ -51,48 +60,6 @@ const DynamicArticle = ({
   const metadataWithDefaults = {
     ...global.attributes.metadata,
     ...metadata,
-  }
-  const advertisementFunc = (position) => {
-    switch (position) {
-      case "article-top-desktop":
-        return advertisement.filter(
-          (placeholder) => placeholder.attributes.placeholder === position
-        )[0].attributes.code
-      case "article-inline-desktop":
-        return advertisement.filter(
-          (placeholder) => placeholder.attributes.placeholder === position
-        )[0].attributes.code
-      case "article-bottom-desktop":
-        return advertisement.filter(
-          (placeholder) => placeholder.attributes.placeholder === position
-        )[0].attributes.code
-      default:
-        return "articleTop"
-    }
-  }
-  const createFullPostMarkup = () => {
-    let paraArray = articleContent.content.split("</p>")
-    let NewsContentText = ""
-    paraArray.forEach(myFunction)
-    function myFunction(item, index) {
-      if (
-        Number((paraArray.length / 2).toFixed(0)) - 1 === index ||
-        index === 6
-      ) {
-        NewsContentText +=
-          item +
-          `<div class="adsInline"><div class="band"><span>REKLAM</span></div>${advertisementFunc(
-            "article-inline-desktop"
-          )}<div class="band"></div></div>`
-      } else {
-        NewsContentText += item
-      }
-    }
-    return {
-      __html: `<div class="w-[336px] h-[280px] float-left mr-4 mb-4">${advertisementFunc(
-        "article-top-desktop"
-      )}</div>${NewsContentText}`,
-    }
   }
   const breadcrumbElement = [
     {
@@ -127,7 +94,7 @@ const DynamicArticle = ({
             article={articleContent.id}
             product={null}
             slug={`${process.env.NEXT_PUBLIC_SITE_URL}/haber/${articleContent.id}/${articleContext.slug}`}
-            infinite={true}
+            infinite={false}
           />
         </div>
         <ArticleSidebar articleId={articleContent.id} />
@@ -143,28 +110,35 @@ export async function getStaticPaths(context) {
       const currentArticles = await currentArticlesPromise
       const localeArticles = await fetchAPI("/articles", {
         locale,
+        populate: {
+          comments: {
+            populate: ["id"],
+            fields: ["id"],
+          },
+        },
         fields: ["slug", "locale", "id"],
       })
       return [...currentArticles, ...localeArticles.data]
     },
     Promise.resolve([])
   )
+  const paths = articles
+    .filter((item) => item.attributes.comments.data.length > 100)
+    .map((article) => {
+      const { id } = article
+      const { slug, locale } = article.attributes
+      // Decompose the slug that was saved in Strapi
+      const slugArray = !slug ? false : slug
+      const idArray = !id ? "" : id
 
-  const paths = articles.map((article) => {
-    const { id } = article
-    const { slug, locale } = article.attributes
-    // Decompose the slug that was saved in Strapi
-    const slugArray = !slug ? false : slug
-    const idArray = !id ? "" : id
+      return {
+        params: { id: JSON.stringify(idArray), slug: slugArray },
+        // Specify the locale to render
+        locale,
+      }
+    })
 
-    return {
-      params: { id: JSON.stringify(idArray), slug: slugArray },
-      // Specify the locale to render
-      locale,
-    }
-  })
-
-  return { paths, fallback: true }
+  return { paths, fallback: false }
 }
 
 export async function getStaticProps(context) {
@@ -198,7 +172,6 @@ export async function getStaticProps(context) {
     category,
     cities,
     tags,
-    reaction,
     metadata,
     localizations,
     slug,
@@ -215,8 +188,6 @@ export async function getStaticProps(context) {
     category,
     cities,
     tags,
-    //comments,
-    reaction,
   }
 
   const articleContext = {
@@ -241,8 +212,8 @@ export async function getStaticProps(context) {
         localizedPaths,
       },
     },
-    revalidate: 60,
+    revalidate: 600,
   }
 }
 
-export default DynamicArticle
+export default DynamicArticleComments

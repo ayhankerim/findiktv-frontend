@@ -80,7 +80,6 @@ const Reactions = ({ article }) => {
     })
 
   const onSubmit = async (id, x, checked) => {
-    console.log("reactionsData", id, x, checked, reactionTypes)
     await fetchAPI(
       `/reactions`,
       {},
