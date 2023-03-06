@@ -3,6 +3,7 @@ import PropTypes from "prop-types"
 import Slider from "react-slick"
 import Link from "next/link"
 import Image from "next/image"
+import NextImage from "@/components/elements/image"
 import { fetchAPI } from "@/utils/api"
 import Advertisement from "@/components/elements/advertisement"
 import { categoryColor } from "@/utils/category-color"
@@ -144,6 +145,7 @@ const SliderWithSide = ({ data, position = "sidebar" }) => {
       },
     ],
   }
+  console.log(mostVisiteds)
   return (
     <div className="container flex flex-col md:flex-row md:flex-nowrap gap-2 align-top pb-6">
       <div className="w-full md:w-8/12">
@@ -154,11 +156,8 @@ const SliderWithSide = ({ data, position = "sidebar" }) => {
                 href={`/haber/${article.id}/${article.attributes.slug}`}
                 title={article.attributes.title}
               >
-                <Image
-                  src={
-                    article.attributes.homepage_image.data.attributes.formats
-                      .large.url
-                  }
+                <NextImage
+                  media={article.attributes.homepage_image}
                   alt={article.attributes.title}
                   className="p-0"
                   width="821"

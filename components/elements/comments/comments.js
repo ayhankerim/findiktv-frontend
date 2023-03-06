@@ -68,6 +68,15 @@ const Comments = ({ article, product, slug, city }) => {
             avatar: {
               populate: ["*"],
             },
+            SystemAvatar: {
+              populate: ["*"],
+              populate: {
+                image: {
+                  populate: ["*"],
+                },
+              },
+              fields: ["*"],
+            },
             city: {
               populate: ["title"],
             },
@@ -133,6 +142,15 @@ const Comments = ({ article, product, slug, city }) => {
           populate: {
             avatar: {
               populate: ["*"],
+            },
+            SystemAvatar: {
+              populate: ["*"],
+              populate: {
+                image: {
+                  populate: ["*"],
+                },
+              },
+              fields: ["*"],
             },
             city: {
               populate: ["title"],
@@ -240,10 +258,21 @@ const Comments = ({ article, product, slug, city }) => {
                   comment.attributes.user.data.attributes.avatar.data.attributes
                     .formats.thumbnail.url
                 }
-                alt={
-                  comment.attributes.user.data.attributes.avatar.data.attributes
-                    .alternativeText
+                alt={comment.attributes.user.data.attributes.username}
+              />
+            ) : comment.attributes.user.data?.attributes.SystemAvatar.data ? (
+              <Image
+                className="rounded"
+                fill
+                sizes="100vw"
+                style={{
+                  objectFit: "cover",
+                }}
+                src={
+                  comment.attributes.user.data.attributes.SystemAvatar.data
+                    ?.attributes.image.data.attributes.url
                 }
+                alt={comment.attributes.user.data.attributes.username}
               />
             ) : (
               <MdPerson style={{ width: 55, height: 55 }} />

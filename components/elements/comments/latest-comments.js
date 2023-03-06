@@ -28,7 +28,29 @@ const LatestComments = ({ size, position, offset = 0 }) => {
       fields: ["*"],
       populate: {
         user: {
-          populate: ["id", "avatar", "city", "role"],
+          populate: ["id", "city", "role"],
+        },
+        user: {
+          populate: {
+            avatar: {
+              populate: ["*"],
+            },
+            SystemAvatar: {
+              populate: ["*"],
+              populate: {
+                image: {
+                  populate: ["*"],
+                },
+              },
+              fields: ["*"],
+            },
+            city: {
+              populate: ["title"],
+            },
+            role: {
+              populate: ["name"],
+            },
+          },
         },
         article: {
           populate: ["id", "slug"],
@@ -86,6 +108,21 @@ const LatestComments = ({ size, position, offset = 0 }) => {
                       src={
                         comment.attributes.user.data.attributes.avatar.data
                           .attributes.formats.thumbnail.url
+                      }
+                      alt={comment.attributes.user.data.attributes.username}
+                    />
+                  ) : comment.attributes.user.data?.attributes.SystemAvatar
+                      .data ? (
+                    <Image
+                      className="rounded"
+                      fill
+                      sizes="100vw"
+                      style={{
+                        objectFit: "cover",
+                      }}
+                      src={
+                        comment.attributes.user.data.attributes.SystemAvatar
+                          .data?.attributes.image.data.attributes.url
                       }
                       alt={comment.attributes.user.data.attributes.username}
                     />

@@ -113,6 +113,8 @@ const nextConfig = {
   images: {
     formats: ["image/avif", "image/webp"],
     domains: ["imagedelivery.net"],
+    loader: "custom",
+    loaderFile: "./utils/imageLoader.js",
   },
   swcMinify: true,
   productionBrowserSourceMaps: true,

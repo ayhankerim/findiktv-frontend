@@ -3,21 +3,42 @@ import Image from "next/image"
 import PropTypes from "prop-types"
 import { mediaPropTypes } from "utils/types"
 
-const NextImage = ({ media, ...props }) => {
+const NextImage = ({ media, alt, ...props }) => {
   const { url, alternativeText, width, height } = media.data.attributes
 
   const loader = ({ src, width }) => {
     return getStrapiMedia(src)
   }
 
+  const cloudflareLoader = ({ src, width, quality }) => {
+    const key = src.includes("imagedelivery.net")
+    switch (key) {
+      case true:
+        const cloudflareSrc = src
+          .substring(26)
+          .replace("/Development", "")
+          .replace("/public", "")
+          .replace("/Test", "")
+        return `https://www.findiktv.com/cdn-cgi/imagedelivery/${cloudflareSrc}/format=auto${
+          quality ? `,quality=${quality}` : ""
+        }${width ? `,width=${width}` : ""}`
+        break
+      default:
+        return getStrapiMedia(src)
+        break
+    }
+  }
+
   // The image has a fixed width and height
   if (props.width && props.height) {
     return (
       <Image
-        //loader={loader}
+        loader={cloudflareLoader}
         src={url}
-        alt={alternativeText || ""}
-        unoptimized={false}
+        alt={alt || alternativeText ? alternativeText : ""}
+        style={{
+          objectFit: "cover",
+        }}
         {...props}
       />
     )
@@ -26,13 +47,14 @@ const NextImage = ({ media, ...props }) => {
   // The image is responsive
   return (
     <Image
-      //loader={loader}
-      layout="responsive"
+      loader={cloudflareLoader}
       width={width || "100%"}
       height={height || "100%"}
-      objectFit="contain"
+      style={{
+        objectFit: "contain",
+      }}
       src={url}
-      alt={alternativeText || ""}
+      alt={alt || alternativeText ? alternativeText : ""}
     />
   )
 }

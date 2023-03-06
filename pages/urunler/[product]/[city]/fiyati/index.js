@@ -285,21 +285,12 @@ const DynamicCities = ({
             </article>
             <div className="mb-2 relative h-[320px] lg:h-[500px] -mx-4 sm:mx-0 lg:mx-0">
               <Image
-                src={
-                  cityContent.featured.data.attributes.formats.large
-                    ? cityContent.featured.data.attributes.formats.large.url
-                    : cityContent.featured.data.attributes.formats.medium.url
-                }
-                alt={cityContent.featured.data.attributes.alternativeText}
+                src={cityContent.featured.data.attributes.url}
+                alt={cityContent.title}
                 className="md:rounded-lg"
                 priority={true}
-                fill
-                sizes="(max-width: 768px) 100vw,
-                  (max-width: 800px) 50vw,
-                  33vw"
-                style={{
-                  objectFit: "cover",
-                }}
+                width={779}
+                height={522}
               />
             </div>
             <article
