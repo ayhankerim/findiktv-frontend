@@ -207,8 +207,8 @@ const Comments = ({ article, product, slug, city }) => {
         }
       )
   const address = article
-    ? `${process.env.NEXT_PUBLIC_SITE_URL}/api/comments?${articleQuery}`
-    : `${process.env.NEXT_PUBLIC_SITE_URL}/api/comments?${cityQuery}&${productQuery}`
+    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/comments?${articleQuery}`
+    : `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/comments?${cityQuery}&${productQuery}`
   const fetcher = async (url) =>
     await axios
       .get(url, {

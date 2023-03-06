@@ -278,7 +278,7 @@ const ProfileBasicPass = () => {
 
             try {
               const response = await axios.get(
-                `${process.env.NEXT_PUBLIC_SITE_URL}/api/users/me?populate=avatar,city,SystemAvatar,profile_cover`,
+                `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/users/me?populate=avatar,city,SystemAvatar,profile_cover`,
                 {
                   headers: {
                     Authorization: `Bearer ${session.jwt}`,

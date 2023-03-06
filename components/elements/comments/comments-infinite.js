@@ -25,7 +25,7 @@ const Comments = ({ article, slug }) => {
   const userData = useSelector((state) => state.user.userData)
   const { data: session } = useSession()
   const { mutate } = useSWRConfig()
-  const address = `${process.env.NEXT_PUBLIC_SITE_URL}/api/comments?populate[user][populate]=%2A&populate[threadOf][fields][0]=id&populate[reply_to][fields][0]=id&filters[article][id][$eq]=${article}&filters[removed][$eq]=false&filters[$or][0][approvalStatus][$eq]=approved&filters[$or][1][approvalStatus][$eq]=ignored&sort[0]=id%3Adesc`
+  const address = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/comments?populate[user][populate]=%2A&populate[threadOf][fields][0]=id&populate[reply_to][fields][0]=id&filters[article][id][$eq]=${article}&filters[removed][$eq]=false&filters[$or][0][approvalStatus][$eq]=approved&filters[$or][1][approvalStatus][$eq]=ignored&sort[0]=id%3Adesc`
   const fetcher = async (url) =>
     await axios
       .get(url, {
