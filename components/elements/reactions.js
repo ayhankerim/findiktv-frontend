@@ -71,7 +71,10 @@ const Reactions = ({ article }) => {
     data: reactionsData,
     mutate,
     error,
-  } = useSWR(`/api/reactions/?` + query, fetcher)
+  } = useSWR(
+    `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/reactions/?` + query,
+    fetcher
+  )
 
   var total = 0
   reactionsData?.data &&
@@ -105,7 +108,7 @@ const Reactions = ({ article }) => {
       return item
     })
     setReactionTypes(new_updated_data)
-    mutate(`/api/reactions?` + query)
+    mutate(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/reactions?` + query)
   }
   return (
     <section className="reactionSection mt-2">

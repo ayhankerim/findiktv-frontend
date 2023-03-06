@@ -37,7 +37,7 @@ const DynamicCategories = ({
     isValidating,
   } = useSWRInfinite(
     (index) =>
-      `/api/articles?${qs.stringify(
+      `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/articles?${qs.stringify(
         {
           filters: {
             category: {

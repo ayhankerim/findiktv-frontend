@@ -10,7 +10,9 @@ async function fetcher(...args) {
 
 export default function ViewCounter({ articleId, pageType = "articles" }) {
   const { data } = useSWR(
-    `/api/${pageType ? pageType : "articles"}/${articleId}?fields[0]=view`,
+    `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/${
+      pageType ? pageType : "articles"
+    }/${articleId}?fields[0]=view`,
     fetcher
   )
   const views = new Number(data?.data.attributes.view)

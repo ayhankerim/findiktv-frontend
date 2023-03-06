@@ -28,7 +28,9 @@ const LatestArticles = ({
   offset = 0,
 }) => {
   const { data: latestArticles } = useSWR(
-    `/api/articles?populate[0]=image&populate[1]=category&filters[id][$notIn]=${current}${
+    `${
+      process.env.NEXT_PUBLIC_STRAPI_API_URL
+    }/api/articles?populate[0]=image&populate[1]=category&filters[id][$notIn]=${current}${
       city ? `&filters[cities][id][$eq]=${city}` : ``
     }&pagination[start]=${offset}&pagination[limit]=${count}&sort[0]=id%3Adesc`,
     fetcher
