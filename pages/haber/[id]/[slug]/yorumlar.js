@@ -63,13 +63,12 @@ const DynamicArticleComments = ({
   }
   const breadcrumbElement = [
     {
-      title: articleContent.category.data.attributes.title.toLocaleUpperCase(
-        articleContent.locale
-      ),
+      title:
+        articleContent.category.data.attributes.title.toLocaleUpperCase("tr"),
       slug: "/kategori/" + articleContent.category.data.attributes.slug,
     },
     {
-      title: articleContent.title.toLocaleUpperCase(articleContent.locale),
+      title: articleContent.title.toLocaleUpperCase("tr"),
       slug: "/haber/" + articleContent.id + "/" + articleContext.slug,
     },
     {
@@ -178,7 +177,7 @@ export async function getStaticProps(context) {
   } = articleData.attributes
 
   const articleContent = {
-    id: articleData.id,
+    id: params.id,
     title,
     summary,
     content,

@@ -74,7 +74,7 @@ const Breadcrumb = ({ items }) => {
             itemID={`${items[items.length - 1].slug}`}
           >
             <span itemProp="name">
-              {items[items.length - 1].title.toLocaleUpperCase(locale)}
+              {items[items.length - 1].title.toLocaleUpperCase("tr")}
             </span>
           </span>
         </li>

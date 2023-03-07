@@ -21,7 +21,7 @@ const ArticleMostVisited = ({ size, slug }) => {
         },
         publishedAt: {
           $gte: Moment(new Date())
-            .subtract(3, "days")
+            .subtract(7, "days")
             .utcOffset(3)
             .format("YYYY-MM-DD HH:mm:ss"),
         },
@@ -73,11 +73,13 @@ const ArticleMostVisited = ({ size, slug }) => {
                     alt={
                       article.attributes.image.data.attributes.alternativeText
                     }
-                    className="h-[34px] w-[62px]"
-                    width={62}
-                    height={34}
+                    className="h-[auto] w-3/12"
+                    width={91}
+                    height={58}
                   />
-                  <h3 className="font-semibold">{article.attributes.title}</h3>
+                  <h3 className="w-9/12 font-semibold">
+                    {article.attributes.title}
+                  </h3>
                 </div>
                 {/* <div className="flex flex-wrap py-1 h-0 hidden">
                   <p className="text-xs">{article.attributes.summary}</p>

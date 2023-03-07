@@ -49,7 +49,7 @@ const ArticleBlock = ({ article, category, index }) => {
             >
               {Moment(article.attributes.publishedAt)
                 .fromNow(true)
-                .toLocaleUpperCase(article.locale)}{" "}
+                .toLocaleUpperCase("tr")}{" "}
               ÖNCE
             </div>
             <h3 className="font-semibold">{article.attributes.title}</h3>

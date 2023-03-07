@@ -142,7 +142,7 @@ const DynamicCities = ({
     {
       title:
         cityContent.prices.data[0].attributes.product.data.attributes.title.toLocaleUpperCase(
-          cityContent.locale
+          "tr"
         ) + " FİYATLARI",
       slug:
         "/urunler/" +
@@ -151,10 +151,10 @@ const DynamicCities = ({
     },
     {
       title:
-        cityContent.title.toLocaleUpperCase(cityContent.locale) +
+        cityContent.title.toLocaleUpperCase("tr") +
         " " +
         cityContent.prices.data[0].attributes.product.data.attributes.title.toLocaleUpperCase(
-          cityContent.locale
+          "tr"
         ) +
         " FİYATI",
       slug:
@@ -316,8 +316,7 @@ const DynamicCities = ({
               offset={0}
               position="bottom"
               headTitle={
-                cityContent.title.toLocaleUpperCase(cityContent.locale) +
-                " HABERLERİ"
+                cityContent.title.toLocaleUpperCase("tr") + " HABERLERİ"
               }
             />
             <ArticleComments

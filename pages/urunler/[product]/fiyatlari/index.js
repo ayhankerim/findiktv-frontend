@@ -125,9 +125,7 @@ const DynamicProducts = ({
   const breadcrumbElement = [
     { title: "ÜRÜNLER", slug: "/urunler" },
     {
-      title:
-        productContent.title.toLocaleUpperCase(productContent.locale) +
-        " FİYATLARI",
+      title: productContent.title.toLocaleUpperCase("tr") + " FİYATLARI",
       slug: "/urunler/" + productContext.slug + "/fiyatlari",
     },
   ]
@@ -290,8 +288,7 @@ const DynamicProducts = ({
               offset={3}
               position="bottom"
               headTitle={
-                productContent.title.toLocaleUpperCase(productContent.locale) +
-                " HABERLERİ"
+                productContent.title.toLocaleUpperCase("tr") + " HABERLERİ"
               }
             />
             <ArticleComments

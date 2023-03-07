@@ -103,9 +103,7 @@ const DynamicCategories = ({
           <div className="flex flex-col flex-1 w-full gap-3">
             <div className="flex flex-row items-end justify-between border-b border-midgray">
               <h1 className="font-semibold text-xl text-darkgray">
-                {categoryContent.title.toLocaleUpperCase(
-                  categoryContext.locale
-                )}{" "}
+                {categoryContent.title.toLocaleUpperCase("tr")}{" "}
                 <span className="text-midgray">HABERLERİ</span>
               </h1>
             </div>
