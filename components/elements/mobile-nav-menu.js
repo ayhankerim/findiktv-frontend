@@ -26,11 +26,11 @@ const MobileNavMenu = ({ navbar, closeSelf }) => {
 
   return (
     <div className="w-screen h-screen fixed top-0 left-0 overflow-y-scroll bg-white z-[21] py-6">
-      <div className="container h-full flex flex-col justify-between">
+      <div className="container h-full flex flex-col justify-start gap-10">
         {/* Top section */}
-        <div className="flex flex-row justify-between pb-2 items-center">
+        <div className="flex flex-row justify-between my-2 items-center">
           {/* Company logo */}
-          <NextImage width="120" height="33" media={navbar.logo} />
+          <NextImage width="180" height="50" media={navbar.logo} />
           {/* Close button */}
           <button onClick={closeSelf} className="py-1 px-1">
             <MdClose className="h-8 w-auto" />
@@ -38,7 +38,7 @@ const MobileNavMenu = ({ navbar, closeSelf }) => {
         </div>
         {/* Bottom section */}
         <div className="flex flex-col justify-end w-full mx-auto">
-          <ul className="flex flex-col list-none gap-2 items-baseline text-xl mb-10">
+          <ul className="flex flex-col list-none gap-2 items-baseline text-xl">
             {navbar.links.map((navLink) => (
               <li key={navLink.id} className="block w-full">
                 <CustomLink link={navLink}>
@@ -55,7 +55,7 @@ const MobileNavMenu = ({ navbar, closeSelf }) => {
         <ul className="grid grid-cols-3 gap-2">
           <li className="flex items-center transition duration-150 ease-out hover:ease-in hover:bg-dark shadow-sm hover:shadow-2xl hover:shadow-primary text-darkgray hover:text-white border border-darkgray rounded">
             <Link
-              href="/giris-yap"
+              href="/forum"
               className="flex flex-col w-full items-center text-center"
               passHref
             >
@@ -65,7 +65,7 @@ const MobileNavMenu = ({ navbar, closeSelf }) => {
           </li>
           <li className="flex items-center transition duration-150 ease-out hover:ease-in hover:bg-dark shadow-sm hover:shadow-2xl hover:shadow-primary text-darkgray hover:text-white border border-darkgray rounded">
             <Link
-              href="/giris-yap"
+              href="/rehber"
               className="flex flex-col w-full items-center text-center"
               passHref
             >
@@ -95,7 +95,7 @@ const MobileNavMenu = ({ navbar, closeSelf }) => {
             ) : (
               <Link
                 href="/hesap/giris-yap"
-                className="flex flex-col items-center transition duration-150 ease-out hover:ease-in hover:bg-primary shadow-sm hover:shadow-2xl hover:shadow-dark text-center text-primary hover:text-white border border-primary rounded"
+                className="flex flex-col w-full items-center transition duration-150 ease-out hover:ease-in hover:bg-primary shadow-sm hover:shadow-2xl hover:shadow-dark text-center text-primary hover:text-white border border-primary rounded"
                 passHref
               >
                 <MdLogin className="text-xxl m-4" />

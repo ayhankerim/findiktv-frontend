@@ -92,7 +92,7 @@ const Navbar = ({ navbar, pageContext }) => {
                 <ul className="flex gap-2">
                   <li className="flex items-center transition duration-150 ease-out hover:ease-in hover:bg-dark shadow-sm hover:shadow-2xl hover:shadow-primary text-darkgray hover:text-white border border-darkgray rounded">
                     <Link
-                      href="/urunler"
+                      href="/forum"
                       className="flex flex-col items-center text-center"
                       passHref
                     >
@@ -104,7 +104,7 @@ const Navbar = ({ navbar, pageContext }) => {
                   </li>
                   <li className="flex items-center transition duration-150 ease-out hover:ease-in hover:bg-dark shadow-sm hover:shadow-2xl hover:shadow-primary text-darkgray hover:text-white border border-darkgray rounded">
                     <Link
-                      href="/giris-yap"
+                      href="/rehber"
                       className="flex flex-col items-center text-center"
                       passHref
                     >

@@ -27,6 +27,7 @@ const notify = (type, message) => {
 
 export default function Register({ global }) {
   const [loading, setLoading] = useState(false)
+  const [accountCreated, setAccountCreated] = useState(false)
   const router = useRouter()
   const [userData, setUserData] = useState({
     username: "",
@@ -174,171 +175,194 @@ export default function Register({ global }) {
                     Hesap Oluştur
                   </h1>
                 </div>
-
-                <Formik
-                  initialValues={{
-                    username: "",
-                    email: "",
-                    password: "",
-                  }}
-                  enableReinitialize
-                  validationSchema={loginSchema}
-                  //validateOnChange={false}
-                  onSubmit={async (
-                    values,
-                    { setSubmitting, setErrors, resetForm }
-                  ) => {
-                    setLoading(true)
-                    try {
-                      await fetchAPI(
-                        `/auth/local/register`,
-                        {},
-                        {
-                          method: "POST",
-                          body: JSON.stringify({
-                            username: values.username,
-                            email: values.email,
-                            role: 3,
-                            confirmed: false,
-                            password: values.password,
-                          }),
+                {accountCreated ? (
+                  <div className="text-base">
+                    <p className="text-primary font-bold">
+                      Hesabınız başarılı bir şekilde oluşturulmuştur.
+                    </p>
+                    <p>
+                      E-posta kutunuza gönderilen bağlantıya tıklayarak
+                      hesabınızı onaylayabilirsiniz.
+                    </p>
+                    <p className="mt-2">
+                      <Link
+                        href="/"
+                        className="text-secondary underline text-sm font-semibold"
+                      >
+                        Ana sayfaya dön
+                      </Link>
+                    </p>
+                  </div>
+                ) : (
+                  <>
+                    <Formik
+                      initialValues={{
+                        username: "",
+                        email: "",
+                        password: "",
+                      }}
+                      enableReinitialize
+                      validationSchema={loginSchema}
+                      //validateOnChange={false}
+                      onSubmit={async (
+                        values,
+                        { setSubmitting, setErrors, resetForm }
+                      ) => {
+                        setLoading(true)
+                        try {
+                          await fetchAPI(
+                            `/auth/local/register`,
+                            {},
+                            {
+                              method: "POST",
+                              body: JSON.stringify({
+                                username: values.username,
+                                email: values.email,
+                                role: 3,
+                                confirmed: false,
+                                password: values.password,
+                              }),
+                            }
+                          ).then(async (data) => {
+                            setUserData({
+                              username: data.username,
+                              email: data.email,
+                            })
+                            setAccountCreated(true)
+                          })
+                        } catch (err) {
+                          setErrors(err)
+                          notify(
+                            "error",
+                            "Hesap oluşturulurken bir sorunla karşılaştık. Lütfen daha sonra tekrar deneyiniz!"
+                          )
                         }
-                      ).then(async (data) => {
-                        setUserData({
-                          username: data.username,
-                          email: data.email,
-                        })
-                        router.replace("/hesap/profil")
-                      })
-                    } catch (err) {
-                      setErrors(err)
-                      notify(
-                        "error",
-                        "Hesap oluşturulurken bir sorunla karşılaştık. Lütfen daha sonra tekrar deneyiniz!"
-                      )
-                    }
-                    setLoading(false)
-                    setSubmitting(false)
-                  }}
-                >
-                  {({ errors, touched, isSubmitting, setFieldValue }) => (
-                    <Form>
-                      <div className="flex flex-col mb-5">
-                        <label className="form-label" htmlFor="username">
-                          Kullanıcı adı
-                        </label>
-                        <Field
-                          className={classNames(
-                            errors.username && touched.username
-                              ? "border-danger"
-                              : "border-midgray",
-                            "text-base focus:outline-none py-1 px-2 border"
+                        setLoading(false)
+                        setSubmitting(false)
+                      }}
+                    >
+                      {({ errors, touched, isSubmitting, setFieldValue }) => (
+                        <Form>
+                          <div className="flex flex-col mb-5">
+                            <label className="form-label" htmlFor="username">
+                              Kullanıcı adı
+                            </label>
+                            <Field
+                              className={classNames(
+                                errors.username && touched.username
+                                  ? "border-danger"
+                                  : "border-midgray",
+                                "text-base focus:outline-none py-1 px-2 border"
+                              )}
+                              type="text"
+                              name="username"
+                            />
+                            {errors.username && touched.username && (
+                              <p className="text-danger">{errors.username}</p>
+                            )}
+                          </div>
+                          <div className="flex flex-col mb-5">
+                            <label className="form-label" htmlFor="email">
+                              E-posta adresiniz
+                            </label>
+                            <Field
+                              className={classNames(
+                                errors.email && touched.email
+                                  ? "border-danger"
+                                  : "border-midgray",
+                                "text-base focus:outline-none py-1 px-2 border"
+                              )}
+                              type="email"
+                              name="email"
+                            />
+                            {errors.email && touched.email && (
+                              <p className="text-danger">{errors.email}</p>
+                            )}
+                          </div>
+                          <div className="flex flex-col mb-5">
+                            <label className="form-label" htmlFor="password">
+                              Şifreniz
+                            </label>
+                            <Field
+                              className={classNames(
+                                errors.password && touched.password
+                                  ? "border-danger"
+                                  : "border-midgray",
+                                "text-base focus:outline-none py-1 px-2 border"
+                              )}
+                              type="password"
+                              name="password"
+                            />
+                            {errors.password && touched.password && (
+                              <p className="text-danger">{errors.password}</p>
+                            )}
+                          </div>
+                          {errors.api && (
+                            <p className="text-red-500 h-12 text-sm mt-1 ml-2 text-left">
+                              {errors.api}
+                            </p>
                           )}
-                          type="text"
-                          name="username"
-                        />
-                        {errors.username && touched.username && (
-                          <p className="text-danger">{errors.username}</p>
-                        )}
-                      </div>
-                      <div className="flex flex-col mb-5">
-                        <label className="form-label" htmlFor="email">
-                          E-posta adresiniz
-                        </label>
-                        <Field
-                          className={classNames(
-                            errors.email && touched.email
-                              ? "border-danger"
-                              : "border-midgray",
-                            "text-base focus:outline-none py-1 px-2 border"
-                          )}
-                          type="email"
-                          name="email"
-                        />
-                        {errors.email && touched.email && (
-                          <p className="text-danger">{errors.email}</p>
-                        )}
-                      </div>
-                      <div className="flex flex-col mb-5">
-                        <label className="form-label" htmlFor="password">
-                          Şifreniz
-                        </label>
-                        <Field
-                          className={classNames(
-                            errors.password && touched.password
-                              ? "border-danger"
-                              : "border-midgray",
-                            "text-base focus:outline-none py-1 px-2 border"
-                          )}
-                          type="password"
-                          name="password"
-                        />
-                        {errors.password && touched.password && (
-                          <p className="text-danger">{errors.password}</p>
-                        )}
-                      </div>
-                      {errors.api && (
-                        <p className="text-red-500 h-12 text-sm mt-1 ml-2 text-left">
-                          {errors.api}
-                        </p>
+                          <div className="flex flex-row gap-2">
+                            <button
+                              className="disabled:opacity-75 w-full bg-secondary hover:bg-secondary/90 text-white rounded p-4 text-base transition duration-150 ease-out md:ease-in"
+                              type="submit"
+                              disabled={loading}
+                            >
+                              {loading ? (
+                                <span role="status">
+                                  <BiLoaderCircle className="mr-2 inline-block align-middle w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" />
+                                  <span className="sr-only">
+                                    Kaydediliyor...
+                                  </span>
+                                  <span>Kaydediliyor...</span>
+                                </span>
+                              ) : (
+                                <span>Hesap oluştur</span>
+                              )}
+                            </button>
+                          </div>
+                        </Form>
                       )}
-                      <div className="flex flex-row gap-2">
-                        <button
-                          className="disabled:opacity-75 w-full bg-secondary hover:bg-secondary/90 text-white rounded p-4 text-base transition duration-150 ease-out md:ease-in"
-                          type="submit"
-                          disabled={loading}
-                        >
-                          {loading ? (
-                            <span role="status">
-                              <BiLoaderCircle className="mr-2 inline-block align-middle w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" />
-                              <span className="sr-only">Kaydediliyor...</span>
-                              <span>Kaydediliyor...</span>
-                            </span>
-                          ) : (
-                            <span>Hesap oluştur</span>
-                          )}
-                        </button>
-                      </div>
-                    </Form>
-                  )}
-                </Formik>
+                    </Formik>
 
-                <div className="py-5 text-center">
-                  <span className="text-xs text-uppercase font-semibold">
-                    veya
-                  </span>
-                </div>
-                <div className="flex gap-2">
-                  <div className="w-full">
-                    <a
-                      href="#"
-                      className="flex flex-col items-center hover:bg-lightgray/90 text-midgray hover:text-secondary border hover:border-lightgray/90 text-center rounded px-6 py-2 text-sm w-full transition duration-150 ease-out md:ease-in"
-                    >
-                      <MdFacebook className="inline-block" />
-                      Facebook
-                    </a>
-                  </div>
-                  <div className="w-full">
-                    <a
-                      href="#"
-                      className="flex flex-col items-center hover:bg-lightgray/90 text-midgray hover:text-secondary border hover:border-lightgray/90 text-center rounded px-6 py-2 text-sm w-full transition duration-150 ease-out md:ease-in"
-                    >
-                      <FcGoogle className="inline-block" />
-                      Google
-                    </a>
-                  </div>
-                </div>
-                <div className="my-6">
-                  <p>
-                    <span className="mr-1">Hesabınız var mı?</span>
-                    <Link
-                      href="/hesap/giris-yap"
-                      className="text-warning text-sm font-semibold"
-                    >
-                      Giriş yap
-                    </Link>
-                  </p>
-                </div>
+                    <div className="py-5 text-center">
+                      <span className="text-xs text-uppercase font-semibold">
+                        veya
+                      </span>
+                    </div>
+                    <div className="flex gap-2">
+                      <div className="w-full">
+                        <a
+                          href="#"
+                          className="flex flex-col items-center hover:bg-lightgray/90 text-midgray hover:text-secondary border hover:border-lightgray/90 text-center rounded px-6 py-2 text-sm w-full transition duration-150 ease-out md:ease-in"
+                        >
+                          <MdFacebook className="inline-block" />
+                          Facebook
+                        </a>
+                      </div>
+                      <div className="w-full">
+                        <a
+                          href="#"
+                          className="flex flex-col items-center hover:bg-lightgray/90 text-midgray hover:text-secondary border hover:border-lightgray/90 text-center rounded px-6 py-2 text-sm w-full transition duration-150 ease-out md:ease-in"
+                        >
+                          <FcGoogle className="inline-block" />
+                          Google
+                        </a>
+                      </div>
+                    </div>
+                    <div className="my-6">
+                      <p>
+                        <span className="mr-1">Hesabınız var mı?</span>
+                        <Link
+                          href="/hesap/giris-yap"
+                          className="text-warning text-sm font-semibold"
+                        >
+                          Giriş yap
+                        </Link>
+                      </p>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>

@@ -57,7 +57,7 @@ function Dialog({
             className="flex text-dark justify-center items-center h-full w-full left-0 top-0 fixed"
           >
             <div
-              className={`max-w-[28rem] w-11/12 sm:2w-full ${
+              className={`overflow-y-auto max-h-[98vh] max-w-[28rem] w-11/12 sm:w-full ${
                 classes ? classes : "p-4 bg-white sm:rounded-lg"
               }`}
             >
