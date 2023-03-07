@@ -50,12 +50,6 @@ export default function SignIn({ global }) {
     ...global.attributes.metadata,
     ...metadata,
   }
-  const [farmerImage, setImage] = useState("")
-  useEffect(() => {
-    fetchAPI("/upload/files/37").then((data) => {
-      setImage(data)
-    })
-  }, [])
 
   return (
     <Layout>
@@ -64,15 +58,13 @@ export default function SignIn({ global }) {
       <div className="px-5 py-5 lg:p-0 bg-white">
         <div className="flex justify-center w-full">
           <div className="lg:w-5/12 xl:w-4/12 p-12 xl:p-20 fixed left-0 top-0 h-screen overflow-y-hidden hidden lg:flex flex-col">
-            {farmerImage && (
-              <Image
-                src={farmerImage.formats.large.url}
-                alt={farmerImage.alternativeText}
-                className="absolute inset-0 h-full w-full object-cover"
-                priority={true}
-                fill
-              />
-            )}
+            <Image
+              src="https://www.findiktv.com/cdn-cgi/imagedelivery/A_vnS-Tfmrf1TT32XC1EgA/9db77d3a-1cdb-4bc5-c236-20f990316500/format=auto,height=1000"
+              alt="Üretici heesabı"
+              className="absolute inset-0 h-full w-full object-cover"
+              priority={true}
+              fill
+            />
             <div className="flex absolute bg-secondary/80 left-0 top-0 h-full w-full">
               <div className="flex flex-col justify-end p-12">
                 <h1 className="ls-tight font-bolder text-xl text-white mb-2">
@@ -90,7 +82,7 @@ export default function SignIn({ global }) {
               <div className="lg:w-10/12 md:w-9/12 xl:w-6/12 mx-auto xl:ml-0">
                 <div className="mt-10 lg:mt-5 mb-6 flex flex-col align-center">
                   <Image
-                    src="/uploads/logo_findiktv_2000_92bc7df5ca.png?updated_at=2023-01-09T08:00:08.202Z"
+                    src="https://www.findiktv.com/cdn-cgi/imagedelivery/A_vnS-Tfmrf1TT32XC1EgA/84789d40-699b-40da-9930-3d2b9c9cb300/format=auto,w=250,q=100"
                     alt="FINDIK TV"
                     width={200}
                     height={48}

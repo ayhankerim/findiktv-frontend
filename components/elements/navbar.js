@@ -67,11 +67,7 @@ const Navbar = ({ navbar, pageContext }) => {
           {/* Content aligned to the left */}
           <div className="flex w-5/12 md:w-4/12 lg:w-3/12 xl:w-2/12">
             <Link href="/" className="" passHref>
-              <NextImage
-                width={navbar.logo.data.attributes.width}
-                height={navbar.logo.data.attributes.height}
-                media={navbar.logo}
-              />
+              <NextImage width={205} height={50} media={navbar.logo} />
             </Link>
           </div>
           <div className="hidden lg:flex lg:w-6/12">
