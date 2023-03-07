@@ -86,6 +86,10 @@ const nextConfig = {
         source: "/api/auth/email-confirmation",
         destination: `${process.env.STRAPI_API_URL}/api/auth/email-confirmation`,
       },
+      {
+        source: "/api/auth/callback/credentials",
+        destination: `${process.env.STRAPI_API_URL}/api/auth/callback/credentials`,
+      },
     ]
   },
   async headers() {
