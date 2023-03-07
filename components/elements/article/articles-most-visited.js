@@ -64,29 +64,20 @@ const ArticleMostVisited = ({ size, slug }) => {
                 href={`/haber/${article.id}/${article.attributes.slug}`}
                 className="flex flex-col px-2 hover:bg-lightgray"
               >
-                <div className="flex items-center justify-start">
-                  <div className="flex flex-nowrap relative h-[34px] w-[62px] overflow-hidden">
-                    <Image
-                      src={
-                        article.attributes.image.data.attributes.formats
-                          .thumbnail.url
-                      }
-                      alt={
-                        article.attributes.image.data.attributes.alternativeText
-                      }
-                      className="absolute inset-0 h-full w-full object-cover"
-                      priority={true}
-                      fill
-                      sizes="(max-width: 768px) 100vw,
-                        (max-width: 800px) 50vw,
-                        33vw"
-                    />
-                  </div>
-                  <div className="flex flex-wrap pl-4 py-1">
-                    <h3 className="font-semibold">
-                      {article.attributes.title}
-                    </h3>
-                  </div>
+                <div className="flex items-center justify-start py-1 gap-2">
+                  <Image
+                    src={
+                      article.attributes.image.data.attributes.formats.thumbnail
+                        .url
+                    }
+                    alt={
+                      article.attributes.image.data.attributes.alternativeText
+                    }
+                    className="h-[34px] w-[62px]"
+                    width={62}
+                    height={34}
+                  />
+                  <h3 className="font-semibold">{article.attributes.title}</h3>
                 </div>
                 {/* <div className="flex flex-wrap py-1 h-0 hidden">
                   <p className="text-xs">{article.attributes.summary}</p>

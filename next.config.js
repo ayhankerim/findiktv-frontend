@@ -88,7 +88,7 @@ const nextConfig = {
       },
       {
         source: "/api/auth/:path*",
-        destination: `${process.env.STRAPI_API_URL}/api/auth/:path*`,
+        destination: "/api/auth/:path*",
       },
       {
         source: "/api/:path*",
