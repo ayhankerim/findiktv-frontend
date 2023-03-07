@@ -67,10 +67,6 @@ const nextConfig = {
         destination: `${process.env.STRAPI_API_URL}/uploads/:path*`,
       },
       {
-        source: "/api/views/:path*",
-        destination: "/api/views/:path*",
-      },
-      {
         source: "/api/auth/local/register",
         destination: `${process.env.STRAPI_API_URL}/api/auth/local/register`,
       },
@@ -88,7 +84,7 @@ const nextConfig = {
       },
       {
         source: "/api/auth/:path*",
-        destination: "/api/auth/:path*",
+        destination: `${process.env.STRAPI_API_URL}/api/auth/:path*`,
       },
       {
         source: "/api/:path*",

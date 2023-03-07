@@ -145,7 +145,6 @@ const SliderWithSide = ({ data, position = "sidebar" }) => {
       },
     ],
   }
-  console.log(mostVisiteds)
   return (
     <div className="container flex flex-col md:flex-row md:flex-nowrap gap-2 align-top pb-6">
       <div className="w-full md:w-8/12">
