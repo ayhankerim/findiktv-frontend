@@ -230,7 +230,7 @@ export const getServerSideProps = async (context) => {
     username: params.username,
   })
 
-  if (userData == null) {
+  if (userData === null) {
     // Giving the page no props will trigger a 404 page
     return { props: {} }
   }

@@ -85,7 +85,7 @@ const ProfileUpdateForm = () => {
         initialValues={{
           name: userData.name,
           surname: userData.surname,
-          city: userData.city.id,
+          city: userData.city ? userData.city.id : null,
           about: userData.about,
         }}
         validationSchema={loggedInSchema}

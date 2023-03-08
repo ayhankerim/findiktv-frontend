@@ -27,8 +27,12 @@ const ProfileCoverAvatarChange = () => {
   const [isShowing, setIsShowing] = useState(false)
   const [avatarList, setAvatarList] = useState([])
   const [coverList, setCoverList] = useState([])
-  const [selectedAvatar, SetSelectedAvatar] = useState(userData.SystemAvatar.id)
-  const [selectedCover, SetSelectedCover] = useState(userData.profile_cover.id)
+  const [selectedAvatar, SetSelectedAvatar] = useState(
+    userData.SystemAvatar ? userData.SystemAvatar.id : null
+  )
+  const [selectedCover, SetSelectedCover] = useState(
+    userData.profile_cover ? userData.profile_cover.id : null
+  )
 
   const updateAvatar = async (_id) => {
     setLoading(true)
