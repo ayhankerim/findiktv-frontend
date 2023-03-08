@@ -102,3 +102,10 @@ dist
 
 # TernJS port file
 .tern-port
+
+# Sentry
+.sentryclirc
+
+# Sentry
+next.config.original.js
+pages/sentry_sample_error.js

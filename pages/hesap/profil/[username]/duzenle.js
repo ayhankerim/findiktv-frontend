@@ -1,29 +1,20 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/router"
-import ErrorPage from "next/error"
 import { getSession, useSession } from "next-auth/react"
-import { useSelector, useDispatch } from "react-redux"
-import { getUserData, getAdsData, fetchAPI, getGlobalData } from "@/utils/api"
+import { useSelector } from "react-redux"
+import { getUserData, fetchAPI, getGlobalData } from "@/utils/api"
 import Image from "next/image"
 import Layout from "@/components/layout"
 import ProfileUpdateForm from "@/components/elements/profile/profile-update-form"
 import ProfileCoverAvatarChange from "@/components/elements/profile/profile-cover-avatar-change"
 import SocialAccountsUpdate from "@/components/elements/profile/social-accounts-update"
 import ProfileBasicPass from "@/components/elements/profile/profile-basic-pass"
-import Tooltip from "@/components/elements/tooltip"
 import Seo from "@/components/elements/seo"
 import LatestComments from "@/components/elements/comments/latest-comments"
 import ArticleMostVisited from "@/components/elements/article/articles-most-visited"
 import { FcApproval } from "react-icons/fc"
 import { Tab } from "@headlessui/react"
-import { RiEditBoxLine, RiEditBoxFill, RiSeparator } from "react-icons/ri"
-import { MdOutlineLocationOn } from "react-icons/md"
-import {
-  FaTelegramPlane,
-  FaFacebookF,
-  FaTwitter,
-  FaLinkedinIn,
-} from "react-icons/fa"
+import { RiSeparator } from "react-icons/ri"
 import Avatar from "@/components/elements/profile/avatar"
 
 function classNames(...classes) {
@@ -73,9 +64,7 @@ const ProfileCover = (username) => {
   )
 }
 
-const DynamicUsers = ({ userContent, advertisement, global, userContext }) => {
-  const { data: session } = useSession()
-  const userData = useSelector((state) => state.user.userData)
+const DynamicUsers = ({ userContent, global, userContext }) => {
   const [tabs] = useState([
     {
       id: 1,
