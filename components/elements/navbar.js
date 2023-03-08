@@ -159,11 +159,11 @@ const Navbar = ({ navbar, pageContext }) => {
             )}
           </div>
         </div>
-        <nav className="container flex flex-row items-center justify-between border-b-2 border-gray bg-white">
+        <nav className="container flex flex-row items-center justify-between border-b-2 border-gray gap-4 bg-white">
           {/* Content aligned to the left */}
-          <div className="flex flex-row items-center relative bottom-[-2px]">
+          <div className="flex flex-row w-full items-center relative bottom-[-2px]">
             {/* List of links on desktop */}
-            <ul className="hidden list-none md:flex flex-row gap-2 xl:gap-4 items-baseline">
+            <ul className="hidden list-none w-full md:flex flex-row justify-between gap-2 xl:gap-4 items-center">
               {navbar.links.map((navLink) => (
                 <li
                   className="border-b-2 border-transparent hover:border-b-2 hover:border-b-secondary hover:bg-lightgray transition duration-150 ease-out md:ease-in"
