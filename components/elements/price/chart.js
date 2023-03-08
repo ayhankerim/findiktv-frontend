@@ -210,7 +210,9 @@ const PriceChart = ({ city, product, type, grapghData }) => {
               .filter((item) => item.attributes.quality === "Levant")
               .map(function (item) {
                 return [
-                  new Date(item.attributes.date).getTime(),
+                  new Date(item.attributes.date).getTime({
+                    timeZone: "Europe/Istanbul",
+                  }),
                   item.attributes.min,
                   item.attributes.max,
                 ]
@@ -226,7 +228,9 @@ const PriceChart = ({ city, product, type, grapghData }) => {
               .filter((item) => item.attributes.quality === "Giresun")
               .map(function (item) {
                 return [
-                  new Date(item.attributes.date).getTime(),
+                  new Date(item.attributes.date).getTime({
+                    timeZone: "Europe/Istanbul",
+                  }),
                   item.attributes.min,
                   item.attributes.max,
                 ]
@@ -242,7 +246,9 @@ const PriceChart = ({ city, product, type, grapghData }) => {
             },
             data: grapghData.data.map(function (item) {
               return [
-                new Date(item.attributes.date).getTime(),
+                new Date(item.attributes.date).getTime({
+                  timeZone: "Europe/Istanbul",
+                }),
                 item.attributes.volume,
               ]
             }),
