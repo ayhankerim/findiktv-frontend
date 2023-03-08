@@ -24,6 +24,10 @@ import CustomLink from "./custom-link"
 import LocaleSwitch from "../locale-switch"
 import Advertisement from "@/components/elements/advertisement"
 
+function classNames(...classes) {
+  return classes.filter(Boolean).join(" ")
+}
+
 const Navbar = ({ navbar, pageContext }) => {
   const router = useRouter()
   const { data: session } = useSession()
@@ -166,7 +170,14 @@ const Navbar = ({ navbar, pageContext }) => {
                   key={navLink.id}
                 >
                   <CustomLink link={navLink} locale={router.locale}>
-                    <div className="text-base font-bold hover:text-secondary px-2 py-1">
+                    <div
+                      className={classNames(
+                        navLink.marked === true
+                          ? "bg-secondary text-white hover:bg-danger"
+                          : "hover:text-secondary",
+                        "text-base font-bold px-2 py-1"
+                      )}
+                    >
                       {navLink.text}
                     </div>
                   </CustomLink>

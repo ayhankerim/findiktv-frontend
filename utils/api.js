@@ -1412,6 +1412,7 @@ export async function getGlobalData(locale) {
                     url
                     newTab
                     text
+                    marked
                   }
                   button {
                     id

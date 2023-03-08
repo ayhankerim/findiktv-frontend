@@ -7,6 +7,7 @@ import { getButtonAppearance } from "utils/button"
 import ButtonLink from "./button-link"
 import Link from "next/link"
 import NextImage from "./image"
+import classNames from "classnames"
 import CustomLink from "./custom-link"
 import {
   MdClose,
@@ -35,21 +36,6 @@ const MobileNavMenu = ({ navbar, closeSelf }) => {
           <button onClick={closeSelf} className="py-1 px-1">
             <MdClose className="h-8 w-auto" />
           </button>
-        </div>
-        {/* Bottom section */}
-        <div className="flex flex-col justify-end w-full mx-auto">
-          <ul className="flex flex-col list-none gap-2 items-baseline text-xl">
-            {navbar.links.map((navLink) => (
-              <li key={navLink.id} className="block w-full">
-                <CustomLink link={navLink}>
-                  <div className="hover:text-gray-900 flex flex-row justify-between items-center">
-                    <span>{navLink.text}</span>
-                    <MdChevronRight className="h-8 w-auto" />
-                  </div>
-                </CustomLink>
-              </li>
-            ))}
-          </ul>
         </div>
 
         <ul className="grid grid-cols-3 gap-2">
@@ -104,6 +90,28 @@ const MobileNavMenu = ({ navbar, closeSelf }) => {
             )}
           </li>
         </ul>
+        {/* Bottom section */}
+        <div className="flex flex-col justify-end w-full mx-auto">
+          <ul className="flex flex-col list-none gap-2 items-baseline text-xl">
+            {navbar.links.map((navLink) => (
+              <li key={navLink.id} className="block w-full">
+                <CustomLink link={navLink}>
+                  <div
+                    className={classNames(
+                      navLink.marked === true
+                        ? "bg-lightgray border-t border-b border-t-secondary border-b-secondary"
+                        : "",
+                      "hover:text-gray-900 flex flex-row justify-between items-center"
+                    )}
+                  >
+                    <span>{navLink.text}</span>
+                    <MdChevronRight className="h-8 w-auto" />
+                  </div>
+                </CustomLink>
+              </li>
+            ))}
+          </ul>
+        </div>
         {/* <ButtonLink
           button={navbar.button}
           appearance={getButtonAppearance(navbar.button.type, "light")}
