@@ -19,6 +19,7 @@ article.NewsContent h2 {
 article.NewsContent p {
   padding-bottom: 10px;
   @apply font-light;
+  @apply text-base;
 }
 article.NewsContent a {
   @apply font-bold;
