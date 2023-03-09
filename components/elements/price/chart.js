@@ -77,7 +77,6 @@ if (typeof Highcharts === "object") {
 const PriceChart = ({ city, product, type, grapghData }) => {
   const [chartOptions, setChartOptions] = useState({
     chart: {
-      type: "arearange",
       backgroundColor: "transparent",
       plotBorderColor: "#606063",
       style: {
@@ -198,8 +197,7 @@ const PriceChart = ({ city, product, type, grapghData }) => {
                     timeZone: "Europe/Istanbul",
                   }) +
                     3 * 60 * 60 * 1000,
-                  item.attributes.min,
-                  item.attributes.max,
+                  item.attributes.average,
                 ]
               }),
           },
@@ -217,8 +215,7 @@ const PriceChart = ({ city, product, type, grapghData }) => {
                     timeZone: "Europe/Istanbul",
                   }) +
                     3 * 60 * 60 * 1000,
-                  item.attributes.min,
-                  item.attributes.max,
+                  item.attributes.average,
                 ]
               }),
           },
@@ -236,8 +233,7 @@ const PriceChart = ({ city, product, type, grapghData }) => {
                     timeZone: "Europe/Istanbul",
                   }) +
                     3 * 60 * 60 * 1000,
-                  item.attributes.min,
-                  item.attributes.max,
+                  item.attributes.average,
                 ]
               }),
           },
