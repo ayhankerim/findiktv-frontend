@@ -81,10 +81,7 @@ function average(arr) {
     results = [],
     date
   for (var i = 0; i < arr.length; i++) {
-    //date = arr[i].attributes.date
-    date =
-      new Date(arr[i].attributes.date).setHours(0, 0, 0) + 24 * 60 * 60 * 1000
-    console.log(date)
+    date = new Date(arr[i].attributes.date).setHours(0, 0, 0)
     if (!(date in sums)) {
       sums[date] = 0
       counts[date] = 0
@@ -227,8 +224,7 @@ const PriceChart = ({ city, product, type, grapghData }) => {
               .filter((item) => item.quality === "Sivri")
               .map(function (item) {
                 return [
-                  new Date(new Date().setTime(item.date)).setHours(0, 0, 0) +
-                    24 * 60 * 60 * 1000,
+                  new Date(new Date().setTime(item.date)).setHours(0, 0, 0),
                   item.average,
                 ]
               }),
@@ -243,8 +239,7 @@ const PriceChart = ({ city, product, type, grapghData }) => {
               .filter((item) => item.quality === "Levant")
               .map(function (item) {
                 return [
-                  new Date(new Date().setTime(item.date)).setHours(0, 0, 0) +
-                    24 * 60 * 60 * 1000,
+                  new Date(new Date().setTime(item.date)).setHours(0, 0, 0),
                   item.average,
                 ]
               }),
@@ -259,8 +254,7 @@ const PriceChart = ({ city, product, type, grapghData }) => {
               .filter((item) => item.quality === "Giresun")
               .map(function (item) {
                 return [
-                  new Date(new Date().setTime(item.date)).setHours(0, 0, 0) +
-                    24 * 60 * 60 * 1000,
+                  new Date(new Date().setTime(item.date)).setHours(0, 0, 0),
                   item.average,
                 ]
               }),
@@ -275,8 +269,7 @@ const PriceChart = ({ city, product, type, grapghData }) => {
             },
             data: average(grapghData.data).map(function (item) {
               return [
-                new Date(new Date().setTime(item.date)).setHours(0, 0, 0) +
-                  24 * 60 * 60 * 1000,
+                new Date(new Date().setTime(item.date)).setHours(0, 0, 0),
                 item.volume,
               ]
             }),
