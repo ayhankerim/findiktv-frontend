@@ -171,7 +171,6 @@ export default function CommentForm({
         //validateOnChange={false}
         onSubmit={async (values, { setSubmitting, setErrors, resetForm }) => {
           setLoading(true)
-          console.log("product", product)
           if (session) {
             try {
               setErrors({ api: null })
@@ -187,8 +186,9 @@ export default function CommentForm({
                       city: city,
                       threadOf: threadOf ? threadOf : null,
                       reply_to: replyto ? replyto : null,
-                      author: session.id,
+                      user: session.id,
                       content: values.content,
+                      approvalStatus: "approved",
                       ip: clientIP,
                     },
                   }),
@@ -228,7 +228,7 @@ export default function CommentForm({
                           city: city,
                           threadOf: threadOf ? threadOf : null,
                           reply_to: replyto ? replyto : null,
-                          author: user[0].id,
+                          user: user[0].id,
                           content: values.content,
                           ip: clientIP,
                         },
@@ -267,7 +267,7 @@ export default function CommentForm({
                             city: city,
                             threadOf: threadOf ? threadOf : null,
                             reply_to: replyto ? replyto : null,
-                            author: data.user.id,
+                            user: data.user.id,
                             content: values.content,
                             ip: clientIP,
                           },
@@ -277,7 +277,10 @@ export default function CommentForm({
                   })
                 }
               })
-              notify("success", "Yorumunuz eklendi.")
+              notify(
+                "success",
+                "Yorumunuz eklendi. Moderatörlerin onayının ardından yayına alınacaktır."
+              )
               resetForm({
                 values: {
                   content: "",
