@@ -194,7 +194,10 @@ const PriceChart = ({ city, product, type, grapghData }) => {
               .filter((item) => item.attributes.quality === "Sivri")
               .map(function (item) {
                 return [
-                  new Date(item.attributes.date).getTime(),
+                  new Date(item.attributes.date).getTime({
+                    timeZone: "Europe/Istanbul",
+                  }) +
+                    3 * 60 * 60 * 1000,
                   item.attributes.min,
                   item.attributes.max,
                 ]
@@ -212,7 +215,8 @@ const PriceChart = ({ city, product, type, grapghData }) => {
                 return [
                   new Date(item.attributes.date).getTime({
                     timeZone: "Europe/Istanbul",
-                  }),
+                  }) +
+                    3 * 60 * 60 * 1000,
                   item.attributes.min,
                   item.attributes.max,
                 ]
@@ -230,7 +234,8 @@ const PriceChart = ({ city, product, type, grapghData }) => {
                 return [
                   new Date(item.attributes.date).getTime({
                     timeZone: "Europe/Istanbul",
-                  }),
+                  }) +
+                    3 * 60 * 60 * 1000,
                   item.attributes.min,
                   item.attributes.max,
                 ]
@@ -248,7 +253,8 @@ const PriceChart = ({ city, product, type, grapghData }) => {
               return [
                 new Date(item.attributes.date).getTime({
                   timeZone: "Europe/Istanbul",
-                }),
+                }) +
+                  3 * 60 * 60 * 1000,
                 item.attributes.volume,
               ]
             }),

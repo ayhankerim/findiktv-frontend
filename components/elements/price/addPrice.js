@@ -114,7 +114,10 @@ const AddPrice = ({ product, cities, cityData }) => {
                 body: JSON.stringify({
                   data: {
                     date: Moment(values.date)
-                      .utcOffset(6)
+                      .utcOffset(3)
+                      .set("hour", Moment().hour())
+                      .set("minute", Moment().minutes())
+                      .set("second", Moment().seconds())
                       .format("YYYY-MM-DD HH:mm:ss"),
                     article: null,
                     min: Number(values.price.substring(1).replace(",", ".")),
