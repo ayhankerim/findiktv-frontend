@@ -81,7 +81,8 @@ function average(arr) {
     results = [],
     date
   for (var i = 0; i < arr.length; i++) {
-    date = new Date(arr[i].attributes.date).setHours(0, 0, 0)
+    date =
+      new Date(arr[i].attributes.date).setHours(0, 0, 0) + 24 * 60 * 60 * 1000
     if (!(date in sums)) {
       sums[date] = 0
       counts[date] = 0
