@@ -73,6 +73,40 @@ if (typeof Highcharts === "object") {
     },
   })
 }
+function average(arr) {
+  let sums = {},
+    counts = {},
+    volume = {},
+    quality = {},
+    results = [],
+    date
+  for (var i = 0; i < arr.length; i++) {
+    //date = arr[i].attributes.date
+    date =
+      new Date(arr[i].attributes.date).setHours(0, 0, 0) + 24 * 60 * 60 * 1000
+    console.log(date)
+    if (!(date in sums)) {
+      sums[date] = 0
+      counts[date] = 0
+      volume[date] = 0
+      quality[date] = ""
+    }
+    sums[date] += arr[i].attributes.average * arr[i].attributes.volume
+    volume[date] += arr[i].attributes.volume
+    quality[date] = arr[i].attributes.quality
+    counts[date]++
+  }
+
+  for (date in sums) {
+    results.push({
+      date: date,
+      average: sums[date] / volume[date],
+      volume: volume[date],
+      quality: quality[date],
+    })
+  }
+  return results
+}
 
 const PriceChart = ({ city, product, type, grapghData }) => {
   const [chartOptions, setChartOptions] = useState({
@@ -189,15 +223,13 @@ const PriceChart = ({ city, product, type, grapghData }) => {
               fillColor: "transparent",
               lineColor: Highcharts.getOptions().colors[0],
             },
-            data: grapghData.data
-              .filter((item) => item.attributes.quality === "Sivri")
+            data: average(grapghData.data)
+              .filter((item) => item.quality === "Sivri")
               .map(function (item) {
                 return [
-                  new Date(item.attributes.date).getTime({
-                    timeZone: "Europe/Istanbul",
-                  }) +
-                    3 * 60 * 60 * 1000,
-                  item.attributes.average,
+                  new Date(new Date().setTime(item.date)).setHours(0, 0, 0) +
+                    24 * 60 * 60 * 1000,
+                  item.average,
                 ]
               }),
           },
@@ -207,15 +239,13 @@ const PriceChart = ({ city, product, type, grapghData }) => {
               fillColor: "transparent",
               lineColor: Highcharts.getOptions().colors[1],
             },
-            data: grapghData.data
-              .filter((item) => item.attributes.quality === "Levant")
+            data: average(grapghData.data)
+              .filter((item) => item.quality === "Levant")
               .map(function (item) {
                 return [
-                  new Date(item.attributes.date).getTime({
-                    timeZone: "Europe/Istanbul",
-                  }) +
-                    3 * 60 * 60 * 1000,
-                  item.attributes.average,
+                  new Date(new Date().setTime(item.date)).setHours(0, 0, 0) +
+                    24 * 60 * 60 * 1000,
+                  item.average,
                 ]
               }),
           },
@@ -225,15 +255,13 @@ const PriceChart = ({ city, product, type, grapghData }) => {
               fillColor: "transparent",
               lineColor: Highcharts.getOptions().colors[2],
             },
-            data: grapghData.data
-              .filter((item) => item.attributes.quality === "Giresun")
+            data: average(grapghData.data)
+              .filter((item) => item.quality === "Giresun")
               .map(function (item) {
                 return [
-                  new Date(item.attributes.date).getTime({
-                    timeZone: "Europe/Istanbul",
-                  }) +
-                    3 * 60 * 60 * 1000,
-                  item.attributes.average,
+                  new Date(new Date().setTime(item.date)).setHours(0, 0, 0) +
+                    24 * 60 * 60 * 1000,
+                  item.average,
                 ]
               }),
           },
@@ -245,13 +273,11 @@ const PriceChart = ({ city, product, type, grapghData }) => {
               valueSuffix: " kg",
               valueDecimals: 2,
             },
-            data: grapghData.data.map(function (item) {
+            data: average(grapghData.data).map(function (item) {
               return [
-                new Date(item.attributes.date).getTime({
-                  timeZone: "Europe/Istanbul",
-                }) +
-                  3 * 60 * 60 * 1000,
-                item.attributes.volume,
+                new Date(new Date().setTime(item.date)).setHours(0, 0, 0) +
+                  24 * 60 * 60 * 1000,
+                item.volume,
               ]
             }),
             yAxis: 1,
