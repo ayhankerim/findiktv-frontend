@@ -66,17 +66,8 @@ const PriceCalculator = ({ product, city, pricetype }) => {
   const userData = useSelector((state) => state.user.userData)
   const [loading, setLoading] = useState(false)
   const { data: session } = useSession()
-  const [clientIP, setClientIP] = useState(null)
   const [isShowing, setIsShowing] = useState(false)
   const [calculationResult, setCalculationResult] = useState(0)
-
-  useEffect(() => {
-    fetch("/api/client")
-      .then((res) => res.json())
-      .then((data) => {
-        setClientIP(data.ip)
-      })
-  }, [])
   return (
     <>
       <div className="flex flex-row items-center justify-between border-b border-secondary/20 relative">
@@ -99,46 +90,56 @@ const PriceCalculator = ({ product, city, pricetype }) => {
           setLoading(true)
           try {
             setErrors({ api: null })
-            await fetchAPI(
-              "/prices",
-              {},
-              {
-                method: "POST",
-                body: JSON.stringify({
-                  data: {
-                    date: Moment(new Date())
-                      .utcOffset(3)
-                      .format("YYYY-MM-DD HH:mm:ss"),
-                    min: Number(values.price.substring(1).replace(",", ".")),
-                    max: Number(values.price.substring(1).replace(",", ".")),
-                    average: Number(
-                      values.price.substring(1).replace(",", ".")
-                    ),
-                    quality: values.productType,
-                    volume: values.volume
-                      ? Number(
-                          parseInt(
-                            values.volume
-                              ? values.volume.replaceAll(".", "").slice(0, -3)
-                              : 0
-                          )
-                        )
-                      : 1,
-                    efficiency: Number(
-                      values.efficiency
-                        ? values.efficiency.replace(",", ".")
-                        : 50
-                    ),
-                    product: product,
-                    approvalStatus: "calculation",
-                    type: "openmarket",
-                    city: city,
-                    user: session ? userData.id : null,
-                    ip: clientIP,
-                  },
-                }),
-              }
-            )
+            await fetch("/api/client")
+              .then((res) => res.json())
+              .then(async (clientIP) => {
+                await fetchAPI(
+                  "/prices",
+                  {},
+                  {
+                    method: "POST",
+                    body: JSON.stringify({
+                      data: {
+                        date: Moment(new Date())
+                          .utcOffset(3)
+                          .format("YYYY-MM-DD HH:mm:ss"),
+                        min: Number(
+                          values.price.substring(1).replace(",", ".")
+                        ),
+                        max: Number(
+                          values.price.substring(1).replace(",", ".")
+                        ),
+                        average: Number(
+                          values.price.substring(1).replace(",", ".")
+                        ),
+                        quality: values.productType,
+                        volume: values.volume
+                          ? Number(
+                              parseInt(
+                                values.volume
+                                  ? values.volume
+                                      .replaceAll(".", "")
+                                      .slice(0, -3)
+                                  : 0
+                              )
+                            )
+                          : 1,
+                        efficiency: Number(
+                          values.efficiency
+                            ? values.efficiency.replace(",", ".")
+                            : 50
+                        ),
+                        product: product,
+                        approvalStatus: "calculation",
+                        type: "openmarket",
+                        city: city,
+                        user: session ? userData.id : null,
+                        ip: clientIP.ip,
+                      },
+                    }),
+                  }
+                )
+              })
             setIsShowing(true)
             setCalculationResult(
               Number(values.price.substring(1).replace(",", ".")) *

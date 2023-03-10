@@ -23,7 +23,7 @@ export default async function handler(req, res) {
       fields: ["email"],
     }).then(async (user) => {
       if (user.length > 0) {
-        fetchAPI(
+        await fetchAPI(
           "/comments",
           {},
           {
@@ -44,7 +44,7 @@ export default async function handler(req, res) {
           }
         )
       } else {
-        fetchAPI(
+        await fetchAPI(
           `/auth/local/register`,
           {},
           {
@@ -62,7 +62,7 @@ export default async function handler(req, res) {
             }),
           }
         ).then(async (data) => {
-          fetchAPI(
+          await fetchAPI(
             "/comments",
             {},
             {
@@ -70,7 +70,7 @@ export default async function handler(req, res) {
               body: JSON.stringify({
                 data: {
                   article: null,
-                  product: process.env.COMMENT_PRODUCT || 1,
+                  product: process.env.COMMENT_PRODUCT || 2,
                   city: null,
                   threadOf: null,
                   reply_to: null,

@@ -71,17 +71,9 @@ const AddPrice = ({ product, cities, cityData }) => {
   const userData = useSelector((state) => state.user.userData)
   const [loading, setLoading] = useState(false)
   const { data: session } = useSession()
-  const [clientIP, setClientIP] = useState(null)
   const [isShowing, setIsShowing] = useState(false)
   const [detailShowing, SetDetailShowing] = useState(false)
 
-  useEffect(() => {
-    fetch("/api/client")
-      .then((res) => res.json())
-      .then((data) => {
-        setClientIP(data.ip)
-      })
-  }, [])
   //console.log("cityData", cityData)
   return (
     <>
@@ -106,62 +98,72 @@ const AddPrice = ({ product, cities, cityData }) => {
           setLoading(true)
           try {
             setErrors({ api: null })
-            await fetchAPI(
-              "/prices",
-              {},
-              {
-                method: "POST",
-                body: JSON.stringify({
-                  data: {
-                    date: Moment(values.date)
-                      .utcOffset(3)
-                      .set("hour", Moment().hour())
-                      .set("minute", Moment().minutes())
-                      .set("second", Moment().seconds())
-                      .format("YYYY-MM-DD HH:mm:ss"),
-                    article: null,
-                    min: Number(values.price.substring(1).replace(",", ".")),
-                    max: Number(values.price.substring(1).replace(",", ".")),
-                    average: Number(
-                      values.price.substring(1).replace(",", ".")
-                    ),
-                    quality: values.productType,
-                    volume: values.volume
-                      ? Number(
-                          parseInt(
-                            values.volume
-                              ? values.volume.replaceAll(".", "").slice(0, -3)
-                              : 0
-                          )
-                        )
-                      : 1,
-                    efficiency: Number(
-                      values.efficiency
-                        ? values.efficiency.toString().replace(",", ".")
-                        : 50
-                    ),
-                    product: product,
-                    approvalStatus: "waiting",
-                    type: "openmarket",
-                    city: values.city,
-                    user: session ? userData.id : null,
-                    ip: clientIP,
+            await fetch("/api/client")
+              .then((res) => res.json())
+              .then((clientIP) => {
+                fetchAPI(
+                  "/prices",
+                  {},
+                  {
+                    method: "POST",
+                    body: JSON.stringify({
+                      data: {
+                        date: Moment(values.date)
+                          .utcOffset(3)
+                          .set("hour", Moment().hour())
+                          .set("minute", Moment().minutes())
+                          .set("second", Moment().seconds())
+                          .format("YYYY-MM-DD HH:mm:ss"),
+                        article: null,
+                        min: Number(
+                          values.price.substring(1).replace(",", ".")
+                        ),
+                        max: Number(
+                          values.price.substring(1).replace(",", ".")
+                        ),
+                        average: Number(
+                          values.price.substring(1).replace(",", ".")
+                        ),
+                        quality: values.productType,
+                        volume: values.volume
+                          ? Number(
+                              parseInt(
+                                values.volume
+                                  ? values.volume
+                                      .replaceAll(".", "")
+                                      .slice(0, -3)
+                                  : 0
+                              )
+                            )
+                          : 1,
+                        efficiency: Number(
+                          values.efficiency
+                            ? values.efficiency.toString().replace(",", ".")
+                            : 50
+                        ),
+                        product: product,
+                        approvalStatus: "waiting",
+                        type: "openmarket",
+                        city: values.city,
+                        user: session ? userData.id : null,
+                        ip: clientIP.ip,
+                      },
+                    }),
+                  }
+                )
+                notify("success", "Fiyat girişiniz alındı, teşekkür ederiz.")
+                resetForm({
+                  values: {
+                    price: "",
+                    date: Moment(new Date()).format("YYYY-MM-DD"),
+                    productType: "",
+                    city: cityData.id,
+                    volume: "",
+                    efficiency: 50,
+                    term: false,
                   },
-                }),
-              }
-            )
-            notify("success", "Fiyat girişiniz alındı, teşekkür ederiz.")
-            resetForm({
-              values: {
-                price: "",
-                date: Moment(new Date()).format("YYYY-MM-DD"),
-                productType: "",
-                city: cityData.id,
-                volume: "",
-                efficiency: 50,
-                term: false,
-              },
-            })
+                })
+              })
           } catch (err) {
             console.error(err)
             setErrors({ api: err.message })

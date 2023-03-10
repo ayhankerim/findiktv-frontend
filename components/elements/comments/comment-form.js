@@ -34,7 +34,6 @@ export default function CommentForm({
 }) {
   const [loading, setLoading] = useState(false)
   const { data: session } = useSession()
-  const [clientIP, setClientIP] = useState(null)
   const [isShowing, setIsShowing] = useState(false)
 
   const loggedInSchema = yup.object().shape({
@@ -148,13 +147,6 @@ export default function CommentForm({
       .bool()
       .oneOf([true], "Yorum yazma kurallarını onaylamanız gereklidir!"),
   })
-  useEffect(() => {
-    fetch("/api/client")
-      .then((res) => res.json())
-      .then((data) => {
-        setClientIP(data.ip)
-      })
-  }, [])
   return (
     <>
       <Toaster position="top-right" reverseOrder={false} />
@@ -171,52 +163,13 @@ export default function CommentForm({
         //validateOnChange={false}
         onSubmit={async (values, { setSubmitting, setErrors, resetForm }) => {
           setLoading(true)
-          if (session) {
-            try {
-              setErrors({ api: null })
-              await fetchAPI(
-                "/comments",
-                {},
-                {
-                  method: "POST",
-                  body: JSON.stringify({
-                    data: {
-                      article: article,
-                      product: product,
-                      city: city,
-                      threadOf: threadOf ? threadOf : null,
-                      reply_to: replyto ? replyto : null,
-                      user: session.id,
-                      content: values.content,
-                      approvalStatus: "approved",
-                      ip: clientIP,
-                    },
-                  }),
-                }
-              )
-              notify("success", "Yorumunuz eklendi.")
-              resetForm({
-                values: {
-                  content: "",
-                },
-              })
-              onNewComment()
-            } catch (err) {
-              console.error(err)
-              setErrors({ api: err.message })
-            }
-          } else {
-            try {
-              setErrors({ api: null })
-              fetchAPI(
-                `/users?filters[email][$eq]=${values.email}&filters[confirmed][$eq]=false&fields[0]=email`,
-                {},
-                {
-                  method: "GET",
-                }
-              ).then(async (user) => {
-                if (user.length > 0) {
-                  fetchAPI(
+          await fetch("/api/client")
+            .then((res) => res.json())
+            .then(async (clientIP) => {
+              if (session) {
+                try {
+                  setErrors({ api: null })
+                  await fetchAPI(
                     "/comments",
                     {},
                     {
@@ -228,69 +181,112 @@ export default function CommentForm({
                           city: city,
                           threadOf: threadOf ? threadOf : null,
                           reply_to: replyto ? replyto : null,
-                          user: user[0].id,
+                          user: session.id,
                           content: values.content,
+                          approvalStatus: "approved",
                           ip: clientIP,
                         },
                       }),
                     }
                   )
-                } else {
+                  notify("success", "Yorumunuz eklendi.")
+                  resetForm({
+                    values: {
+                      content: "",
+                    },
+                  })
+                  onNewComment()
+                } catch (err) {
+                  console.error(err)
+                  setErrors({ api: err.message })
+                }
+              } else {
+                try {
+                  setErrors({ api: null })
                   fetchAPI(
-                    `/auth/local/register`,
+                    `/users?filters[email][$eq]=${values.email}&filters[confirmed][$eq]=false&fields[0]=email`,
                     {},
                     {
-                      method: "POST",
-                      body: JSON.stringify({
-                        username: Math.random().toString(36).slice(5),
-                        email: values.email,
-                        name: values.name,
-                        surname: values.surname,
-                        role: 3,
-                        confirmed: false,
-                        password: values.password
-                          ? values.password
-                          : Math.random().toString(36).slice(2) +
-                            Math.random().toString(36).slice(2),
-                      }),
+                      method: "GET",
                     }
-                  ).then(async (data) => {
-                    fetchAPI(
-                      "/comments",
-                      {},
-                      {
-                        method: "POST",
-                        body: JSON.stringify({
-                          data: {
-                            article: article,
-                            product: product,
-                            city: city,
-                            threadOf: threadOf ? threadOf : null,
-                            reply_to: replyto ? replyto : null,
-                            user: data.user.id,
-                            content: values.content,
-                            ip: clientIP,
-                          },
-                        }),
-                      }
-                    )
+                  ).then(async (user) => {
+                    if (user.length > 0) {
+                      await fetchAPI(
+                        "/comments",
+                        {},
+                        {
+                          method: "POST",
+                          body: JSON.stringify({
+                            data: {
+                              article: article,
+                              product: product,
+                              city: city,
+                              threadOf: threadOf ? threadOf : null,
+                              reply_to: replyto ? replyto : null,
+                              user: user[0].id,
+                              content: values.content,
+                              ip: clientIP.ip,
+                            },
+                          }),
+                        }
+                      )
+                    } else {
+                      fetchAPI(
+                        `/auth/local/register`,
+                        {},
+                        {
+                          method: "POST",
+                          body: JSON.stringify({
+                            username: Math.random().toString(36).slice(5),
+                            email: values.email,
+                            name: values.name,
+                            surname: values.surname,
+                            role: 3,
+                            confirmed: false,
+                            password: values.password
+                              ? values.password
+                              : Math.random().toString(36).slice(2) +
+                                Math.random().toString(36).slice(2),
+                          }),
+                        }
+                      ).then(async (data) => {
+                        fetchAPI(
+                          "/comments",
+                          {},
+                          {
+                            method: "POST",
+                            body: JSON.stringify({
+                              data: {
+                                article: article,
+                                product: product,
+                                city: city,
+                                threadOf: threadOf ? threadOf : null,
+                                reply_to: replyto ? replyto : null,
+                                user: data.user.id,
+                                content: values.content,
+                                ip: clientIP.ip,
+                              },
+                            }),
+                          }
+                        )
+                      })
+                    }
                   })
+                  notify(
+                    "success",
+                    "Yorumunuz eklendi. Moderatörlerin onayının ardından yayına alınacaktır."
+                  )
+                  resetForm({
+                    values: {
+                      content: "",
+                    },
+                  })
+                  onNewComment()
+                } catch (err) {
+                  setErrors({ api: err.message })
                 }
-              })
-              notify(
-                "success",
-                "Yorumunuz eklendi. Moderatörlerin onayının ardından yayına alınacaktır."
-              )
-              resetForm({
-                values: {
-                  content: "",
-                },
-              })
-              onNewComment()
-            } catch (err) {
-              setErrors({ api: err.message })
-            }
-          }
+              }
+            })
 
           setLoading(false)
           setSubmitting(false)
