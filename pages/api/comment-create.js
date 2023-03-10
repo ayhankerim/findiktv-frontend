@@ -10,7 +10,10 @@ export default function handler(req, res) {
   const store = require("data-store")({
     path: process.cwd() + "/.config/config.json",
   })
+  console.log(store.data.comment)
+  console.log(comments.data[store.data.comment].comment_author_email)
   try {
+    console.log(0)
     fetchAPI(
       `/users?filters[email][$eq]=${
         comments.data[store.data.comment].comment_author_email
@@ -21,6 +24,7 @@ export default function handler(req, res) {
       }
     ).then(async (user) => {
       if (user.length > 0) {
+        console.log(1)
         fetchAPI(
           "/comments",
           {},
@@ -41,7 +45,9 @@ export default function handler(req, res) {
             }),
           }
         )
+        console.log(2)
       } else {
+        console.log(3)
         fetchAPI(
           `/auth/local/register`,
           {},
@@ -60,6 +66,7 @@ export default function handler(req, res) {
             }),
           }
         ).then(async (data) => {
+          console.log(4)
           fetchAPI(
             "/comments",
             {},
@@ -81,11 +88,13 @@ export default function handler(req, res) {
             }
           )
         })
+        console.log(5)
       }
     })
+    store.set({ comment: store.data.comment + 1 })
+    res.status(200).json("ok")
   } catch (error) {
-    res.status(200).json(error)
+    console.log(6)
+    res.status(500).json(error)
   }
-  store.set({ comment: store.data.comment + 1 })
-  res.status(200).json("ok")
 }
