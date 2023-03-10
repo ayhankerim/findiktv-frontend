@@ -1,6 +1,6 @@
 import { fetchAPI } from "utils/api"
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
   if (req.query.secret !== process.env.REVALIDATION_SECRET_TOKEN) {
     return res.status(401).json({ message: "Invalid token" })
   }
@@ -10,21 +10,19 @@ export default function handler(req, res) {
   const store = require("data-store")({
     path: process.cwd() + "/.config/config.json",
   })
-  console.log(store.data.comment)
-  console.log(comments.data[store.data.comment].comment_author_email)
   try {
-    console.log(0)
-    fetchAPI(
-      `/users?filters[email][$eq]=${
-        comments.data[store.data.comment].comment_author_email
-      }&filters[confirmed][$eq]=false&fields[0]=email`,
-      {},
-      {
-        method: "GET",
-      }
-    ).then(async (user) => {
+    await fetchAPI("/users", {
+      filters: {
+        email: {
+          $eq: comments.data[store.data.comment].comment_author_email,
+        },
+        confirmed: {
+          $eq: false,
+        },
+      },
+      fields: ["email"],
+    }).then(async (user) => {
       if (user.length > 0) {
-        console.log(1)
         fetchAPI(
           "/comments",
           {},
@@ -45,9 +43,7 @@ export default function handler(req, res) {
             }),
           }
         )
-        console.log(2)
       } else {
-        console.log(3)
         fetchAPI(
           `/auth/local/register`,
           {},
@@ -66,7 +62,6 @@ export default function handler(req, res) {
             }),
           }
         ).then(async (data) => {
-          console.log(4)
           fetchAPI(
             "/comments",
             {},
@@ -88,13 +83,11 @@ export default function handler(req, res) {
             }
           )
         })
-        console.log(5)
       }
     })
     store.set({ comment: store.data.comment + 1 })
     res.status(200).json("ok")
   } catch (error) {
-    console.log(6)
     res.status(500).json(error)
   }
 }
