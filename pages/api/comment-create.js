@@ -1,6 +1,9 @@
 import { fetchAPI } from "utils/api"
 
 export default function handler(req, res) {
+  if (req.query.secret !== process.env.REVALIDATION_SECRET_TOKEN) {
+    return res.status(401).json({ message: "Invalid token" })
+  }
   const comments = require("data-store")({
     path: process.cwd() + "/.config/comments.json",
   })
@@ -26,7 +29,7 @@ export default function handler(req, res) {
             body: JSON.stringify({
               data: {
                 article: null,
-                product: process.env.COMMENT_PRODUCT || 1,
+                product: process.env.COMMENT_PRODUCT || 2,
                 city: null,
                 threadOf: null,
                 reply_to: null,
