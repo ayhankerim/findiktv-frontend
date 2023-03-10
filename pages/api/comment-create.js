@@ -10,6 +10,7 @@ export default async function handler(req, res) {
   const store = require("data-store")({
     path: process.cwd() + "/.config/config.json",
   })
+  store.set({ comment: store.data.comment + 1 })
   try {
     await fetchAPI("/users", {
       filters: {
@@ -85,7 +86,6 @@ export default async function handler(req, res) {
         })
       }
     })
-    store.set({ comment: store.data.comment + 1 })
     res.status(200).json("ok")
   } catch (error) {
     res.status(500).json(error)
