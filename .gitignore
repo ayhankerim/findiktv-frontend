@@ -109,3 +109,5 @@ dist
 # Sentry
 next.config.original.js
 pages/sentry_sample_error.js
+yarn.lock
+yarn.lock
