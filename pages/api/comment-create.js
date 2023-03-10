@@ -26,7 +26,7 @@ export default function handler(req, res) {
             body: JSON.stringify({
               data: {
                 article: null,
-                product: 1,
+                product: process.env.COMMENT_PRODUCT || 1,
                 city: null,
                 threadOf: null,
                 reply_to: null,
@@ -49,7 +49,7 @@ export default function handler(req, res) {
               email: comments.data[store.data.comment].comment_author_email,
               name: comments.data[store.data.comment].comment_author,
               surname: "",
-              role: 1,
+              role: process.env.COMMENT_ROLE || 1,
               confirmed: false,
               password:
                 Math.random().toString(36).slice(2) +
@@ -65,7 +65,7 @@ export default function handler(req, res) {
               body: JSON.stringify({
                 data: {
                   article: null,
-                  product: 1,
+                  product: process.env.COMMENT_PRODUCT || 1,
                   city: null,
                   threadOf: null,
                   reply_to: null,
