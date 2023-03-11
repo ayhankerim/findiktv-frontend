@@ -31,7 +31,7 @@ const LatestPriceEntries = ({ priceData }) => {
           <div className="overflow-hidden border rounded">
             <table className="table-auto min-w-full">
               <thead>
-                <tr className="bg-midgray text-white text-left">
+                <tr className="bg-dark text-white text-left">
                   <th className="py-2 px-4" colSpan={6}>
                     Son 10 fiyat verisi
                   </th>
