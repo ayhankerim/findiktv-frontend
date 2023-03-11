@@ -30,7 +30,9 @@ const LatestArticles = ({
   const { data: latestArticles } = useSWR(
     `${
       process.env.NEXT_PUBLIC_STRAPI_API_URL
-    }/api/articles?populate[0]=image&populate[1]=category&filters[id][$notIn]=${current}${
+    }/api/articles?populate[0]=image&populate[1]=category${
+      current && `&filters[id][$notIn]=${current}`
+    }${
       city ? `&filters[cities][id][$eq]=${city}` : ``
     }&pagination[start]=${offset}&pagination[limit]=${count}&sort[0]=id%3Adesc`,
     fetcher
@@ -86,7 +88,7 @@ const LatestArticles = ({
                   />
                 </div>
                 <div className="relative p-4">
-                  {article.attributes.category.data && (
+                  {article.attributes.category?.data && (
                     <div
                       className="absolute top-[-1rem] text-white right-2 rounded px-1"
                       style={{

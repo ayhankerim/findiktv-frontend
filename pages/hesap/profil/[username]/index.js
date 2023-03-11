@@ -420,24 +420,25 @@ export async function getStaticPaths(context) {
     async (currentUsersPromise, locale) => {
       const currentUsers = await currentUsersPromise
       const localeUsers = await fetchAPI("/users", {
-        fields: ["username"],
+        fields: ["username", "confirmed"],
       })
       return [...currentUsers, ...localeUsers]
     },
     Promise.resolve([])
   )
+  const paths = users
+    .filter((item) => item.confirmed === true)
+    .map((user) => {
+      const { username } = user
+      // Decompose the slug that was saved in Strapi
+      const usernameArray = !username ? false : username
 
-  const paths = users.map((user) => {
-    const { username } = user
-    // Decompose the slug that was saved in Strapi
-    const usernameArray = !username ? false : username
+      return {
+        params: { username: usernameArray },
+      }
+    })
 
-    return {
-      params: { username: usernameArray },
-    }
-  })
-
-  return { paths, fallback: "blocking" }
+  return { paths, fallback: false }
 }
 
 export async function getStaticProps(context) {
