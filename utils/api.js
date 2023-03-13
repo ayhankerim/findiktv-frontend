@@ -1209,7 +1209,7 @@ export async function getUserData({ username }) {
         }
 
         query getUsers($username: String!) {
-          usersPermissionsUsers(filters: (filters: { username: { eq: $username }, confirmed: {eq: true} }) {
+          usersPermissionsUsers(filters: { username: { eq: $username }, confirmed: {eq: true} }) {
             data {
               id
               attributes {
