@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/router"
-import { getSession, useSession } from "next-auth/react"
-import { useSelector } from "react-redux"
+import { getSession } from "next-auth/react"
 import { getUserData, fetchAPI, getGlobalData } from "@/utils/api"
 import Image from "next/image"
 import Layout from "@/components/layout"

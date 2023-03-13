@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from "react"
-import { getSession, useSession } from "next-auth/react"
+import React, { useState, useEffect } from "react"
+import { useSession } from "next-auth/react"
 import { useSelector, useDispatch } from "react-redux"
 import { updateUser } from "@/store/user"
 import axios from "axios"

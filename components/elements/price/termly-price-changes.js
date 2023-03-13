@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from "react"
 import Moment from "moment"
 import "moment/locale/tr"
 

@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react"
+import React from "react"
 import Link from "next/link"
-import { fetchAPI } from "@/utils/api"
 import Moment from "moment"
 import "moment/locale/tr"
 

@@ -1,8 +1,6 @@
 import React from "react"
 import { getGlobalData } from "@/utils/api"
 import Layout from "@/components/layout"
-import ArticleBlock from "@/components/elements/article/articles-block"
-import ArticleSlider from "@/components/elements/article/article-slider"
 import Seo from "@/components/elements/seo"
 import LatestComments from "@/components/elements/comments/latest-comments"
 import ArticleMostVisited from "@/components/elements/article/articles-most-visited"

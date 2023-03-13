@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import Advertisement from "@/components/elements/advertisement"
-import { fetchAPI } from "@/utils/api"
 
 import {
   TbArrowDown,

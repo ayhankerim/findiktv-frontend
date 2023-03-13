@@ -253,7 +253,7 @@ const DynamicProducts = ({
                     ? productContent.featured.data.attributes.formats.large.url
                     : productContent.featured.data.attributes.formats.medium.url
                 }
-                alt={productContent.featured.data.attributes.alternativeText}
+                alt={`${productContent.title} Fiyatları`}
                 className="md:rounded-lg"
                 priority={true}
                 fill
@@ -283,9 +283,10 @@ const DynamicProducts = ({
             </div>
             <LatestArticles
               current={null}
+              product={productContent.id}
               city={null}
               count={3}
-              offset={3}
+              offset={0}
               position="bottom"
               headTitle={
                 productContent.title.toLocaleUpperCase("tr") + " HABERLERİ"

@@ -2,7 +2,7 @@ import React, { Fragment } from "react"
 import Link from "next/link"
 import { Menu, Transition } from "@headlessui/react"
 import { signOut, useSession } from "next-auth/react"
-import { useSelector, useDispatch } from "react-redux"
+import { useSelector } from "react-redux"
 import {
   MdComment,
   MdKeyboardArrowDown,

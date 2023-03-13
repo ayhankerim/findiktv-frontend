@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import useSWR, { useSWRConfig } from "swr"
+import useSWR from "swr"
 import { useSession } from "next-auth/react"
 import { fetchAPI } from "utils/api"
 import { MdOutlineEmojiEmotions } from "react-icons/md"

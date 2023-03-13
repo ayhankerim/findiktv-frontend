@@ -2,11 +2,10 @@ import React, { useEffect } from "react"
 import ErrorPage from "next/error"
 import Image from "next/image"
 import { useRouter } from "next/router"
-import { useSelector, useDispatch } from "react-redux"
+import { useDispatch } from "react-redux"
 import {
   getArticleData,
   getAdsData,
-  //getCommentsData,
   fetchAPI,
   getGlobalData,
 } from "@/utils/api"

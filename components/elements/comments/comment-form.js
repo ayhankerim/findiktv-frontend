@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useRef } from "react"
-import { signOut, useSession } from "next-auth/react"
-import useSWR, { useSWRConfig } from "swr"
+import React, { useState } from "react"
+import { useSession } from "next-auth/react"
 import { fetchAPI } from "utils/api"
 import * as yup from "yup"
 import { Formik, Form, Field } from "formik"

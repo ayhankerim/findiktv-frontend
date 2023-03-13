@@ -1,29 +1,19 @@
 import React, { useEffect } from "react"
 import ErrorPage from "next/error"
-import Image from "next/image"
 import { useRouter } from "next/router"
-import { useSelector, useDispatch } from "react-redux"
+import { useDispatch } from "react-redux"
 import {
   getArticleData,
   getAdsData,
-  //getCommentsData,
   fetchAPI,
   getGlobalData,
 } from "@/utils/api"
 import { updateAds } from "@/store/advertisements"
-import { contentWithAds } from "@/utils/content-with-ads"
 import Seo from "@/components/elements/seo"
 import Breadcrumb from "@/components/elements/breadcrumb"
-import Advertisement from "@/components/elements/advertisement"
-import ArticleDates from "@/components/elements/date"
-import ViewCounter from "@/components/elements/pageviews"
-import ArticleShare from "@/components/elements/share"
-import ArticleReactions from "@/components/elements/reactions"
 import ArticleComments from "@/components/elements/comments/comments"
 import Layout from "@/components/layout"
 import { getLocalizedPaths } from "@/utils/localize"
-import ArticleRelations from "@/components/elements/article/article-relations"
-import LatestArticles from "@/components/elements/latest-articles"
 import ArticleSidebar from "@/components/elements/article/article-sidebar"
 
 // The file is called [[...slug]].js because we're using Next's

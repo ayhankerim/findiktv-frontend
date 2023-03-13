@@ -1,12 +1,11 @@
-import React, { useState, useEffect, useRef } from "react"
+import React, { useState, useEffect } from "react"
 import Image from "next/image"
-import { getSession, useSession } from "next-auth/react"
+import { useSession } from "next-auth/react"
 import { fetchAPI } from "utils/api"
 import axios from "axios"
 import toast, { Toaster } from "react-hot-toast"
 import { useSelector, useDispatch } from "react-redux"
 import { updateUser } from "@/store/user"
-import { BiLoaderCircle } from "react-icons/bi"
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ")

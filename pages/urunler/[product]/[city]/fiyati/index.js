@@ -7,7 +7,7 @@ import {
   fetchAPI,
   getGlobalData,
 } from "@/utils/api"
-import { useSelector, useDispatch } from "react-redux"
+import { useDispatch } from "react-redux"
 import { updateAds } from "@/store/advertisements"
 import { Popover, Transition } from "@headlessui/react"
 import { TbChevronDown } from "react-icons/tb"
@@ -22,7 +22,6 @@ import Image from "next/image"
 import { useRouter } from "next/router"
 import Layout from "@/components/layout"
 import AverageCard from "@/components/elements/price/average-card"
-import CityPriceList from "@/components/elements/price/city-price-list"
 import TermlyPriceChange from "@/components/elements/price/termly-price-changes"
 import LatestArticles from "@/components/elements/latest-articles"
 import ArticleComments from "@/components/elements/comments/comments"
@@ -311,6 +310,7 @@ const DynamicCities = ({
             </div>
             <LatestArticles
               current={null}
+              product={productContent.id}
               city={cityContent.id}
               count={3}
               offset={0}

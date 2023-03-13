@@ -1,9 +1,7 @@
 import { useState, useEffect } from "react"
-import axios from "axios"
 import Image from "next/image"
 import Link from "next/link"
 import { fetchAPI } from "@/utils/api"
-import { categoryColor } from "@/utils/category-color"
 import Advertisement from "@/components/elements/advertisement"
 import Moment from "moment"
 import "moment/locale/tr"
@@ -11,7 +9,6 @@ import { MdOutlineWhatshot } from "react-icons/md"
 
 const ArticleMostVisited = ({ size, slug }) => {
   const [mostVisiteds, setMostVisiteds] = useState([])
-  const [check, setCheck] = useState([])
 
   useEffect(() => {
     fetchAPI("/articles", {
@@ -70,9 +67,7 @@ const ArticleMostVisited = ({ size, slug }) => {
                       article.attributes.image.data.attributes.formats.thumbnail
                         .url
                     }
-                    alt={
-                      article.attributes.image.data.attributes.alternativeText
-                    }
+                    alt={article.attributes.title}
                     className="h-[auto] w-3/12"
                     width={91}
                     height={58}
@@ -81,9 +76,6 @@ const ArticleMostVisited = ({ size, slug }) => {
                     {article.attributes.title}
                   </h3>
                 </div>
-                {/* <div className="flex flex-wrap py-1 h-0 hidden">
-                  <p className="text-xs">{article.attributes.summary}</p>
-                </div> */}
               </Link>
             </div>
           ))}

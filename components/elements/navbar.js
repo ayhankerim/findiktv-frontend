@@ -6,7 +6,6 @@ import { useRouter } from "next/router"
 import { signOut, useSession } from "next-auth/react"
 import { useSelector, useDispatch } from "react-redux"
 import { updateUser } from "@/store/user"
-import { getButtonAppearance } from "utils/button"
 import { mediaPropTypes, linkPropTypes, buttonLinkPropTypes } from "utils/types"
 import {
   MdMenu,
@@ -17,11 +16,8 @@ import {
   MdLibraryBooks,
 } from "react-icons/md"
 import MobileNavMenu from "./mobile-nav-menu"
-import ButtonLink from "./button-link"
 import NextImage from "./image"
-import Image from "next/image"
 import CustomLink from "./custom-link"
-import LocaleSwitch from "../locale-switch"
 import Advertisement from "@/components/elements/advertisement"
 
 function classNames(...classes) {

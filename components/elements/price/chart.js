@@ -7,7 +7,6 @@ import HighchartsMore from "highcharts/highcharts-more"
 import HighchartsAccessibility from "highcharts/modules/accessibility"
 import HighchartsData from "highcharts/modules/data"
 import Advertisement from "@/components/elements/advertisement"
-import { any } from "prop-types"
 
 if (typeof Highcharts === "object") {
   //HighchartsExporting(Highcharts)

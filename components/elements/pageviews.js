@@ -1,4 +1,3 @@
-import { useEffect } from "react"
 import { fetchAPI } from "@/utils/api"
 import useSWR from "swr"
 import { MdOutlineRemoveRedEye } from "react-icons/md"

@@ -3,8 +3,6 @@ import { signOut, useSession } from "next-auth/react"
 import { useSelector } from "react-redux"
 import { mediaPropTypes, linkPropTypes, buttonLinkPropTypes } from "utils/types"
 import { useLockBodyScroll } from "utils/hooks"
-import { getButtonAppearance } from "utils/button"
-import ButtonLink from "./button-link"
 import Link from "next/link"
 import NextImage from "./image"
 import classNames from "classnames"
@@ -17,7 +15,6 @@ import {
   MdForum,
   MdLibraryBooks,
 } from "react-icons/md"
-import { FiYoutube } from "react-icons/fi"
 
 const MobileNavMenu = ({ navbar, closeSelf }) => {
   // Prevent window scroll while mobile nav menu is open

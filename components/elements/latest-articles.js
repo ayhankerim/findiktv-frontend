@@ -1,42 +1,62 @@
-import { useEffect } from "react"
-import axios from "axios"
-import useSWR from "swr"
+import { useEffect, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
+import { fetchAPI } from "@/utils/api"
 import { categoryColor } from "@/utils/category-color"
 import Advertisement from "@/components/elements/advertisement"
 import { MdOutlineArticle } from "react-icons/md"
 import styles from "@/styles/latest-articles.module.scss"
+import { any } from "prop-types"
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ")
 }
-const fetcher = async (url) =>
-  await axios
-    .get(url, {
-      headers: {
-        Authorization: `Bearer ${process.env.NEXT_PUBLIC_SECRET_TOKEN}`,
-      },
-    })
-    .then((res) => res.data)
 const LatestArticles = ({
   current,
+  product,
   city,
   count,
   position,
   headTitle,
   offset = 0,
 }) => {
-  const { data: latestArticles } = useSWR(
-    `${
-      process.env.NEXT_PUBLIC_STRAPI_API_URL
-    }/api/articles?populate[0]=image&populate[1]=category${
-      current && `&filters[id][$notIn]=${current}`
-    }${
-      city ? `&filters[cities][id][$eq]=${city}` : ``
-    }&pagination[start]=${offset}&pagination[limit]=${count}&sort[0]=id%3Adesc`,
-    fetcher
-  )
+  const [latestArticles, setLatestArticles] = useState([])
+
+  useEffect(() => {
+    fetchAPI("/articles", {
+      filters: {
+        id: {
+          $ne: current ? current : null,
+        },
+        products: {
+          id: {
+            $eq: product ? product : any,
+          },
+        },
+        cities: {
+          id: {
+            $in: city ? city : any,
+          },
+        },
+      },
+      fields: ["title", "slug"],
+      populate: {
+        image: {
+          populate: ["*"],
+        },
+        category: {
+          populate: ["slug", "title"],
+        },
+      },
+      sort: ["id:desc"],
+      pagination: {
+        start: offset,
+        limit: count,
+      },
+    }).then((data) => {
+      setLatestArticles(data.data)
+    })
+  }, [city, count, current, offset, product])
   return (
     <>
       <div className="flex flex-row items-center justify-between border-b border-secondary/20 relative">
@@ -48,7 +68,7 @@ const LatestArticles = ({
       </div>
       <div className="flex flex-wrap -mx-2 my-2">
         {latestArticles &&
-          latestArticles.data.map((article, i, latestArticles) => (
+          latestArticles.map((article, i, latestArticles) => (
             <div
               className={classNames(
                 position === "bottom"
@@ -76,9 +96,7 @@ const LatestArticles = ({
                       article.attributes.image.data.attributes.formats.thumbnail
                         .url
                     }
-                    alt={
-                      article.attributes.image.data.attributes.alternativeText
-                    }
+                    alt={article.attributes.title}
                     className="absolute inset-0 h-full w-full object-cover"
                     priority={true}
                     fill
@@ -88,7 +106,7 @@ const LatestArticles = ({
                   />
                 </div>
                 <div className="relative p-4">
-                  {article.attributes.category?.data && (
+                  {article.attributes.category.data && (
                     <div
                       className="absolute top-[-1rem] text-white right-2 rounded px-1"
                       style={{

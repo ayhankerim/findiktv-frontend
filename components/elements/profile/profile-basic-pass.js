@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from "react"
+import React, { useState } from "react"
 import Router from "next/router"
-import { getSession, useSession } from "next-auth/react"
+import { useSession } from "next-auth/react"
 import { useSelector, useDispatch } from "react-redux"
 import { updateUser } from "@/store/user"
 import axios from "axios"

@@ -2,16 +2,9 @@ import React from "react"
 import { useRouter } from "next/router"
 import ErrorPage from "next/error"
 import useSWRInfinite from "swr/infinite"
-import {
-  getCityData,
-  getAdsData,
-  //getCommentsData,
-  fetchAPI,
-  getGlobalData,
-} from "@/utils/api"
+import { getCityData, getAdsData, fetchAPI, getGlobalData } from "@/utils/api"
 import Layout from "@/components/layout"
 import ArticleBlock from "@/components/elements/article/articles-block"
-import ArticleSlider from "@/components/elements/article/article-slider"
 import Seo from "@/components/elements/seo"
 import LatestComments from "@/components/elements/comments/latest-comments"
 import ArticleMostVisited from "@/components/elements/article/articles-most-visited"
