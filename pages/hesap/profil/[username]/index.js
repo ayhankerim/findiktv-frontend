@@ -503,7 +503,7 @@ export async function getStaticProps(context) {
         ...userContext,
       },
     },
-    revalidate: 600,
+    revalidate: 15,
   }
 }
 

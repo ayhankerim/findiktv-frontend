@@ -209,7 +209,7 @@ const Comments = ({ article, slug }) => {
             <Image
               width="72"
               height="72"
-              src="https://www.findiktv.com/cdn-cgi/imagedelivery/A_vnS-Tfmrf1TT32XC1EgA/8980237d-c760-48b3-c06d-baec1e74e700/public"
+              src={`${process.env.NEXT_PUBLIC_CLOUD_IMAGE_CORE_URL}8980237d-c760-48b3-c06d-baec1e74e700/public`}
               alt="İlk Yorumu sen yaz"
             />
             <h4 className="text-base">İlk yorumu siz yapın!</h4>

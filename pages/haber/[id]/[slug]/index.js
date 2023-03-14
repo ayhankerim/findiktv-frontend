@@ -40,7 +40,9 @@ const DynamicArticle = ({
   }, [advertisement, dispatch])
   // Check if the required data was provided
   if (!router.isFallback && !articleContent.content?.length) {
-    return <ErrorPage statusCode={404} />
+    return {
+      notFound: true,
+    }
   }
 
   // Loading screen (only possible in preview mode)
@@ -202,7 +204,9 @@ export async function getStaticProps(context) {
 
   if (articleData == null) {
     // Giving the page no props will trigger a 404 page
-    return { props: {} }
+    return {
+      notFound: true,
+    }
   }
 
   // We have the required page data, pass it to the page component
@@ -213,13 +217,21 @@ export async function getStaticProps(context) {
     publishedAt,
     updatedAt,
     image,
+    homepage_image,
     category,
     cities,
     tags,
-    metadata,
+    //metadata,
     localizations,
     slug,
   } = articleData.attributes
+
+  const metadata = {
+    metaTitle: title,
+    metaDescription: summary,
+    shareImage: homepage_image,
+    twitterUsername: "FindikTvcom",
+  }
 
   const articleContent = {
     id: params.id,
@@ -243,7 +255,6 @@ export async function getStaticProps(context) {
   }
 
   const localizedPaths = getLocalizedPaths(articleContext)
-
   return {
     props: {
       preview,

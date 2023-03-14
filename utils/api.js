@@ -320,14 +320,6 @@ export async function getArticleData({ slug, locale, id, preview }) {
                 content
                 publishedAt
                 updatedAt
-                metadata {
-                  metaTitle
-                  metaDescription
-                  shareImage {
-                    ...FileParts
-                  }
-                  twitterUsername
-                }
                 image {
                   ...FileParts
                 }

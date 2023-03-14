@@ -19,6 +19,18 @@ const ArticleSection = ({ data, position = "bottom" }) => {
   useEffect(() => {
     fetchAPI("/articles", {
       filters: {
+        $or: [
+          {
+            ignoreHome: {
+              $eq: false,
+            },
+          },
+          {
+            ignoreHome: {
+              $null: true,
+            },
+          },
+        ],
         featured: {
           $eq: data.FeaturedOnly,
         },
@@ -48,20 +60,14 @@ const ArticleSection = ({ data, position = "bottom" }) => {
           <h4 className="font-semibold text-base text-midgray">
             {data.SectionTitle}
           </h4>
-          <MdOutlineWatchLater className="text-xl" />
-          <span className="absolute h-[5px] w-2/5 left-0 bottom-[-5px] bg-secondary/60"></span>
+          <span className="absolute h-[5px] w-2/5 max-w-[180px] left-0 bottom-[-5px] bg-secondary/60"></span>
         </div>
       )}
-      <div className="flex flex-col md:flex-row w-full gap-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 xl:grid-cols-3 w-full gap-2">
         {mostVisiteds &&
           mostVisiteds.map((article, i) => (
             <div
-              className={classNames(
-                position === "bottom"
-                  ? "sm:w-1/2 md:w-1/2 xl:w-1/3"
-                  : "sm:w-1/2 md:w-full xl:w-full",
-                "w-full pb-2"
-              )}
+              className={classNames(position === "bottom" ? "" : "", "w-full")}
               key={article.id}
             >
               <Link
@@ -77,9 +83,7 @@ const ArticleSection = ({ data, position = "bottom" }) => {
                       article.attributes.image.data.attributes.formats.thumbnail
                         .url
                     }
-                    alt={
-                      article.attributes.image.data.attributes.alternativeText
-                    }
+                    alt={article.attributes.title}
                     className="absolute inset-0 h-full w-full object-cover"
                     priority={false}
                     fill

@@ -19,9 +19,11 @@ const NextImage = ({ media, alt, ...props }) => {
           .replace("/Development", "")
           .replace("/public", "")
           .replace("/Test", "")
-        return `https://www.findiktv.com/cdn-cgi/imagedelivery/${cloudflareSrc}/format=auto${
-          quality ? `,quality=${quality}` : ""
-        }${width ? `,width=${width}` : ""}`
+        return `${
+          process.env.NEXT_PUBLIC_CLOUD_IMAGE_CORE_URL
+        }${cloudflareSrc}/format=auto${quality ? `,quality=${quality}` : ""}${
+          width ? `,width=${width}` : ""
+        }`
         break
       default:
         return getStrapiMedia(src)

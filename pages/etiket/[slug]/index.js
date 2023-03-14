@@ -67,7 +67,9 @@ const DynamicTags = ({
   const router = useRouter()
   // Check if the required data was provided
   if (!router.isFallback && !tagContent) {
-    return <ErrorPage statusCode={404} />
+    return {
+      notFound: true,
+    }
   }
 
   // Loading screen (only possible in preview mode)
@@ -188,7 +190,9 @@ export async function getStaticProps(context) {
 
   if (tagData == null) {
     // Giving the page no props will trigger a 404 page
-    return { props: {} }
+    return {
+      notFound: true,
+    }
   }
 
   // We have the required page data, pass it to the page component

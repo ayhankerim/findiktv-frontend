@@ -115,12 +115,14 @@ const nextConfig = {
     locales: ["tr"],
     defaultLocale: "tr",
   },
-
   images: {
     formats: ["image/avif", "image/webp"],
     domains: ["imagedelivery.net"],
     loader: "custom",
     loaderFile: "./utils/imageLoader.js",
+  },
+  api: {
+    externalResolver: true,
   },
   swcMinify: true,
   productionBrowserSourceMaps: true,

@@ -107,13 +107,13 @@ const SliderWithSide = ({ data, position = "sidebar" }) => {
   const settings = {
     customPaging: function (i) {
       return (
-        <button className="block w-full text-center border px-2 sm:px-3 md:px-3 lg:px-4 bg-secondary/10 font-bold">
+        <button className="block w-full text-center border px-[4px] sm:px-[8px] md:px-[5px] lg:px-[10px] xl:px-3 bg-secondary/10 font-bold">
           {i + 1}
         </button>
       )
     },
     dots: true,
-    dotsClass: "slick-dots relative !flex justify-between z-20 ",
+    dotsClass: "slick-dots relative !flex justify-between z-20 overflow-x-auto",
     speed: 500,
     nextArrow: <SampleNextArrow />,
     prevArrow: <SamplePrevArrow />,
@@ -154,8 +154,11 @@ const SliderWithSide = ({ data, position = "sidebar" }) => {
                 href={`/haber/${article.id}/${article.attributes.slug}`}
                 title={article.attributes.title}
               >
-                <NextImage
-                  media={article.attributes.homepage_image}
+                <Image
+                  src={
+                    article.attributes.homepage_image.data.attributes.formats
+                      .medium.url
+                  }
                   alt={article.attributes.title}
                   className="p-0"
                   width="821"
@@ -192,9 +195,7 @@ const SliderWithSide = ({ data, position = "sidebar" }) => {
                       article.attributes.image.data.attributes.formats.thumbnail
                         .url
                     }
-                    alt={
-                      article.attributes.image.data.attributes.alternativeText
-                    }
+                    alt={article.attributes.title}
                     className="absolute inset-0 h-full w-full object-cover"
                     priority={false}
                     fill

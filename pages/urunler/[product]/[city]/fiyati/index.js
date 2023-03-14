@@ -120,7 +120,9 @@ const DynamicCities = ({
   // Check if the required data was provided
 
   if (!router.isFallback && !cityContent.content?.length) {
-    return <ErrorPage statusCode={404} />
+    return {
+      notFound: true,
+    }
   }
 
   // Loading screen (only possible in preview mode)
@@ -395,7 +397,9 @@ export async function getStaticProps(context) {
 
   if (cityData == null) {
     // Giving the page no props will trigger a 404 page
-    return { props: {} }
+    return {
+      notFound: true,
+    }
   }
   const productAllCityData = await getProductAllCitiesData({
     product: params.product,

@@ -1,12 +1,10 @@
 import React, { useEffect } from "react"
 import ErrorPage from "next/error"
 import { getPageData, fetchAPI, getAdsData, getGlobalData } from "utils/api"
-import { getSession } from "next-auth/react"
 import Sections from "@/components/sections"
 import Seo from "@/components/elements/seo"
 import { useRouter } from "next/router"
 import { useSelector, useDispatch } from "react-redux"
-import Advertisement from "@/components/elements/advertisement"
 import { updateAds } from "@/store/advertisements"
 import Layout from "@/components/layout"
 import { getLocalizedPaths } from "utils/localize"
@@ -32,7 +30,9 @@ const DynamicPage = ({
 
   // Check if the required data was provided
   if (!router.isFallback && !sections?.length) {
-    return <ErrorPage statusCode={404} />
+    return {
+      notFound: true,
+    }
   }
 
   // Loading screen (only possible in preview mode)
@@ -102,7 +102,10 @@ export async function getStaticProps(context) {
 
   if (pageData == null) {
     // Giving the page no props will trigger a 404 page
-    return { props: {} }
+    //return { props: {} }
+    return {
+      notFound: true,
+    }
   }
 
   // We have the required page data, pass it to the page component

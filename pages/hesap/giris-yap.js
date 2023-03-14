@@ -65,7 +65,7 @@ export default function SignIn({ global }) {
         <div className="flex justify-center w-full">
           <div className="lg:w-5/12 xl:w-4/12 p-12 xl:p-20 fixed left-0 top-0 h-screen overflow-y-hidden hidden lg:flex flex-col">
             <Image
-              src="https://www.findiktv.com/cdn-cgi/imagedelivery/A_vnS-Tfmrf1TT32XC1EgA/9db77d3a-1cdb-4bc5-c236-20f990316500/format=auto,height=1000"
+              src={`${process.env.NEXT_PUBLIC_CLOUD_IMAGE_CORE_URL}9db77d3a-1cdb-4bc5-c236-20f990316500/format=auto,height=1000`}
               alt="Üretici heesabı"
               className="absolute inset-0 h-full w-full object-cover"
               priority={true}
@@ -89,7 +89,7 @@ export default function SignIn({ global }) {
                 <div className="mt-10 lg:mt-5 mb-6 flex flex-col align-center">
                   <Link href={"/"}>
                     <Image
-                      src="https://www.findiktv.com/cdn-cgi/imagedelivery/A_vnS-Tfmrf1TT32XC1EgA/84789d40-699b-40da-9930-3d2b9c9cb300/format=auto,w=250,q=100"
+                      src={`${process.env.NEXT_PUBLIC_CLOUD_IMAGE_CORE_URL}84789d40-699b-40da-9930-3d2b9c9cb300/format=auto,w=250,q=100`}
                       alt="FINDIK TV"
                       width={200}
                       height={48}
