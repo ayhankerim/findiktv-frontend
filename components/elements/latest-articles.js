@@ -23,10 +23,19 @@ const LatestArticles = ({
   const [latestArticles, setLatestArticles] = useState([])
 
   useEffect(() => {
-    let currentVal = current ? current : null
-    let productVal = product ? product : any
-    let cityVal = city ? city : any
     fetchAPI("/articles", {
+      filters: {
+        products: {
+          id: {
+            $eq: product ? product : any,
+          },
+        },
+        cities: {
+          id: {
+            $in: city ? city : any,
+          },
+        },
+      },
       fields: ["title", "slug"],
       populate: {
         image: {
