@@ -27,21 +27,6 @@ const LatestArticles = ({
     let productVal = product ? product : any
     let cityVal = city ? city : any
     fetchAPI("/articles", {
-      filters: {
-        id: {
-          $ne: currentVal,
-        },
-        products: {
-          id: {
-            $eq: productVal,
-          },
-        },
-        cities: {
-          id: {
-            $in: cityVal,
-          },
-        },
-      },
       fields: ["title", "slug"],
       populate: {
         image: {
