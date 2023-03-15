@@ -25,15 +25,8 @@ const LatestArticles = ({
   useEffect(() => {
     fetchAPI("/articles", {
       filters: {
-        products: {
-          id: {
-            $eq: product ? product : any,
-          },
-        },
-        cities: {
-          id: {
-            $in: city ? city : any,
-          },
+        id: {
+          $ne: current ? current : null,
         },
       },
       fields: ["title", "slug"],
