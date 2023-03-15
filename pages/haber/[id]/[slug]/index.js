@@ -107,7 +107,7 @@ const DynamicArticle = ({
                     ? articleContent.image.data.attributes.formats.large.url
                     : articleContent.image.data.attributes.formats.medium.url
                 }
-                alt={articleContent.image.data.attributes.alternativeText}
+                alt={articleContent.title}
                 className="sm:rounded-lg"
                 priority={true}
                 fill
@@ -140,6 +140,8 @@ const DynamicArticle = ({
               current={articleContent.id}
               count={3}
               position="bottom"
+              product={null}
+              city={null}
             />
             <ArticleReactions article={articleContent.id} />
             <ArticleComments

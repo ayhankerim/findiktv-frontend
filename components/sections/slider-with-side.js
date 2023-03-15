@@ -163,7 +163,8 @@ const SliderWithSide = ({ data, position = "sidebar" }) => {
                   className="p-0"
                   width="821"
                   height="550"
-                  priority={i === 0 ? true : false}
+                  //priority={i === 0 ? true : false}
+                  priority={true}
                 />
               </Link>
             </article>

@@ -1,7 +1,7 @@
 import LatestArticles from "@/components/elements/latest-articles"
 import Advertisement from "@/components/elements/advertisement"
 
-const ArticleSidebar = ({ articleId, advertisement }) => {
+const ArticleSidebar = ({ articleId }) => {
   return (
     <aside className="sticky top-2 flex-none w-full md:w-[160px] lg:w-[336px]">
       <Advertisement position="sidebar-top-desktop" />
@@ -10,6 +10,8 @@ const ArticleSidebar = ({ articleId, advertisement }) => {
         count={6}
         offset={3}
         position="sidebar"
+        product={null}
+        city={null}
       />
       <Advertisement position="sidebar-bottom-desktop" />
     </aside>
