@@ -17,6 +17,7 @@ import {
 } from "react-icons/md"
 import MobileNavMenu from "./mobile-nav-menu"
 import NextImage from "./image"
+import Image from "next/image"
 import CustomLink from "./custom-link"
 import Advertisement from "@/components/elements/advertisement"
 
@@ -66,8 +67,13 @@ const Navbar = ({ navbar, pageContext }) => {
         <div className="container flex flex-row items-center justify-between gap-1 lg:gap-2 py-2 bg-white">
           {/* Content aligned to the left */}
           <div className="flex w-5/12 md:w-4/12 lg:w-3/12 xl:w-2/12">
-            <Link href="/" className="" passHref>
-              <NextImage width={205} height={50} media={navbar.logo} />
+            <Link title="Ana Sayfa" href="/" className="" passHref>
+              <Image
+                width={205}
+                height={50}
+                alt="FINDIK TV"
+                src={navbar.logo.data.attributes.formats.small.url}
+              />
             </Link>
           </div>
           <div className="hidden lg:flex lg:w-6/12">

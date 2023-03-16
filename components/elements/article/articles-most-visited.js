@@ -41,7 +41,7 @@ const ArticleMostVisited = ({ size, slug }) => {
   return (
     <>
       <div className="flex flex-row items-center justify-between border-b border-danger/40 relative">
-        <h4 className="font-semibold text-base text-midgray">ÖNE ÇIKANLAR</h4>
+        <h3 className="font-semibold text-base text-midgray">ÖNE ÇIKANLAR</h3>
         <MdOutlineWhatshot className="text-xl text-danger" />
         <span className="absolute h-[5px] w-2/5 left-0 bottom-[-5px] bg-danger/80"></span>
       </div>

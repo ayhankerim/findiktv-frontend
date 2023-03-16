@@ -69,9 +69,9 @@ const PriceCalculator = ({ product, city, pricetype }) => {
   return (
     <>
       <div className="flex flex-row items-center justify-between border-b border-secondary/20 relative">
-        <h4 className="font-semibold text-base text-midgray">
+        <h3 className="font-semibold text-base text-midgray">
           FİYAT HESAPLAMA
-        </h4>
+        </h3>
         <AiOutlineCalculator className="text-lg text-midgray" />
         <span className="absolute h-[5px] w-2/5 max-w-[180px] left-0 bottom-[-5px] bg-secondary/60"></span>
       </div>
@@ -226,6 +226,7 @@ const PriceCalculator = ({ product, city, pricetype }) => {
                         </label>
                         <Field
                           as="select"
+                          id="productType"
                           name="productType"
                           onChange={(e) => {
                             fetchAPI("/prices", {
@@ -301,6 +302,7 @@ const PriceCalculator = ({ product, city, pricetype }) => {
                           prefix={"₺"}
                           allowNegative={false}
                           decimalScale={2}
+                          id="price"
                           name="price"
                           className={classNames(
                             errors.price && touched.price
@@ -332,6 +334,7 @@ const PriceCalculator = ({ product, city, pricetype }) => {
                           suffix={" kg"}
                           allowNegative={false}
                           decimalScale={0}
+                          id="volume"
                           name="volume"
                           //onValueChange={(value) => console.log(value.floatValue)}
                           className={classNames(
@@ -362,6 +365,7 @@ const PriceCalculator = ({ product, city, pricetype }) => {
                           decimalSeparator=","
                           allowNegative={false}
                           decimalScale={2}
+                          id="efficiency"
                           name="efficiency"
                           className={classNames(
                             errors.efficiency && touched.efficiency

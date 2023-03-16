@@ -113,9 +113,9 @@ const Reactions = ({ article }) => {
   return (
     <section className="reactionSection mt-2">
       <div className="flex flex-row items-center justify-between border-b border-midgray">
-        <h4 className="font-semibold text-base text-midgray">
+        <h3 className="font-semibold text-base text-midgray">
           BU İÇERİĞE EMOJİYLE TEPKİ VER!
-        </h4>
+        </h3>
         <MdOutlineEmojiEmotions className="text-lg text-midgray" />
       </div>
       <div className="grid grid-cols-7 sm:grid-cols-8 md:grid-cols-9 lg:grid-cols-10 xl:grid-cols-11 xxl:grid-cols-12 gap-1 text-xs mt-1 mb-4">

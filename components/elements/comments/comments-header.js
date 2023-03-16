@@ -18,9 +18,9 @@ const CommentsHeader = () => {
   const userData = useSelector((state) => state.user.userData)
   return (
     <div className="flex flex-col md:flex-row items-center justify-between border-b border-midgray">
-      <h4 className="font-semibold text-base text-midgray">
+      <h3 className="font-semibold text-base text-midgray">
         YORUM YAZIN! {session ? "" : "(Üye olmadan da yorum yazabilirsiniz)"}
-      </h4>
+      </h3>
       <div className="flex gap-2">
         {session ? (
           <Menu as="div" className="relative ml-3">

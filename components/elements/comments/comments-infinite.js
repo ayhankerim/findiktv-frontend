@@ -177,7 +177,7 @@ const Comments = ({ article, slug }) => {
         countedComment > 0 ? (
           <div className="flex flex-col gap-2 mt-4">
             <div className="flex justify-between items-center border-b border-midgray">
-              <h4 className="font-semibold text-base text-midgray">Yorumlar</h4>
+              <h3 className="font-semibold text-base text-midgray">Yorumlar</h3>
               <div className="flex">
                 <div className="font-semibold text-sm text-midgray">
                   {countedComment} yorum
@@ -212,18 +212,18 @@ const Comments = ({ article, slug }) => {
               src={`${process.env.NEXT_PUBLIC_CLOUD_IMAGE_CORE_URL}8980237d-c760-48b3-c06d-baec1e74e700/public`}
               alt="İlk Yorumu sen yaz"
             />
-            <h4 className="text-base">İlk yorumu siz yapın!</h4>
+            <h3 className="text-base">İlk yorumu siz yapın!</h3>
           </div>
         )
       ) : error ? (
         <div className="flex flex-col items-center gap-2 mt-4 text-center">
           <MdOutlineReportProblem className="text-xxl text-danger" />
-          <h4>Yorumlar gertirilirken bir sorunla karşılaşıldı!</h4>
+          <h3>Yorumlar gertirilirken bir sorunla karşılaşıldı!</h3>
         </div>
       ) : (
         <div className="flex flex-col items-center gap-2 mt-4 text-center">
           <TbLoader className="animate-spin text-xxl text-warning" />
-          <h4>Yorumlar getiriliyor, lütfen bekleyiniz...</h4>
+          <h3>Yorumlar getiriliyor, lütfen bekleyiniz...</h3>
         </div>
       )}
     </section>

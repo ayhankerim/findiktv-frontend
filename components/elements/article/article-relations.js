@@ -8,10 +8,10 @@ const ArticleRelations = ({ cities, tags, title, slug }) => {
       <div className="flex flex-col sm:flex-row sm:items-center flex-col-reverse justify-between gap-4">
         {cities.data.length > 0 && (
           <div className="flex items-center gap-4">
-            <h4 className="flex items-center font-semibold text-base text-midgray">
+            <h3 className="flex items-center font-semibold text-base text-midgray">
               <MdOutlineLocationOn className="text-sm inline-block mr-2" />{" "}
               ŞEHİRLER
-            </h4>
+            </h3>
             <ul className="flex flex-wrap my-2 gap-2">
               {cities.data.map((city) => (
                 <li key={city.id}>
@@ -31,10 +31,10 @@ const ArticleRelations = ({ cities, tags, title, slug }) => {
       </div>
       {tags.data.length > 0 && (
         <div className="flex flex-col my-4">
-          <h4 className="flex items-center font-semibold text-base text-midgray">
+          <h3 className="flex items-center font-semibold text-base text-midgray">
             <MdOutlineTag className="text-sm inline-block mr-2" /> İLİŞKİLİ
             İÇERİKLER
-          </h4>
+          </h3>
           <ul className="flex flex-wrap my-2 gap-2">
             {tags.data.map((tag) => (
               <li key={tag.id}>

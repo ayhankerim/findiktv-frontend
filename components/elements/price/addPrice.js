@@ -78,7 +78,7 @@ const AddPrice = ({ product, cities, cityData }) => {
   return (
     <>
       <div className="flex flex-row items-center justify-between border-b border-secondary/20 relative">
-        <h4 className="font-semibold text-base text-midgray">FİYAT GİR</h4>
+        <h2 className="font-semibold text-base text-midgray">FİYAT GİR</h2>
         <MdAddChart className="text-lg text-midgray" />
         <span className="absolute h-[5px] w-2/5 max-w-[180px] left-0 bottom-[-5px] bg-secondary/60"></span>
       </div>
