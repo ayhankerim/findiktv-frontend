@@ -253,7 +253,7 @@ const DynamicCities = ({
                   product={productContext.slug}
                   priceData={priceData}
                 />
-                <div className="w-full h-[300px] lg:h-[120px] -mx-4 sm:mx-0">
+                <div className="w-full h-[300px] lg:h-[120px] -mx-2 sm:mx-0">
                   <Advertisement position="price-page-middle-3" />
                 </div>
                 <LatestPriceEntries

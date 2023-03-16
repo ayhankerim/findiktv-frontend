@@ -86,7 +86,7 @@ const DynamicProducts = ({
       sort: ["date:desc"],
       pagination: {
         start: 0,
-        limit: 100,
+        limit: 1000,
       },
     }).then((data) => {
       const citydata =
@@ -212,7 +212,7 @@ const DynamicProducts = ({
                   product={productContext.slug}
                   priceData={priceData}
                 />
-                <div className="w-full h-[300px] lg:h-[120px] -mx-4 sm:mx-0">
+                <div className="w-full h-[300px] lg:h-[120px] -mx-2 sm:mx-0">
                   <Advertisement position="price-page-middle-3" />
                 </div>
                 <CityPriceList

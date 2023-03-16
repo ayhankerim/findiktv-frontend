@@ -206,7 +206,7 @@ const AverageCard = ({ cardData }) => {
           </div>
         ))}
       </div>
-      <div className="w-full h-[300px] lg:h-[120px] -mx-4 sm:mx-0">
+      <div className="w-full h-[300px] lg:h-[120px] -mx-2 sm:mx-0">
         <Advertisement position="header-top-desktop" adformat="horizontal" />
       </div>
     </>

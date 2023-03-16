@@ -201,7 +201,7 @@ const LatestComments = ({ size, position, offset = 0 }) => {
               </article>
             </div>
           ))}
-        <div className="w-full md:w-1/2 lg:w-full min-h-[300px] -mx-4 sm:mx-0 md:mx-0">
+        <div className="w-full md:w-1/2 lg:w-full min-h-[300px] -mx-2 sm:mx-0 md:mx-0">
           <Advertisement
             position={
               position === "bottom"

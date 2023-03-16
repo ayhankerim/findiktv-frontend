@@ -127,7 +127,7 @@ const DynamicArticle = ({
               )}
               // preview={preview}
             />
-            <div className="w-full h-[300px] lg:h-[120px] -mx-4 sm:mx-0">
+            <div className="w-full h-[300px] lg:h-[120px] -mx-2 sm:mx-0">
               <Advertisement position="article-bottom-desktop" />
             </div>
             <ArticleRelations

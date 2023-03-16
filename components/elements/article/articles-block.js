@@ -30,7 +30,7 @@ const ArticleBlock = ({ article, category, index }) => {
               src={
                 article.attributes.image.data.attributes.formats.thumbnail.url
               }
-              alt={article.attributes.image.data.attributes.alternativeText}
+              alt={article.attributes.title}
               className="absolute inset-0 h-full w-full object-cover"
               priority={true}
               fill
