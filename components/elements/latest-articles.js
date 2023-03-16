@@ -28,6 +28,16 @@ const LatestArticles = ({
         id: {
           $ne: current ? current : null,
         },
+        products: {
+          id: {
+            $eq: product ? product : [],
+          },
+        },
+        cities: {
+          id: {
+            $in: city ? city : [],
+          },
+        },
       },
       fields: ["title", "slug"],
       populate: {

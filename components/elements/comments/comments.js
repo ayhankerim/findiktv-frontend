@@ -353,9 +353,9 @@ const Comments = ({ article, product, slug, city }) => {
       {commentArray ? (
         commentArray.meta.pagination.total > 0 ? (
           <div className="flex flex-col gap-2 mt-4">
-            <div className="flex justify-between items-center border-b border-midgray">
+            <div className="flex flex-col md:flex-row justify-between items-center border-b border-midgray">
               <h4 className="font-semibold text-base text-midgray">Yorumlar</h4>
-              <div className="flex">
+              <div className="flex flex-col md:flex-row text-center">
                 {commentArray.meta.pagination.total > 15 && (
                   <div className="flex flex-row gap-2 mr-4 font-light text-sm text-midgray">
                     Son
