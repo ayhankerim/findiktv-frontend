@@ -107,7 +107,7 @@ const SliderWithSide = ({ data, position = "sidebar" }) => {
   const settings = {
     customPaging: function (i) {
       return (
-        <button className="block w-full text-center border px-[4px] sm:px-[8px] md:px-[5px] lg:px-[10px] xl:px-3 bg-secondary/10 font-bold">
+        <button className="block w-full text-center border px-3 sm:px-5 md:px-4 lg:px-6 xl:px-7 xxl:px-8 bg-secondary/10 font-bold">
           {i + 1}
         </button>
       )
@@ -171,14 +171,12 @@ const SliderWithSide = ({ data, position = "sidebar" }) => {
           ))}
         </Slider>
       </div>
-      <div className="flex flex-col w-full md:w-4/12">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 w-full gap-2 md:w-4/12">
         {mostVisiteds &&
           mostVisiteds.map((article, i) => (
             <div
               className={classNames(
-                position === "bottom"
-                  ? "sm:w-1/2 md:w-1/2 xl:w-1/3"
-                  : "sm:w-1/2 md:w-full xl:w-full",
+                position === "bottom" ? "" : "",
                 "w-full pb-2"
               )}
               key={article.id}
@@ -190,7 +188,7 @@ const SliderWithSide = ({ data, position = "sidebar" }) => {
                   `${styles.cCard} block bg-lightgray rounded border border-b-2 overflow-hidden`
                 )}
               >
-                <div className="relative border-b-4 border-primary pb-52 overflow-hidden">
+                <div className="relative border-b-4 border-primary pb-60 sm:pb-48 md:pb-20 lg:pb-36 xl:pb-48 xxl:pb-52 overflow-hidden">
                   <Image
                     src={
                       article.attributes.image.data.attributes.formats.thumbnail

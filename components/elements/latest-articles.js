@@ -23,22 +23,35 @@ const LatestArticles = ({
   const [latestArticles, setLatestArticles] = useState([])
 
   useEffect(() => {
-    fetchAPI("/articles", {
-      filters: {
+    let arrayFiltered = []
+    if (current) {
+      arrayFiltered.push({
         id: {
-          $ne: current ? current : null,
+          $ne: current,
         },
+      })
+    }
+    if (product) {
+      arrayFiltered.push({
         products: {
           id: {
-            $eq: product ? product : [],
+            $eq: product,
           },
         },
+      })
+    }
+    if (city) {
+      arrayFiltered.push({
         cities: {
           id: {
-            $in: city ? city : [],
+            $in: city,
           },
         },
-      },
+      })
+    }
+
+    fetchAPI("/articles", {
+      filters: arrayFiltered,
       fields: ["title", "slug"],
       populate: {
         image: {
