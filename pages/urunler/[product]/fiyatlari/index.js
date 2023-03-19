@@ -297,7 +297,7 @@ const DynamicProducts = ({
             <ArticleComments
               article={null}
               product={productContent.id}
-              slug={`${process.env.NEXT_PUBLIC_SITE_URL}/haber/${productContent.id}/${productContext.slug}`}
+              slug={`${process.env.NEXT_PUBLIC_SITE_URL}/urunler/${productContext.slug}/fiyatlari`}
               infinite={false}
               city={null}
             />

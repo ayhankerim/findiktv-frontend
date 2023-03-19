@@ -306,7 +306,7 @@ const DynamicCities = ({
             <ArticleShare
               position="articleBottom"
               title={`${cityContent.title} Fiyatları`}
-              slug={`${process.env.NEXT_PUBLIC_SITE_URL}/urunler/${productContext.slug}/fiyatlari`}
+              slug={`${process.env.NEXT_PUBLIC_SITE_URL}/urunler/${productContext.slug}/${cityContext.slug}/fiyati`}
             />
             <div className="flex flex-row items-center sm:items-start justify-between mt-4 mb-2">
               <ArticleDates
@@ -329,7 +329,7 @@ const DynamicCities = ({
             <ArticleComments
               article={null}
               product={productContent.id}
-              slug={`${process.env.NEXT_PUBLIC_SITE_URL}/haber/${productContent.id}/${productContext.slug}`}
+              slug={`${process.env.NEXT_PUBLIC_SITE_URL}/urunler/${productContext.slug}/${cityContext.slug}/fiyati`}
               city={cityContent.id}
               infinite={false}
             />
@@ -348,13 +348,25 @@ export async function getStaticPaths(context) {
   const cities = await context.locales.reduce(
     async (currentCitiesPromise, locale) => {
       const currentCities = await currentCitiesPromise
-      const localeCities = await fetchAPI(
-        "/cities?populate[prices][populate][product][populate][0]=slug",
-        {
-          locale,
-          fields: ["slug", "locale"],
-        }
-      )
+      const localeCities = await fetchAPI("/cities", {
+        locale,
+        fields: ["slug", "locale"],
+        populate: {
+          prices: {
+            populate: {
+              product: {
+                populate: ["slug"],
+                fields: ["slug"],
+              },
+            },
+          },
+        },
+        sort: ["id:desc"],
+        pagination: {
+          start: 0,
+          limit: 1,
+        },
+      })
       return [...currentCities, ...localeCities.data]
     },
     Promise.resolve([])
