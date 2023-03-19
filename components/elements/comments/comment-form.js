@@ -183,7 +183,7 @@ export default function CommentForm({
                           user: session.id,
                           content: values.content,
                           approvalStatus: "approved",
-                          ip: clientIP,
+                          ip: clientIP.ip,
                         },
                       }),
                     }

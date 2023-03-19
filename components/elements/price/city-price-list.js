@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useMemo } from "react"
 import Link from "next/link"
 import Moment from "moment"
 import "moment/locale/tr"
@@ -20,58 +20,61 @@ function currencyFormatter(value) {
   }).format(value)
   return amount
 }
-function lastCityPrice(type, priceData, priceType, item) {
-  let theValue = type === 1 ? "-" : 0
-  switch (type) {
-    case 1:
-      theValue = priceData.data.filter(
-        (price) =>
-          price.attributes.city.data.attributes.title === item &&
-          price.attributes.quality === priceType.name
-      )[0] ? (
-        currencyFormatter(
-          priceData.data.filter(
+const CityPriceList = ({ product, priceData, cityList }) => {
+  const lastCityPrice = useMemo(
+    () => (type, priceData, priceType, item) => {
+      let theValue = type === 1 ? "-" : 0
+      switch (type) {
+        case 1:
+          theValue = priceData.data.filter(
             (price) =>
               price.attributes.city.data.attributes.title === item &&
               price.attributes.quality === priceType.name
-          )[0].attributes.average
-        )
-      ) : (
-        <span className="text-midgray">-</span>
-      )
-      break
-    case -1:
-      theValue =
-        priceData.data.filter(
-          (price) =>
-            price.attributes.city.data.attributes.title === item &&
-            price.attributes.quality === priceType.name
-        )[0] &&
-        priceData.data.filter(
-          (price) =>
-            price.attributes.city.data.attributes.title === item &&
-            price.attributes.quality === priceType.name
-        )[1]
-          ? priceData.data.filter(
-              (price) =>
-                price.attributes.city.data.attributes.title === item &&
-                price.attributes.quality === priceType.name
-            )[0].attributes.average -
+          )[0] ? (
+            currencyFormatter(
+              priceData.data.filter(
+                (price) =>
+                  price.attributes.city.data.attributes.title === item &&
+                  price.attributes.quality === priceType.name
+              )[0].attributes.average
+            )
+          ) : (
+            <span className="text-midgray">-</span>
+          )
+          break
+        case -1:
+          theValue =
             priceData.data.filter(
               (price) =>
                 price.attributes.city.data.attributes.title === item &&
                 price.attributes.quality === priceType.name
-            )[1].attributes.average
-          : 0
-      break
+            )[0] &&
+            priceData.data.filter(
+              (price) =>
+                price.attributes.city.data.attributes.title === item &&
+                price.attributes.quality === priceType.name
+            )[1]
+              ? priceData.data.filter(
+                  (price) =>
+                    price.attributes.city.data.attributes.title === item &&
+                    price.attributes.quality === priceType.name
+                )[0].attributes.average -
+                priceData.data.filter(
+                  (price) =>
+                    price.attributes.city.data.attributes.title === item &&
+                    price.attributes.quality === priceType.name
+                )[1].attributes.average
+              : 0
+          break
 
-    default:
-      break
-  }
+        default:
+          break
+      }
 
-  return theValue
-}
-const CityPriceList = ({ product, priceData, cityList }) => {
+      return theValue
+    },
+    []
+  )
   return (
     <div className="flex flex-col">
       <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">

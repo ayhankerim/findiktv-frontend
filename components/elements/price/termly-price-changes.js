@@ -1,3 +1,4 @@
+import React, { useMemo } from "react"
 import Moment from "moment"
 import "moment/locale/tr"
 
@@ -49,126 +50,137 @@ function currencyFormatter(value) {
 }
 
 const TermlyPriceChange = ({ priceData }) => {
-  function CalculateAverage(priceData, selectedDay, name) {
-    let priceSum = 0
-    let totalvolume = 0
-    priceData.data
-      .filter(
-        (item) =>
-          new Date(item.attributes.date).toLocaleDateString() === selectedDay &&
-          item.attributes.quality === name
-      )
-      .map((item) => {
-        priceSum = item.attributes.average * item.attributes.volume + priceSum
-        totalvolume = item.attributes.volume + totalvolume
-      })
-    const averageSum = priceSum / totalvolume
-    return averageSum
-  }
-  function highLowPrice(priceData, selectedDay, name, day, type) {
-    switch (type) {
-      case 0:
-        return priceData.data
-          .filter(
-            (item) =>
-              item.attributes.quality === name &&
-              Moment(item.attributes.date).isAfter(
-                Moment(selectedDay).subtract(day, "days")
-              )
-          )
-          .sort((a, b) => (a.attributes.min > b.attributes.min ? 1 : -1))[0]
-          ?.attributes.max
-        break
-      case 1:
-        return priceData.data
-          .filter(
-            (item) =>
-              item.attributes.quality === name &&
-              Moment(item.attributes.date).isAfter(
-                Moment(selectedDay).subtract(day, "days")
-              )
-          )
-          .sort((a, b) => (a.attributes.max > b.attributes.max ? -1 : 1))[0]
-          ?.attributes.max
-        break
-      default:
-        break
-    }
-  }
-  function priceAverage(name, day, type) {
-    const newestDay = Moment(
-      priceData.data.filter((item) => item.attributes.quality === name)[0]
-        ?.attributes.date
-    ).format("YYYY-MM-DD")
-
-    const selectedDay =
-      day > 0
-        ? new Date(
-            priceData.data.filter(
+  const CalculateAverage = useMemo(
+    () => (priceData, selectedDay, name) => {
+      let priceSum = 0
+      let totalvolume = 0
+      priceData.data
+        .filter(
+          (item) =>
+            new Date(item.attributes.date).toLocaleDateString() ===
+              selectedDay && item.attributes.quality === name
+        )
+        .map((item) => {
+          priceSum = item.attributes.average * item.attributes.volume + priceSum
+          totalvolume = item.attributes.volume + totalvolume
+        })
+      const averageSum = priceSum / totalvolume
+      return averageSum
+    },
+    []
+  )
+  const highLowPrice = useMemo(
+    () => (priceData, selectedDay, name, day, type) => {
+      switch (type) {
+        case 0:
+          return priceData.data
+            .filter(
               (item) =>
                 item.attributes.quality === name &&
-                Moment(item.attributes.date).isBefore(
-                  Moment(newestDay, "YYYY-MM-DD").subtract(day, "days")
+                Moment(item.attributes.date).isAfter(
+                  Moment(selectedDay).subtract(day, "days")
                 )
-            )[0]?.attributes.date || null
-          ).toLocaleDateString()
-        : new Date(
-            priceData.data.filter(
-              (item) => item.attributes.quality === name
-            )[0]?.attributes.date
-          ).toLocaleDateString()
-
-    const comparedDay = new Date(
-      priceData.data.filter(
-        (item) =>
-          item.attributes.quality === name &&
-          Moment(item.attributes.date).isBefore(
-            Moment(selectedDay, "DD.MM.YYYY").subtract(1, "days")
-          )
-      )[0]?.attributes.date || null
-    ).toLocaleDateString()
-
-    switch (type) {
-      case 0:
-        return currencyFormatter(CalculateAverage(priceData, selectedDay, name))
-        break
-      case 1:
-        return !Moment(selectedDay).isBefore(
-          Moment("01.01.1990", "DD.MM.YYYY")
-        ) && !Moment(comparedDay).isBefore(Moment("01.01.1990", "DD.MM.YYYY"))
-          ? (
-              (100 *
-                (CalculateAverage(priceData, selectedDay, name) -
-                  CalculateAverage(priceData, comparedDay, name))) /
-              CalculateAverage(priceData, comparedDay, name)
-            ).toFixed(2) + "%"
-          : "-"
-        break
-      case 2:
-        return currencyFormatter(
-          highLowPrice(priceData, newestDay, name, day, 0)
-        )
-        break
-      case 3:
-        return currencyFormatter(
-          highLowPrice(priceData, newestDay, name, day, 1)
-        )
-        break
-      case 4:
-        return !Moment(selectedDay).isBefore(
-          Moment("01.01.1990", "DD.MM.YYYY")
-        ) && !Moment(comparedDay).isBefore(Moment("01.01.1990", "DD.MM.YYYY"))
-          ? currencyFormatter(
-              CalculateAverage(priceData, selectedDay, name) -
-                CalculateAverage(priceData, comparedDay, name)
             )
-          : "-"
-        break
+            .sort((a, b) => (a.attributes.min > b.attributes.min ? 1 : -1))[0]
+            ?.attributes.max
+          break
+        case 1:
+          return priceData.data
+            .filter(
+              (item) =>
+                item.attributes.quality === name &&
+                Moment(item.attributes.date).isAfter(
+                  Moment(selectedDay).subtract(day, "days")
+                )
+            )
+            .sort((a, b) => (a.attributes.max > b.attributes.max ? -1 : 1))[0]
+            ?.attributes.max
+          break
+        default:
+          break
+      }
+    },
+    []
+  )
+  const priceAverage = useMemo(
+    () => (name, day, type) => {
+      const newestDay = Moment(
+        priceData.data.filter((item) => item.attributes.quality === name)[0]
+          ?.attributes.date
+      ).format("YYYY-MM-DD")
 
-      default:
-        break
-    }
-  }
+      const selectedDay =
+        day > 0
+          ? new Date(
+              priceData.data.filter(
+                (item) =>
+                  item.attributes.quality === name &&
+                  Moment(item.attributes.date).isBefore(
+                    Moment(newestDay, "YYYY-MM-DD").subtract(day, "days")
+                  )
+              )[0]?.attributes.date || null
+            ).toLocaleDateString()
+          : new Date(
+              priceData.data.filter(
+                (item) => item.attributes.quality === name
+              )[0]?.attributes.date
+            ).toLocaleDateString()
+
+      const comparedDay = new Date(
+        priceData.data.filter(
+          (item) =>
+            item.attributes.quality === name &&
+            Moment(item.attributes.date).isBefore(
+              Moment(selectedDay, "DD.MM.YYYY").subtract(1, "days")
+            )
+        )[0]?.attributes.date || null
+      ).toLocaleDateString()
+
+      switch (type) {
+        case 0:
+          return currencyFormatter(
+            CalculateAverage(priceData, selectedDay, name)
+          )
+          break
+        case 1:
+          return !Moment(selectedDay).isBefore(
+            Moment("01.01.1990", "DD.MM.YYYY")
+          ) && !Moment(comparedDay).isBefore(Moment("01.01.1990", "DD.MM.YYYY"))
+            ? (
+                (100 *
+                  (CalculateAverage(priceData, selectedDay, name) -
+                    CalculateAverage(priceData, comparedDay, name))) /
+                CalculateAverage(priceData, comparedDay, name)
+              ).toFixed(2) + "%"
+            : "-"
+          break
+        case 2:
+          return currencyFormatter(
+            highLowPrice(priceData, newestDay, name, day, 0)
+          )
+          break
+        case 3:
+          return currencyFormatter(
+            highLowPrice(priceData, newestDay, name, day, 1)
+          )
+          break
+        case 4:
+          return !Moment(selectedDay).isBefore(
+            Moment("01.01.1990", "DD.MM.YYYY")
+          ) && !Moment(comparedDay).isBefore(Moment("01.01.1990", "DD.MM.YYYY"))
+            ? currencyFormatter(
+                CalculateAverage(priceData, selectedDay, name) -
+                  CalculateAverage(priceData, comparedDay, name)
+              )
+            : "-"
+          break
+
+        default:
+          break
+      }
+    },
+    [CalculateAverage, highLowPrice, priceData]
+  )
   return (
     <div className="flex flex-col">
       <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">

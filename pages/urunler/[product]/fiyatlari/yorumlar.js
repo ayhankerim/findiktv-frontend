@@ -318,24 +318,32 @@ export async function getStaticPaths(context) {
       const currentProducts = await currentProductsPromise
       const localeProducts = await fetchAPI("/products", {
         locale,
-        fields: ["slug", "locale"],
+        populate: {
+          comments: {
+            populate: ["id"],
+            fields: ["id"],
+          },
+        },
+        fields: ["slug", "locale", "id"],
       })
       return [...currentProducts, ...localeProducts.data]
     },
     Promise.resolve([])
   )
 
-  const paths = products.map((product) => {
-    const { slug, locale } = product.attributes
-    // Decompose the slug that was saved in Strapi
-    const slugArray = !slug ? false : slug
+  const paths = products
+    .filter((item) => item.attributes.comments.data.length > 100)
+    .map((product) => {
+      const { slug, locale } = product.attributes
+      // Decompose the slug that was saved in Strapi
+      const slugArray = !slug ? false : slug
 
-    return {
-      params: { product: slugArray },
-      // Specify the locale to render
-      locale,
-    }
-  })
+      return {
+        params: { product: slugArray },
+        // Specify the locale to render
+        locale,
+      }
+    })
 
   return { paths, fallback: true }
 }
