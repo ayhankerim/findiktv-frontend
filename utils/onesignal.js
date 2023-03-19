@@ -2,7 +2,7 @@ import OneSignal from "react-onesignal"
 
 export default async function runOneSignal() {
   await OneSignal.init({
-    appId: "46b70e76-d4f7-40ac-a1e4-5b43678fe4f3",
+    appId: process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID,
     allowLocalhostAsSecureOrigin: true,
   })
   OneSignal.showSlidedownPrompt()
