@@ -107,13 +107,14 @@ const SliderWithSide = ({ data, position = "sidebar" }) => {
   const settings = {
     customPaging: function (i) {
       return (
-        <button className="block w-full text-center border px-3 sm:px-5 md:px-4 lg:px-6 xl:px-7 xxl:px-8 bg-secondary/10 font-bold">
+        <button className="block w-full text-center border bg-secondary/10 font-bold">
           {i + 1}
         </button>
       )
     },
     dots: true,
-    dotsClass: "slick-dots relative !flex justify-between z-20 overflow-x-auto",
+    dotsClass:
+      "slick-dots relative !grid grid-cols-10 gap-[2px] justify-between z-20 overflow-x-auto",
     speed: 500,
     nextArrow: <SampleNextArrow />,
     prevArrow: <SamplePrevArrow />,
@@ -140,6 +141,7 @@ const SliderWithSide = ({ data, position = "sidebar" }) => {
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
+          arrows: false,
         },
       },
     ],
