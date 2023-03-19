@@ -13,14 +13,7 @@ const fetcher = (url) => fetch(url).then((res) => res.json())
 const PAGE_SIZE = 12
 const SLIDER_SIZE = 0
 
-const DynamicTags = ({
-  tagContent,
-  advertisement,
-  metadata,
-  preview,
-  global,
-  tagContext,
-}) => {
+const DynamicTags = ({ tagContent, preview, global, tagContext }) => {
   const qs = require("qs")
   const {
     data,
@@ -77,10 +70,15 @@ const DynamicTags = ({
     return <div className="container">Yükleniyor...</div>
   }
 
-  // Merge default site SEO settings with page specific SEO settings
-  if (metadata && metadata.shareImage.data == null) {
-    delete metadata.shareImage
+  const metadata = {
+    id: 1,
+    metaTitle: `${tagContent.title} | FINDIK TV`,
+    metaDescription: `${tagContent.title} | FINDIK TV`,
+    twitterCardType: "summary",
+    twitterUsername: "findiktvcom",
+    shareImage: null,
   }
+
   const metadataWithDefaults = {
     ...global.attributes.metadata,
     ...metadata,
@@ -196,7 +194,7 @@ export async function getStaticProps(context) {
   }
 
   // We have the required page data, pass it to the page component
-  const { title, metadata, localizations, slug } = tagData.attributes
+  const { title, localizations, slug } = tagData.attributes
 
   const tagContent = {
     id: tagData.id,
@@ -217,7 +215,6 @@ export async function getStaticProps(context) {
     props: {
       tagContent: tagContent,
       advertisement: advertisement,
-      metadata,
       global: globalLocale.data,
       tagContext: {
         ...tagContext,

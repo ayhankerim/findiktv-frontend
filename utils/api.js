@@ -644,20 +644,6 @@ export async function getTagData({ slug, locale, preview }) {
     },
     body: JSON.stringify({
       query: `
-        fragment FileParts on UploadFileEntityResponse {
-          data {
-            id
-            attributes {
-              alternativeText
-              width
-              height
-              mime
-              url
-              formats
-            }
-          }
-        }
-
         query getTags($slug: String!, $locale: I18NLocaleCode!) {
           tags(
             filters: {
@@ -672,14 +658,6 @@ export async function getTagData({ slug, locale, preview }) {
                 slug
                 createdAt
                 updatedAt
-                metadata {
-                  metaTitle
-                  metaDescription
-                  shareImage {
-                    ...FileParts
-                  }
-                  twitterUsername
-                }
                 locale
                 localizations {
                   data {

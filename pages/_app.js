@@ -1,3 +1,4 @@
+import { useEffect } from "react"
 import App from "next/app"
 import Head from "next/head"
 import { DefaultSeo } from "next-seo"
@@ -8,6 +9,7 @@ import { Provider } from "react-redux"
 import { store, persistor } from "@/store/index"
 import { PersistGate } from "redux-persist/integration/react"
 import { Dosis } from "@next/font/google"
+import runOneSignal from "utils/onesignal"
 
 import "@/styles/style.css"
 
@@ -18,6 +20,9 @@ const dosis = Dosis({
 })
 
 const MyApp = ({ Component, pageProps: { session, ...pageProps } }) => {
+  useEffect(() => {
+    runOneSignal()
+  })
   // Extract the data we need
   const { global } = pageProps
   if (global == null || global.data) {

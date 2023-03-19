@@ -287,11 +287,16 @@ const DynamicCities = ({
             <div className="mb-2 relative h-[320px] lg:h-[500px] -mx-4 sm:mx-0 lg:mx-0">
               <Image
                 src={cityContent.featured.data.attributes.url}
-                alt={cityContent.title}
+                alt={`${cityContent.title} Fiyatları`}
                 className="md:rounded-lg"
                 priority={true}
-                width={779}
-                height={522}
+                fill
+                sizes="(max-width: 768px) 100vw,
+                  (max-width: 800px) 50vw,
+                  33vw"
+                style={{
+                  objectFit: "cover",
+                }}
               />
             </div>
             <article
