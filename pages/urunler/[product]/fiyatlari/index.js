@@ -86,7 +86,7 @@ const DynamicProducts = ({
       sort: ["date:desc"],
       pagination: {
         start: 0,
-        limit: 1000,
+        limit: 200,
       },
     }).then((data) => {
       const citydata =
