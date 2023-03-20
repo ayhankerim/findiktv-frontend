@@ -60,7 +60,7 @@ const loggedInSchema = yup.object().shape({
       }
     }),
 })
-const PriceCalculator = ({ product, city, pricetype }) => {
+const PriceCalculator = ({ title, product, city, pricetype }) => {
   const userData = useSelector((state) => state.user.userData)
   const [loading, setLoading] = useState(false)
   const { data: session } = useSession()
@@ -68,14 +68,15 @@ const PriceCalculator = ({ product, city, pricetype }) => {
   const [calculationResult, setCalculationResult] = useState(0)
   return (
     <>
-      <div className="flex flex-row items-center justify-between border-b border-secondary/20 relative">
-        <h3 className="font-semibold text-base text-midgray">
-          FİYAT HESAPLAMA
-        </h3>
-        <AiOutlineCalculator className="text-lg text-midgray" />
-        <span className="absolute h-[5px] w-2/5 max-w-[180px] left-0 bottom-[-5px] bg-secondary/60"></span>
-      </div>
-
+      {title && (
+        <div className="flex flex-row items-center justify-between border-b border-secondary/20 relative">
+          <h3 className="font-semibold text-base text-midgray">
+            FİYAT HESAPLAMA
+          </h3>
+          <AiOutlineCalculator className="text-lg text-midgray" />
+          <span className="absolute h-[5px] w-2/5 max-w-[180px] left-0 bottom-[-5px] bg-secondary/60"></span>
+        </div>
+      )}
       <Formik
         initialValues={{
           price: "",

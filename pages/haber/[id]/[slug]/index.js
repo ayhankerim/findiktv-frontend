@@ -60,9 +60,15 @@ const DynamicArticle = ({
   }
   const breadcrumbElement = [
     {
-      title:
-        articleContent.category.data.attributes.title.toLocaleUpperCase("tr"),
-      slug: "/kategori/" + articleContent.category.data.attributes.slug,
+      title: (articleContent.category.data
+        ? articleContent.category.data.attributes.title
+        : "Gündem"
+      ).toLocaleUpperCase("tr"),
+      slug:
+        "/kategori/" +
+        (articleContent.category.data
+          ? articleContent.category.data.attributes.slug
+          : "gundem"),
     },
     {
       title: articleContent.title.toLocaleUpperCase("tr"),

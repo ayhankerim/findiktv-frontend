@@ -69,6 +69,10 @@ const nextConfig = {
   async rewrites() {
     return [
       {
+        source: "/zirai-don-uyari-sistemi/:path*",
+        destination: `https://mgm.gov.tr/FTPDATA/CBS/TAHMIN/:path*`,
+      },
+      {
         source: "/uploads/:path*",
         destination: `${process.env.STRAPI_API_URL}/uploads/:path*`,
       },
