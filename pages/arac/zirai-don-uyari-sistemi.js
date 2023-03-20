@@ -101,9 +101,7 @@ const RandimanHesaplama = ({ global }) => {
                   height={527}
                   className="p-0"
                   priority={true}
-                  src={`${
-                    process.env.NEXT_PUBLIC_SITE_URL
-                  }/zirai-don-uyari-sistemi/DFT${Moment(d)
+                  src={`https://mgm.gov.tr/FTPDATA/CBS/TAHMIN/DFT${Moment(d)
                     .add(item, "d")
                     .format("YYYYMMDD")}.png`}
                 />
