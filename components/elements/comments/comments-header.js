@@ -54,7 +54,9 @@ const CommentsHeader = () => {
                     <Menu.Item>
                       {({ active }) => (
                         <Link
-                          href="/hesap/profil"
+                          href={`/hesap/profil/${
+                            userData.username ? userData.username : userData.id
+                          }`}
                           className={classNames(
                             active ? "bg-gray-100" : "",
                             "block w-full text-left px-4 py-2 text-sm text-midgray"

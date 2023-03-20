@@ -7,6 +7,7 @@ import {
   TbMinus,
   TbInfoCircle,
   TbX,
+  TbLoader,
 } from "react-icons/tb"
 
 const priceTypes = [
@@ -198,10 +199,15 @@ const AverageCard = ({ cardData }) => {
             ) : (
               <>
                 <div className="flex justify-center items-center h-12 w-10 bg-midgray/20 rounded p-2">
-                  <TbMinus className="text-lg text-midgray" />
+                  <TbLoader className="animate-spin text-lg text-midgray" />
                 </div>
                 <div className="flex flex-col flex-1">
-                  <span className="font-bold text-xl">...</span>
+                  <div class="loader-dots block relative w-20 h-[48px]">
+                    <div class="absolute top-0 mt-3 w-3 h-3 rounded-full bg-lightgray"></div>
+                    <div class="absolute top-0 mt-3 w-3 h-3 rounded-full bg-lightgray"></div>
+                    <div class="absolute top-0 mt-3 w-3 h-3 rounded-full bg-lightgray"></div>
+                    <div class="absolute top-0 mt-3 w-3 h-3 rounded-full bg-lightgray"></div>
+                  </div>
                   <div className="flex justify-between">
                     <span className="text-midgray">{item.name} Kalite</span>
                     <span className="text-midgray">...</span>
