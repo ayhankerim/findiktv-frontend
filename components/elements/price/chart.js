@@ -1,19 +1,19 @@
 import React, { useEffect, useState, useMemo } from "react"
 import HighchartsReact from "highcharts-react-official"
 import Highcharts from "highcharts/highstock"
-import HighchartsMore from "highcharts/highcharts-more"
+//import HighchartsMore from "highcharts/highcharts-more"
 //import HighchartsExporting from "highcharts/modules/exporting"
 //import HighchartsExportData from "highcharts/modules/export-data"
-import HighchartsAccessibility from "highcharts/modules/accessibility"
+//import HighchartsAccessibility from "highcharts/modules/accessibility"
 import HighchartsData from "highcharts/modules/data"
 import Advertisement from "@/components/elements/advertisement"
 
 if (typeof Highcharts === "object") {
   //HighchartsExporting(Highcharts)
   //HighchartsExportData(Highcharts)
-  HighchartsAccessibility(Highcharts)
+  //HighchartsAccessibility(Highcharts)
   HighchartsData(Highcharts)
-  HighchartsMore(Highcharts)
+  //HighchartsMore(Highcharts)
   Highcharts.setOptions({
     lang: {
       loading: "Yükleniyor...",

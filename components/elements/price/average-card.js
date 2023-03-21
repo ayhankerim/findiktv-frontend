@@ -202,11 +202,11 @@ const AverageCard = ({ cardData }) => {
                   <TbLoader className="animate-spin text-lg text-midgray" />
                 </div>
                 <div className="flex flex-col flex-1">
-                  <div class="loader-dots block relative w-20 h-[48px]">
-                    <div class="absolute top-0 mt-3 w-3 h-3 rounded-full bg-lightgray"></div>
-                    <div class="absolute top-0 mt-3 w-3 h-3 rounded-full bg-lightgray"></div>
-                    <div class="absolute top-0 mt-3 w-3 h-3 rounded-full bg-lightgray"></div>
-                    <div class="absolute top-0 mt-3 w-3 h-3 rounded-full bg-lightgray"></div>
+                  <div className="loader-dots block relative w-20 h-[48px]">
+                    <div className="absolute top-0 mt-3 w-3 h-3 rounded-full bg-lightgray"></div>
+                    <div className="absolute top-0 mt-3 w-3 h-3 rounded-full bg-lightgray"></div>
+                    <div className="absolute top-0 mt-3 w-3 h-3 rounded-full bg-lightgray"></div>
+                    <div className="absolute top-0 mt-3 w-3 h-3 rounded-full bg-lightgray"></div>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-midgray">{item.name} Kalite</span>

@@ -129,6 +129,9 @@ const DynamicCities = ({
   if (router.isFallback) {
     return <div className="container">Yükleniyor...</div>
   }
+  const metadataUpdated = {
+    metaTitle: `${metadata.metaTitle} Fındık Fiyat | FINDIK TV`,
+  }
 
   // Merge default site SEO settings with page specific SEO settings
   if (metadata.shareImage?.data == null) {
@@ -137,6 +140,7 @@ const DynamicCities = ({
   const metadataWithDefaults = {
     ...global.attributes.metadata,
     ...metadata,
+    ...metadataUpdated,
   }
   const breadcrumbElement = [
     { title: "ÜRÜNLER", slug: "/urunler" },
