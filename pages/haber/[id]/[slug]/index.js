@@ -108,11 +108,7 @@ const DynamicArticle = ({
             {/* Featured Image or Video Section*/}
             <div className="relative sm:w-full h-[300px] lg:h-[500px] -mx-4 sm:mx-0 md:mx-0 mb-2">
               <Image
-                src={
-                  articleContent.image.data.attributes.formats.large
-                    ? articleContent.image.data.attributes.formats.large.url
-                    : articleContent.image.data.attributes.formats.medium.url
-                }
+                src={articleContent.image.data.attributes.url}
                 alt={articleContent.title}
                 className="sm:rounded-lg"
                 priority={true}
