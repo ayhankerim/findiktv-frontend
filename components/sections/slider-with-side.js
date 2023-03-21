@@ -120,6 +120,7 @@ const SliderWithSide = ({ data, position = "sidebar" }) => {
     prevArrow: <SamplePrevArrow />,
     slidesToShow: 1,
     slidesToScroll: 1,
+    initialSlide: 0,
     infinite: true,
     responsive: [
       {
@@ -155,6 +156,7 @@ const SliderWithSide = ({ data, position = "sidebar" }) => {
               <Link
                 href={`/haber/${article.id}/${article.attributes.slug}`}
                 title={article.attributes.title}
+                target="_blank"
               >
                 <Image
                   src={
@@ -165,7 +167,6 @@ const SliderWithSide = ({ data, position = "sidebar" }) => {
                   className="p-0"
                   width="821"
                   height="550"
-                  //priority={i === 0 ? true : false}
                   priority={true}
                 />
               </Link>

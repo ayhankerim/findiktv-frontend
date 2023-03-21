@@ -18,7 +18,7 @@ const ArticleMostVisited = ({ size, slug }) => {
         },
         publishedAt: {
           $gte: Moment(new Date())
-            .subtract(7, "days")
+            .subtract(3, "days")
             .utcOffset(3)
             .format("YYYY-MM-DD HH:mm:ss"),
         },

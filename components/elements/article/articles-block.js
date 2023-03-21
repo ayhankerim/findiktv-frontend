@@ -32,7 +32,8 @@ const ArticleBlock = ({ article, category, index }) => {
               }
               alt={article.attributes.title}
               className="absolute inset-0 h-full w-full object-cover"
-              priority={true}
+              placeholder="blur"
+              blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8/OhZPQAIhwMsJ60FNgAAAABJRU5ErkJggg=="
               fill
               sizes="(max-width: 768px) 100vw,
                           (max-width: 800px) 50vw,

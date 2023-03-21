@@ -234,7 +234,7 @@ const DynamicProducts = ({
               cities={allCities}
               cityData=""
             />
-            <ArticleMostVisited size={10} slug={null} />
+            <ArticleMostVisited size={5} slug={null} />
             <EfficiencyCalculation
               product={productContent.id}
               city={null}

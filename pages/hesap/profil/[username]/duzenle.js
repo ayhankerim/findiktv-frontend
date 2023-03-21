@@ -3,6 +3,7 @@ import { useRouter } from "next/router"
 import { getSession } from "next-auth/react"
 import { getUserData, fetchAPI, getGlobalData } from "@/utils/api"
 import Image from "next/image"
+import Link from "next/link"
 import Layout from "@/components/layout"
 import ProfileUpdateForm from "@/components/elements/profile/profile-update-form"
 import ProfileCoverAvatarChange from "@/components/elements/profile/profile-cover-avatar-change"
@@ -13,7 +14,7 @@ import LatestComments from "@/components/elements/comments/latest-comments"
 import ArticleMostVisited from "@/components/elements/article/articles-most-visited"
 import { FcApproval } from "react-icons/fc"
 import { Tab } from "@headlessui/react"
-import { RiSeparator } from "react-icons/ri"
+import { RiSeparator, RiArrowGoBackFill } from "react-icons/ri"
 import Avatar from "@/components/elements/profile/avatar"
 
 function classNames(...classes) {
@@ -173,6 +174,18 @@ const DynamicUsers = ({ userContent, global, userContext }) => {
                         <RiSeparator className="inline-block mx-2" />
                         {userContent.role.data.attributes.name}
                       </span>
+                    </div>
+                    <div className="relative text-right">
+                      <Link
+                        href={`/hesap/profil/${userContent.username}`}
+                        className="flex w-full border items-center rounded-md px-2 py-1 text-sm hover:shadow-lg"
+                      >
+                        <RiArrowGoBackFill
+                          className="mr-2 text-sm text-secondary"
+                          aria-hidden="true"
+                        />
+                        Profile dön
+                      </Link>
                     </div>
                   </div>
                 </div>

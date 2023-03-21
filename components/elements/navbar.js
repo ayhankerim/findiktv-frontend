@@ -73,6 +73,7 @@ const Navbar = ({ navbar, pageContext }) => {
                 height={50}
                 alt="FINDIK TV"
                 src={navbar.logo.data.attributes.formats.small.url}
+                priority={true}
               />
             </Link>
           </div>

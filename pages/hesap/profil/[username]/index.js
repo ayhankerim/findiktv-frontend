@@ -155,10 +155,9 @@ const DynamicUsers = ({ userContent, advertisement, global, userContext }) => {
       content: (
         <div
           dangerouslySetInnerHTML={{
-            __html:
-              userContent.about === ""
-                ? userContent.about
-                : "Henüz bir içerik girilmemiş.",
+            __html: userContent.about
+              ? userContent.about
+              : "Henüz bir içerik girilmemiş.",
           }}
         />
       ),
