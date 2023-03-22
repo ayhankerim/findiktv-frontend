@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useSession } from "next-auth/react"
 import { useSelector } from "react-redux"
 import * as yup from "yup"
@@ -67,14 +67,37 @@ const loggedInSchema = yup.object().shape({
     .bool()
     .oneOf([true], "Yorum yazma kurallarını onaylamanız gereklidir!"),
 })
-const AddPrice = ({ product, cities, cityData }) => {
+const AddPrice = ({ product, cityData }) => {
+  const [cities, setCityList] = useState([])
   const userData = useSelector((state) => state.user.userData)
   const [loading, setLoading] = useState(false)
   const { data: session } = useSession()
   const [isShowing, setIsShowing] = useState(false)
   const [detailShowing, SetDetailShowing] = useState(false)
 
-  //console.log("cityData", cityData)
+  useEffect(() => {
+    isShowing &&
+      fetchAPI("/cities", {
+        filters: {
+          prices: {
+            product: {
+              id: {
+                $eq: product,
+              },
+            },
+          },
+        },
+        fields: ["title", "slug"],
+        sort: ["title:asc"],
+        pagination: {
+          start: 0,
+          limit: 100,
+        },
+      }).then((data) => {
+        setCityList(data)
+      })
+  }, [isShowing, product])
+
   return (
     <>
       <div className="flex flex-row items-center justify-between border-b border-secondary/20 relative">

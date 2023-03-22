@@ -2,9 +2,7 @@ import React, { useState, useEffect, Fragment } from "react"
 import ErrorPage from "next/error"
 import {
   getProductData,
-  getProductAllCitiesData,
   getAdsData,
-  //getCommentsData,
   fetchAPI,
   getGlobalData,
 } from "@/utils/api"
@@ -54,7 +52,6 @@ const DynamicProducts = ({
   preview,
   global,
   productContext,
-  allCities,
 }) => {
   const [priceType, setPriceType] = useState(pricetypes[0])
   const [priceData, setPriceData] = useState(null)
@@ -229,11 +226,7 @@ const DynamicProducts = ({
             )}
           </div>
           <aside className="sticky top-2 flex-none w-full lg:w-[250px] xl:w-[336px]">
-            <AddPrice
-              product={productContent.id}
-              cities={allCities}
-              cityData=""
-            />
+            <AddPrice product={productContent.id} cityData="" />
             <ArticleMostVisited size={5} slug={null} />
             <EfficiencyCalculation
               product={productContent.id}
@@ -352,10 +345,6 @@ export async function getStaticProps(context) {
     product: params.product,
     locale,
   })
-  const productAllCityData = await getProductAllCitiesData({
-    product: params.product,
-    locale,
-  })
 
   if (productData == null) {
     // Giving the page no props will trigger a 404 page
@@ -395,7 +384,6 @@ export async function getStaticProps(context) {
         ...productContext,
         //localizedPaths,
       },
-      allCities: productAllCityData,
     },
     revalidate: 60,
   }

@@ -60,7 +60,7 @@ const loggedInSchema = yup.object().shape({
       }
     }),
 })
-const PriceCalculator = ({ title, product, city, pricetype }) => {
+const PriceCalculator = ({ title = "", product, city, pricetype }) => {
   const userData = useSelector((state) => state.user.userData)
   const [loading, setLoading] = useState(false)
   const { data: session } = useSession()
@@ -68,7 +68,7 @@ const PriceCalculator = ({ title, product, city, pricetype }) => {
   const [calculationResult, setCalculationResult] = useState(0)
   return (
     <>
-      {title && (
+      {title !== false && (
         <div className="flex flex-row items-center justify-between border-b border-secondary/20 relative">
           <h3 className="font-semibold text-base text-midgray">
             FİYAT HESAPLAMA

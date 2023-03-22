@@ -3,7 +3,6 @@ import ErrorPage from "next/error"
 import {
   getProductCityData,
   getAdsData,
-  getProductAllCitiesData,
   fetchAPI,
   getGlobalData,
 } from "@/utils/api"
@@ -62,7 +61,6 @@ const DynamicCities = ({
   preview,
   global,
   cityContext,
-  allCities,
 }) => {
   const [priceType, setPriceType] = useState(pricetypes[0])
   const [priceData, setPriceData] = useState(null)
@@ -271,7 +269,6 @@ const DynamicCities = ({
           <aside className="sticky top-2 flex-none w-full md:w-[336px] lg:w-[250px] xl:w-[336px]">
             <AddPrice
               product={cityContent.prices.data[0].attributes.product.data.id}
-              cities={allCities}
               cityData={cityContent}
             />
             <ArticleMostVisited size={10} slug={null} />
@@ -422,10 +419,6 @@ export async function getStaticProps(context) {
       notFound: true,
     }
   }
-  const productAllCityData = await getProductAllCitiesData({
-    product: params.product,
-    locale,
-  })
 
   // We have the required page data, pass it to the page component
   const { title, content, prices, featured, metadata, localizations, slug } =
@@ -459,7 +452,6 @@ export async function getStaticProps(context) {
         ...cityContext,
         //localizedPaths,
       },
-      allCities: productAllCityData,
     },
     revalidate: 60,
   }
