@@ -58,19 +58,15 @@ const DynamicProducts = ({
   productContext,
 }) => {
   const [priceType, setPriceType] = useState(pricetypes[0])
-  //const [priceData, setPriceData] = useState(null)
   const [cityList, setCityList] = useState(null)
   const dispatch = useDispatch()
 
   useEffect(() => {
-    const citydata =
-      priceType.id != "tmo"
-        ? [
-            ...new Set(
-              priceData.data.map((q) => q.attributes.city.data.attributes.title)
-            ),
-          ]
-        : null
+    const citydata = [
+      ...new Set(
+        priceData.data.map((q) => q.attributes.city.data.attributes.title)
+      ),
+    ]
     setCityList(citydata)
     advertisement && dispatch(updateAds(advertisement))
   }, [advertisement, dispatch, priceData.data, priceType])
@@ -178,24 +174,20 @@ const DynamicProducts = ({
               product={productContext.slug}
               grapghData={priceData}
             />
-            {priceType.id != "tmo" && (
-              <>
-                <TermlyPriceChange
-                  type={priceType.id}
-                  product={productContext.slug}
-                  priceData={priceData}
-                />
-                <div className="w-full h-[300px] lg:h-[120px] -mx-2 sm:mx-0">
-                  <Advertisement position="price-page-middle-3" />
-                </div>
-                <CityPriceList
-                  product={productContext.slug}
-                  priceData={priceData}
-                  cityList={cityList}
-                />
-                <LatestPriceEntries priceData={priceData} />
-              </>
-            )}
+            <TermlyPriceChange
+              type={priceType.id}
+              product={productContext.slug}
+              priceData={priceData}
+            />
+            <div className="w-full h-[300px] lg:h-[120px] -mx-2 sm:mx-0">
+              <Advertisement position="price-page-middle-3" />
+            </div>
+            <CityPriceList
+              product={productContext.slug}
+              priceData={priceData}
+              cityList={cityList}
+            />
+            <LatestPriceEntries priceData={priceData} />
           </div>
           <aside className="sticky top-2 flex-none w-full lg:w-[250px] xl:w-[336px]">
             <AddPrice product={productContent.id} cityData="" />

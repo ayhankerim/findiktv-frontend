@@ -58,19 +58,15 @@ const DynamicProducts = ({
   productContext,
 }) => {
   const [priceType, setPriceType] = useState(pricetypes[1])
-  //const [priceData, setPriceData] = useState(null)
   const [cityList, setCityList] = useState(null)
   const dispatch = useDispatch()
 
   useEffect(() => {
-    const citydata =
-      priceType.id != "tmo"
-        ? [
-            ...new Set(
-              priceData.data.map((q) => q.attributes.city.data.attributes.title)
-            ),
-          ]
-        : null
+    const citydata = [
+      ...new Set(
+        priceData.data.map((q) => q.attributes.city.data.attributes.title)
+      ),
+    ]
     setCityList(citydata)
     advertisement && dispatch(updateAds(advertisement))
   }, [advertisement, dispatch, priceData.data, priceType])
@@ -92,15 +88,23 @@ const DynamicProducts = ({
   if (metadata.shareImage?.data == null) {
     delete metadata.shareImage
   }
+  const metaCustomdata = {
+    metaTitle:
+      "Serbest Piyasa " + productContent.title + " Fiyatları | FINDIK TV",
+  }
   const metadataWithDefaults = {
     ...global.attributes.metadata,
     ...metadata,
+    ...metaCustomdata,
   }
   const breadcrumbElement = [
     { title: "ÜRÜNLER", slug: "/urunler" },
     {
-      title: productContent.title.toLocaleUpperCase("tr") + " FİYATLARI",
-      slug: "/urunler/" + productContext.slug + "/fiyatlari",
+      title:
+        "SERBEST PİYASA " +
+        productContent.title.toLocaleUpperCase("tr") +
+        " FİYATLARI",
+      slug: "/urunler/" + productContext.slug + "/" + pricetypes[1].url,
     },
   ]
   return (
@@ -112,7 +116,7 @@ const DynamicProducts = ({
           <Breadcrumb items={breadcrumbElement} />
           <div className="flex flex-col md:flex-row items-center justify-between">
             <h1 className="font-extrabold text-xxl">
-              {productContent.title} Fiyatları
+              Serbest Piyasa {productContent.title} Fiyatları
             </h1>
             <Popover className="relative">
               {({ open }) => (
@@ -178,24 +182,20 @@ const DynamicProducts = ({
               product={productContext.slug}
               grapghData={priceData}
             />
-            {priceType.id != "tmo" && (
-              <>
-                <TermlyPriceChange
-                  type={priceType.id}
-                  product={productContext.slug}
-                  priceData={priceData}
-                />
-                <div className="w-full h-[300px] lg:h-[120px] -mx-2 sm:mx-0">
-                  <Advertisement position="price-page-middle-3" />
-                </div>
-                <CityPriceList
-                  product={productContext.slug}
-                  priceData={priceData}
-                  cityList={cityList}
-                />
-                <LatestPriceEntries priceData={priceData} />
-              </>
-            )}
+            <TermlyPriceChange
+              type={priceType.id}
+              product={productContext.slug}
+              priceData={priceData}
+            />
+            <div className="w-full h-[300px] lg:h-[120px] -mx-2 sm:mx-0">
+              <Advertisement position="price-page-middle-3" />
+            </div>
+            <CityPriceList
+              product={productContext.slug}
+              priceData={priceData}
+              cityList={cityList}
+            />
+            <LatestPriceEntries priceData={priceData} />
           </div>
           <aside className="sticky top-2 flex-none w-full lg:w-[250px] xl:w-[336px]">
             <AddPrice product={productContent.id} cityData="" />
