@@ -364,7 +364,7 @@ export async function getStaticProps(context) {
     sort: ["date:desc"],
     pagination: {
       start: 0,
-      limit: 1000,
+      limit: 100,
     },
   })
 
@@ -380,7 +380,7 @@ export async function getStaticProps(context) {
         //localizedPaths,
       },
     },
-    revalidate: 60,
+    revalidate: 600,
   }
 }
 
