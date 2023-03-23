@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Fragment } from "react"
-import ErrorPage from "next/error"
+import Link from "next/link"
 import {
   getProductData,
   getAdsData,
@@ -35,14 +35,17 @@ const pricetypes = [
   {
     name: "BORSA FİYATLARI",
     id: "stockmarket",
+    url: "fiyatlari",
   },
   {
     name: "SERBEST PİYASA FİYATLARI",
     id: "openmarket",
+    url: "serbest-piyasa-fiyatlari",
   },
   {
     name: "TMO FİYATLARI",
     id: "tmo",
+    url: "tmo-fiyatlari",
   },
 ]
 const DynamicProducts = ({
@@ -51,54 +54,26 @@ const DynamicProducts = ({
   metadata,
   preview,
   global,
+  priceData,
   productContext,
 }) => {
   const [priceType, setPriceType] = useState(pricetypes[0])
-  const [priceData, setPriceData] = useState(null)
+  //const [priceData, setPriceData] = useState(null)
   const [cityList, setCityList] = useState(null)
   const dispatch = useDispatch()
-  const AllAdvertisements = useSelector((state) => state.advertisement.adsData)
 
   useEffect(() => {
-    fetchAPI("/prices", {
-      filters: {
-        product: {
-          slug: {
-            $eq: productContext.slug,
-          },
-        },
-        type: {
-          $eq: priceType.id,
-        },
-        approvalStatus: {
-          $eq: "approved",
-        },
-      },
-      fields: ["min", "max", "average", "quality", "volume"],
-      populate: {
-        city: {
-          fields: ["title", "slug"],
-        },
-      },
-      sort: ["date:desc"],
-      pagination: {
-        start: 0,
-        limit: 100,
-      },
-    }).then((data) => {
-      const citydata =
-        priceType.id != "tmo"
-          ? [
-              ...new Set(
-                data.data.map((q) => q.attributes.city.data.attributes.title)
-              ),
-            ]
-          : null
-      setCityList(citydata)
-      setPriceData(data)
-    })
+    const citydata =
+      priceType.id != "tmo"
+        ? [
+            ...new Set(
+              priceData.data.map((q) => q.attributes.city.data.attributes.title)
+            ),
+          ]
+        : null
+    setCityList(citydata)
     advertisement && dispatch(updateAds(advertisement))
-  }, [advertisement, dispatch, priceType, productContext.slug])
+  }, [advertisement, dispatch, priceData.data, priceType])
 
   const router = useRouter()
   // Check if the required data was provided
@@ -167,9 +142,10 @@ const DynamicProducts = ({
                       <div className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
                         <div className="relative grid gap-8 bg-white p-7 grid-cols-1">
                           {pricetypes.map((item, i) => (
-                            <Popover.Button
+                            <Link
                               key={item.name}
-                              onClick={() => setPriceType(pricetypes[i])}
+                              //onClick={() => setPriceType(pricetypes[i])}
+                              href={`/urunler/${productContext.slug}/${item.url}`}
                               className="-m-3 flex items-center rounded-lg p-2 transition duration-150 ease-in-out hover:bg-gray-50 focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50"
                             >
                               <div className="ml-0">
@@ -177,7 +153,7 @@ const DynamicProducts = ({
                                   {item.name}
                                 </p>
                               </div>
-                            </Popover.Button>
+                            </Link>
                           ))}
                         </div>
                       </div>
@@ -217,11 +193,7 @@ const DynamicProducts = ({
                   priceData={priceData}
                   cityList={cityList}
                 />
-                <LatestPriceEntries
-                  product={productContext.slug}
-                  priceData={priceData}
-                  cityList={cityList}
-                />
+                <LatestPriceEntries priceData={priceData} />
               </>
             )}
           </div>
@@ -243,15 +215,12 @@ const DynamicProducts = ({
             </article>
             <div className="mb-2 relative h-[320px] lg:h-[500px] -mx-4 sm:mx-0 lg:mx-0">
               <Image
-                src={
-                  productContent.featured.data.attributes.formats.large
-                    ? productContent.featured.data.attributes.formats.large.url
-                    : productContent.featured.data.attributes.formats.medium.url
-                }
+                src={productContent.featured.data.attributes.url}
                 alt={`${productContent.title} Fiyatları`}
                 className="md:rounded-lg"
-                priority={true}
                 fill
+                placeholder="blur"
+                blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8/OhZPQAIhwMsJ60FNgAAAABJRU5ErkJggg=="
                 sizes="(max-width: 768px) 100vw,
                   (max-width: 800px) 50vw,
                   33vw"
@@ -372,7 +341,32 @@ export async function getStaticProps(context) {
     localizations,
   }
 
-  //const localizedPaths = getLocalizedPaths(productContext)
+  const pricess = await fetchAPI("/prices", {
+    filters: {
+      product: {
+        slug: {
+          $eq: params.product,
+        },
+      },
+      type: {
+        $eq: "stockmarket",
+      },
+      approvalStatus: {
+        $eq: "approved",
+      },
+    },
+    fields: ["min", "max", "average", "quality", "volume"],
+    populate: {
+      city: {
+        fields: ["title", "slug"],
+      },
+    },
+    sort: ["date:desc"],
+    pagination: {
+      start: 0,
+      limit: 1000,
+    },
+  })
 
   return {
     props: {
@@ -380,6 +374,7 @@ export async function getStaticProps(context) {
       advertisement: advertisement,
       metadata,
       global: globalLocale.data,
+      priceData: pricess,
       productContext: {
         ...productContext,
         //localizedPaths,

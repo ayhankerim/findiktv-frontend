@@ -404,7 +404,7 @@ const Comments = ({ article, product, slug, city }) => {
             <div className="flex flex-col gap-4">
               {CommentItems(commentsAsTree)}
             </div>
-            {commentArray &&
+            {/* {commentArray &&
               commentArray.meta.pagination.total > commentLimit && (
                 <div className="flex flex-col items-end gap-2 text-center">
                   <Link
@@ -414,7 +414,7 @@ const Comments = ({ article, product, slug, city }) => {
                     Tüm yorumları gör
                   </Link>
                 </div>
-              )}
+              )} */}
           </div>
         ) : (
           <div className="flex flex-col items-center gap-2 mt-4 text-center">
