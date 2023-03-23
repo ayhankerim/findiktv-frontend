@@ -2,6 +2,7 @@ import React, { useState, useEffect, Fragment } from "react"
 import Link from "next/link"
 import {
   getProductData,
+  getAllPricesData,
   getAdsData,
   fetchAPI,
   getGlobalData,
@@ -313,6 +314,9 @@ export async function getStaticProps(context) {
       notFound: true,
     }
   }
+  const pricess = await getAllPricesData({
+    product: params.product,
+  })
 
   // We have the required page data, pass it to the page component
   const { title, content, featured, metadata, localizations, slug } =
@@ -333,33 +337,6 @@ export async function getStaticProps(context) {
     localizations,
   }
 
-  const pricess = await fetchAPI("/prices", {
-    filters: {
-      product: {
-        slug: {
-          $eq: params.product,
-        },
-      },
-      type: {
-        $eq: "stockmarket",
-      },
-      approvalStatus: {
-        $eq: "approved",
-      },
-    },
-    fields: ["min", "max", "average", "quality", "volume"],
-    populate: {
-      city: {
-        fields: ["title", "slug"],
-      },
-    },
-    sort: ["date:desc"],
-    pagination: {
-      start: 0,
-      limit: 100,
-    },
-  })
-
   return {
     props: {
       productContent: productContent,
@@ -372,7 +349,7 @@ export async function getStaticProps(context) {
         //localizedPaths,
       },
     },
-    revalidate: 600,
+    revalidate: 60,
   }
 }
 

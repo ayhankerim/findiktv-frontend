@@ -1153,6 +1153,64 @@ export async function getProductAllCitiesData({ product, locale }) {
   return citiesData.data.cities
 }
 
+export async function getAllPricesData({ product }) {
+  // Find the pages that match this slug
+  const gqlEndpoint = getStrapiURL("/graphql")
+  const pricesRes = await fetch(gqlEndpoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.NEXT_PUBLIC_SECRET_TOKEN}`,
+    },
+    body: JSON.stringify({
+      query: `
+        query getPrices($product: String!) {
+          prices(
+            filters: {
+              product: { slug: { eq: $product } }
+              type: { eq: "stockmarket" }
+              approvalStatus: { eq: "approved" }
+            }
+            sort: "date:desc"
+            pagination: { limit: 1000 }
+          ) {
+            data {
+              id
+              attributes {
+                date
+                min
+                max
+                average
+                quality
+                volume
+                city {
+                  data {
+                    attributes {
+                      title
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      `,
+      variables: {
+        product,
+      },
+    }),
+  })
+
+  const pricesData = await pricesRes.json()
+  // Make sure we found something, otherwise return null
+  if (pricesData.data?.prices == null || pricesData.data.prices.length === 0) {
+    return null
+  }
+
+  // Return the first item since there should only be one result per slug
+  return pricesData.data.prices
+}
+
 export async function getUserData({ username }) {
   // Find the pages that match this slug
   const gqlEndpoint = getStrapiURL("/graphql")
