@@ -316,6 +316,7 @@ export async function getStaticProps(context) {
   }
   const pricess = await getAllPricesData({
     product: params.product,
+    limit: Number(String(process.env.NEXT_PUBLIC_PRICE_LIMIT)),
   })
 
   // We have the required page data, pass it to the page component
