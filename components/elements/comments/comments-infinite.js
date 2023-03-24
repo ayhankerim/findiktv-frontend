@@ -209,8 +209,10 @@ const Comments = ({ article, slug }) => {
             <Image
               width="72"
               height="72"
-              src={`${process.env.NEXT_PUBLIC_CLOUD_IMAGE_CORE_URL}8980237d-c760-48b3-c06d-baec1e74e700/public`}
+              src={`${process.env.NEXT_PUBLIC_CLOUD_IMAGE_CORE_URL}8980237d-c760-48b3-c06d-baec1e74e700/format=auto,width=72`}
               alt="İlk Yorumu sen yaz"
+              placeholder="blur"
+              blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8/OhZPQAIhwMsJ60FNgAAAABJRU5ErkJggg=="
             />
             <h3 className="text-base">İlk yorumu siz yapın!</h3>
           </div>

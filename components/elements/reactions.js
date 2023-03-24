@@ -146,29 +146,29 @@ const Reactions = ({ article }) => {
                   className="w-full min-h-[1px] bg-success transition duration-150 ease-out md:ease-in"
                 ></div>
               </div>
-              <Tooltip
-                orientation="bottom"
-                tooltipText={emoji.attributes.title}
+              <button
+                className={`"w-full h-full ${
+                  emoji.check
+                    ? "border-secondary bg-white shadow-lg"
+                    : "border-midgray bg-lightgray"
+                } border border-b-2 hover:bg-white rounded`}
+                onClick={async () => {
+                  onSubmit(emoji.id, emoji.attributes.slug, emoji.check)
+                }}
               >
-                <button
-                  className={`"w-full h-full ${
-                    emoji.check
-                      ? "border-secondary bg-white shadow-lg"
-                      : "border-midgray bg-lightgray"
-                  } border border-b-2 hover:bg-white rounded`}
-                  onClick={async () => {
-                    onSubmit(emoji.id, emoji.attributes.slug, emoji.check)
-                  }}
+                <Tooltip
+                  orientation="bottom"
+                  tooltipText={emoji.attributes.title}
                 >
                   <NextImage
-                    width="64"
-                    height="64"
+                    width="44"
+                    height="44"
+                    className="w-full"
                     media={emoji.attributes.image}
                     alt={emoji.attributes.title}
-                    unoptimized={false}
                   />
-                </button>
-              </Tooltip>
+                </Tooltip>
+              </button>
             </div>
           )
         })}
