@@ -39,6 +39,8 @@ const NextImage = ({ media, alt, ...props }) => {
         style={{
           objectFit: "cover",
         }}
+        placeholder="blur"
+        blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8/OhZPQAIhwMsJ60FNgAAAABJRU5ErkJggg=="
         {...props}
       />
     )

@@ -1,11 +1,8 @@
-const withBundleAnalyzer = require("@next/bundle-analyzer")({
-  enabled: process.env.ANALYZE === "true",
-})
 const { colors } = require(`tailwindcss/defaultTheme`)
 const { fontFamily } = require("tailwindcss/defaultTheme")
 /** @type {import('tailwindcss').Config} \*/
 
-module.exports = withBundleAnalyzer({
+module.exports = {
   mode: "jit", // see https://tailwindcss.com/docs/just-in-time-mode
   purge: ["./components/**/*.js", "./pages/**/*.js"],
   darkMode: false, // or "media" or "class"
@@ -93,4 +90,4 @@ module.exports = withBundleAnalyzer({
     require("@tailwindcss/typography"),
     require("@tailwindcss/aspect-ratio"),
   ],
-})
+}

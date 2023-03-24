@@ -3,7 +3,7 @@ import useSWR from "swr"
 import { useSession } from "next-auth/react"
 import { fetchAPI } from "utils/api"
 import { MdOutlineEmojiEmotions } from "react-icons/md"
-import Image from "next/image"
+import NextImage from "./image"
 import Tooltip from "@/components/elements/tooltip"
 
 const Reactions = ({ article }) => {
@@ -160,12 +160,12 @@ const Reactions = ({ article }) => {
                     onSubmit(emoji.id, emoji.attributes.slug, emoji.check)
                   }}
                 >
-                  <Image
+                  <NextImage
                     width="64"
                     height="64"
-                    src={emoji.attributes.image.data.attributes.url}
+                    media={emoji.attributes.image}
                     alt={emoji.attributes.title}
-                    unoptimized={true}
+                    unoptimized={false}
                   />
                 </button>
               </Tooltip>
