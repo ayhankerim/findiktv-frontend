@@ -29,7 +29,7 @@ const ArticleMostVisited = ({ size, slug }) => {
           populate: ["*"],
         },
       },
-      sort: ["view:desc"],
+      sort: ["id:desc"],
       pagination: {
         start: 0,
         limit: size,

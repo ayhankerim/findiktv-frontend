@@ -55,7 +55,7 @@ const SliderWithSide = ({ data, position = "sidebar" }) => {
           populate: ["*"],
         },
       },
-      sort: ["view:desc"],
+      sort: ["id:desc"],
       pagination: {
         start: data.SideArticleOffset,
         limit: data.SideArticleLimit,

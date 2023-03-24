@@ -219,7 +219,7 @@ const DynamicProducts = ({
                 publishedAt={priceData?.data[0].attributes.date}
                 updatedAt={priceData?.data[0].attributes.date}
               />
-              <ViewCounter articleId={productContent.id} pageType="products" />
+              <ViewCounter product={productContent.id} />
             </div>
             <LatestArticles
               current={null}

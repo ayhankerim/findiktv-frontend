@@ -314,7 +314,7 @@ const DynamicCities = ({
                 publishedAt={priceData?.data[0]?.attributes.date}
                 updatedAt={priceData?.data[0]?.attributes.date}
               />
-              <ViewCounter articleId={cityContent.id} pageType="cities" />
+              <ViewCounter product={productContent.id} city={cityContent.id} />
             </div>
             <LatestArticles
               current={null}

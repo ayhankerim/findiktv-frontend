@@ -8,6 +8,7 @@ import ArticleBlock from "@/components/elements/article/articles-block"
 import Seo from "@/components/elements/seo"
 import LatestComments from "@/components/elements/comments/latest-comments"
 import ArticleMostVisited from "@/components/elements/article/articles-most-visited"
+import ViewCounter from "@/components/elements/pageviews"
 
 const fetcher = (url) => fetch(url).then((res) => res.json())
 const PAGE_SIZE = 12
@@ -87,6 +88,7 @@ const DynamicTags = ({ tagContent, preview, global, tagContext }) => {
     <Layout global={global} pageContext={tagContext}>
       {/* Add meta tags for SEO*/}
       <Seo metadata={metadataWithDefaults} />
+      <ViewCounter visible={false} tag={tagContent.id} />
       {/* Display content sections */}
       {/* <Sections sections={sections} preview={preview} /> */}
       <main className="container flex flex-col justify-between gap-4 pt-2 bg-white">

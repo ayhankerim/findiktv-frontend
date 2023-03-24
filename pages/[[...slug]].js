@@ -1,5 +1,5 @@
 import React, { useEffect } from "react"
-import ErrorPage from "next/error"
+import ViewCounter from "@/components/elements/pageviews"
 import { getPageData, fetchAPI, getAdsData, getGlobalData } from "utils/api"
 import Sections from "@/components/sections"
 import Seo from "@/components/elements/seo"
@@ -15,6 +15,7 @@ import { getLocalizedPaths } from "utils/localize"
 
 const DynamicPage = ({
   sections,
+  pageId,
   advertisement,
   metadata,
   preview,
@@ -54,6 +55,7 @@ const DynamicPage = ({
       <Seo metadata={metadataWithDefaults} />
       {/* Display content sections */}
       <Sections sections={sections} preview={preview} />
+      <ViewCounter visible={false} page={pageId} />
     </Layout>
   )
 }
@@ -124,6 +126,7 @@ export async function getStaticProps(context) {
   return {
     props: {
       preview,
+      pageId: pageData.id,
       sections: contentSections,
       advertisement: advertisement,
       metadata,

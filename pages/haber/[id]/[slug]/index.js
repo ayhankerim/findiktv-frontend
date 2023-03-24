@@ -95,7 +95,7 @@ const DynamicArticle = ({
               publishedAt={articleContent.publishedAt}
               updatedAt={articleContent.updatedAt}
             />
-            <ViewCounter articleId={articleContent.id} pageType="articles" />
+            <ViewCounter article={articleContent.id} />
           </div>
           <ArticleShare
             position="articleTop"
