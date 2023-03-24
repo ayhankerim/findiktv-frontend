@@ -18,7 +18,7 @@ const ArticleMostVisited = ({ size, slug }) => {
         },
         publishedAt: {
           $gte: Moment(new Date())
-            .subtract(3, "days")
+            .subtract(process.env.NEXT_PUBLIC_MOST_VISITED_LIMIT, "days")
             .utcOffset(3)
             .format("YYYY-MM-DD HH:mm:ss"),
         },
@@ -28,8 +28,11 @@ const ArticleMostVisited = ({ size, slug }) => {
         image: {
           populate: ["*"],
         },
+        view: {
+          populate: ["view"],
+        },
       },
-      sort: ["id:desc"],
+      sort: ["view.view:desc", "id:desc"],
       pagination: {
         start: 0,
         limit: size,

@@ -41,7 +41,7 @@ const SliderWithSide = ({ data, position = "sidebar" }) => {
       filters: {
         publishedAt: {
           $gte: Moment(new Date())
-            .subtract(3, "days")
+            .subtract(process.env.NEXT_PUBLIC_MOST_VISITED_LIMIT, "days")
             .utcOffset(3)
             .format("YYYY-MM-DD HH:mm:ss"),
         },
@@ -54,8 +54,11 @@ const SliderWithSide = ({ data, position = "sidebar" }) => {
         category: {
           populate: ["*"],
         },
+        view: {
+          populate: ["view"],
+        },
       },
-      sort: ["id:desc"],
+      sort: ["view.view:desc", "id:desc"],
       pagination: {
         start: data.SideArticleOffset,
         limit: data.SideArticleLimit,
