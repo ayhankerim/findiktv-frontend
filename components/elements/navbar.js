@@ -201,7 +201,7 @@ const Navbar = ({ navbar, pageContext }) => {
           </div>
         </nav>
         <div className="container flex flex-row items-center justify-center gap-2 py-2">
-          <div className="w-full h-[100px] md:h-[300px] -mx-2 sm:mx-0">
+          <div className="w-full hidden sm:block h-[300px] -mx-2 sm:mx-0">
             <Advertisement position="masthead" />
           </div>
         </div>

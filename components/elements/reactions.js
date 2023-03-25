@@ -147,7 +147,7 @@ const Reactions = ({ article }) => {
                 ></div>
               </div>
               <button
-                className={`"w-full h-full ${
+                className={`"w-full ${
                   emoji.check
                     ? "border-secondary bg-white shadow-lg"
                     : "border-midgray bg-lightgray"
