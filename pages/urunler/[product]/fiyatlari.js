@@ -1,5 +1,6 @@
 import React, { useState, useEffect, Fragment } from "react"
 import Link from "next/link"
+import dynamic from "next/dynamic"
 import {
   getProductData,
   getAllPricesData,
@@ -16,7 +17,7 @@ import Advertisement from "@/components/elements/advertisement"
 import ArticleDates from "@/components/elements/date"
 import ViewCounter from "@/components/elements/pageviews"
 import ArticleShare from "@/components/elements/share"
-import PriceChart from "@/components/elements/price/chart"
+//import PriceChart from "@/components/elements/price/chart"
 import Seo from "@/components/elements/seo"
 import Image from "next/image"
 import { useRouter } from "next/router"
@@ -61,6 +62,14 @@ const DynamicProducts = ({
   const [priceType, setPriceType] = useState(pricetypes[0])
   const [cityList, setCityList] = useState(null)
   const dispatch = useDispatch()
+
+  const PriceChart = dynamic(
+    () => import("@/components/elements/price/chart"),
+    {
+      loading: () => <p>Yükleniyor...</p>,
+      ssr: false,
+    }
+  )
 
   useEffect(() => {
     const citydata = [

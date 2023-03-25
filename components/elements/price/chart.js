@@ -284,7 +284,7 @@ const PriceChart = ({ city, product, type, grapghData }) => {
   }, [average, city, grapghData, product, type])
   return (
     <>
-      <div className="hidden md:block border border-lightgray rounded p-3">
+      <div className="border border-lightgray rounded p-3">
         <HighchartsReact
           highcharts={Highcharts}
           constructorType={"stockChart"}
