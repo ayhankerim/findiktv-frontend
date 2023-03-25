@@ -1,5 +1,5 @@
 import React from "react"
-import Slider from "react-slick"
+import dynamic from "next/dynamic"
 import Image from "next/image"
 import { getGlobalData } from "@/utils/api"
 import Layout from "@/components/layout"
@@ -21,6 +21,11 @@ const RandimanHesaplama = ({ global }) => {
     twitterUsername: "findiktvcom",
     shareImage: null,
   }
+
+  const Slider = dynamic(() => import("react-slick"), {
+    loading: () => <p>Yükleniyor...</p>,
+    ssr: false,
+  })
 
   if (metadata && metadata.shareImage?.data == null) {
     delete metadata.shareImage
@@ -96,7 +101,7 @@ const RandimanHesaplama = ({ global }) => {
             {[1, 2, 3, 4, 5].map((item) => (
               <div key={item}>
                 <Image
-                  alt="Gün 1"
+                  alt={`Gün ${item}`}
                   width={790}
                   height={527}
                   className="p-0"

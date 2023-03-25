@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react"
 import PropTypes from "prop-types"
-import Slider from "react-slick"
 import Link from "next/link"
 import Image from "next/image"
+import dynamic from "next/dynamic"
 import NextImage from "@/components/elements/image"
 import { fetchAPI } from "@/utils/api"
 import { categoryColor } from "@/utils/category-color"
@@ -15,10 +15,14 @@ import "moment/locale/tr"
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ")
 }
-
 const SliderWithSide = ({ data, position = "sidebar" }) => {
   const [sliderposts, setSliderPosts] = useState([])
   const [mostVisiteds, setMostVisiteds] = useState([])
+
+  const Slider = dynamic(() => import("react-slick"), {
+    loading: () => <p>Yükleniyor...</p>,
+    ssr: false,
+  })
 
   useEffect(() => {
     fetchAPI("/articles", {
@@ -161,11 +165,8 @@ const SliderWithSide = ({ data, position = "sidebar" }) => {
                 title={article.attributes.title}
                 target="_blank"
               >
-                <Image
-                  src={
-                    article.attributes.homepage_image.data.attributes.formats
-                      .medium.url
-                  }
+                <NextImage
+                  media={article.attributes.homepage_image}
                   alt={article.attributes.title}
                   className="p-0"
                   width="821"

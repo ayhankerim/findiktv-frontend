@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from "react"
-import Slider from "react-slick"
+import dynamic from "next/dynamic"
 import Link from "next/link"
-import Image from "next/image"
+import NextImage from "@/components/elements/image"
 import { fetchAPI } from "@/utils/api"
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs"
 import "slick-carousel/slick/slick.css"
 
 const ArticleSlider = ({ slug, size }) => {
   const [sliderposts, setSliderPosts] = useState([])
+
+  const Slider = dynamic(() => import("react-slick"), {
+    loading: () => <p>Yükleniyor...</p>,
+    ssr: false,
+  })
 
   useEffect(() => {
     fetchAPI("/articles", {
@@ -102,11 +107,8 @@ const ArticleSlider = ({ slug, size }) => {
       {sliderposts.map((article) => (
         <article className="" key={article.id}>
           <Link href={`/haber/${article.id}/${article.attributes.slug}`}>
-            <Image
-              src={
-                article.attributes.homepage_image.data.attributes.formats.small
-                  .url
-              }
+            <NextImage
+              media={article.attributes.homepage_image}
               alt={
                 article.attributes.homepage_image.data.attributes
                   .alternativeText
