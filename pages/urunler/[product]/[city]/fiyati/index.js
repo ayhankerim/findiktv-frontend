@@ -39,20 +39,7 @@ const pricetypes = [
     name: "SERBEST PİYASA FİYATLARI",
     id: "openmarket",
   },
-  // {
-  //   name: "TMO FİYATLARI",
-  //   id: "tmo",
-  // },
 ]
-const productContent = {
-  id: 1,
-  title: "Fındık",
-  slug: "findik",
-}
-const productContext = {
-  title: "Fındık",
-  slug: "findik",
-}
 
 const DynamicCities = ({
   cityContent,
@@ -66,19 +53,18 @@ const DynamicCities = ({
   const [priceData, setPriceData] = useState(null)
   const [cityList, setCityList] = useState(null)
   const dispatch = useDispatch()
-  //const AllAdvertisements = useSelector((state) => state.advertisement.adsData)
 
   useEffect(() => {
     fetchAPI("/prices", {
       filters: {
         product: {
-          slug: {
-            $eq: productContent.slug,
+          id: {
+            $eq: cityContent.prices.data[0].attributes.product.data.id,
           },
         },
         city: {
-          slug: {
-            $eq: cityContext.slug,
+          id: {
+            $eq: cityContent.prices.data[0].attributes.product.data.id,
           },
         },
         type: {
@@ -112,7 +98,13 @@ const DynamicCities = ({
       setPriceData(data)
     })
     advertisement && dispatch(updateAds(advertisement))
-  }, [advertisement, dispatch, priceType, cityContext.slug])
+  }, [
+    advertisement,
+    dispatch,
+    priceType,
+    cityContext.slug,
+    cityContent.prices.data,
+  ])
 
   const router = useRouter()
   // Check if the required data was provided
@@ -168,7 +160,10 @@ const DynamicCities = ({
         "/fiyati",
     },
   ]
-  //console.log("cityContext", cityContext)
+  console.log(
+    "cityContext",
+    cityContent.prices.data[0].attributes.product.data.id
+  )
   return (
     <Layout global={global} cityContext={cityContext}>
       {/* Add meta tags for SEO*/}
@@ -239,27 +234,36 @@ const DynamicCities = ({
             <AverageCard cardData={priceData} />
             <ArticleShare
               position="articleTop"
-              title={`${productContent.title} Fiyatları`}
-              slug={`${process.env.NEXT_PUBLIC_SITE_URL}/urunler/${productContext.slug}/fiyatlari`}
+              title={`${cityContent.prices.data[0].attributes.product.data.attributes.title} Fiyatları`}
+              slug={`${process.env.NEXT_PUBLIC_SITE_URL}/urunler/${cityContent.prices.data[0].attributes.product.data.attributes.slug}/fiyatlari`}
             />
             <PriceChart
               type={priceType.id}
               city={cityContext.slug}
-              product={productContext.slug}
+              product={
+                cityContent.prices.data[0].attributes.product.data.attributes
+                  .slug
+              }
               grapghData={priceData}
             />
             {priceType.id != "tmo" && (
               <>
                 <TermlyPriceChange
                   type={priceType.id}
-                  product={productContext.slug}
+                  product={
+                    cityContent.prices.data[0].attributes.product.data
+                      .attributes.slug
+                  }
                   priceData={priceData}
                 />
                 <div className="w-full h-[300px] lg:h-[120px] -mx-2 sm:mx-0">
                   <Advertisement position="price-page-middle-3" />
                 </div>
                 <LatestPriceEntries
-                  product={productContext.slug}
+                  product={
+                    cityContent.prices.data[0].attributes.product.data
+                      .attributes.slug
+                  }
                   priceData={priceData}
                   cityList={cityList}
                 />
@@ -273,7 +277,7 @@ const DynamicCities = ({
             />
             <ArticleMostVisited size={10} slug={null} />
             <EfficiencyCalculation
-              product={productContent.id}
+              product={cityContent.prices.data[0].attributes.product.data.id}
               city={null}
               pricetype={priceType.id}
             />
@@ -307,19 +311,22 @@ const DynamicCities = ({
             <ArticleShare
               position="articleBottom"
               title={`${cityContent.title} Fiyatları`}
-              slug={`${process.env.NEXT_PUBLIC_SITE_URL}/urunler/${productContext.slug}/${cityContext.slug}/fiyati`}
+              slug={`${process.env.NEXT_PUBLIC_SITE_URL}/urunler/${cityContent.prices.data[0].attributes.product.data.attributes.slug}/${cityContext.slug}/fiyati`}
             />
             <div className="flex flex-row items-center sm:items-start justify-between mt-4 mb-2">
               <ArticleDates
                 publishedAt={priceData?.data[0]?.attributes.date}
                 updatedAt={priceData?.data[0]?.attributes.date}
               />
-              <ViewCounter product={productContent.id} city={cityContent.id} />
+              <ViewCounter
+                product={cityContent.prices.data[0].attributes.product.data.id}
+                city={cityContent.prices.data[0].attributes.product.data.id}
+              />
             </div>
             <LatestArticles
               current={null}
-              product={productContent.id}
-              city={cityContent.id}
+              product={cityContent.prices.data[0].attributes.product.data.id}
+              city={cityContent.prices.data[0].attributes.product.data.id}
               count={3}
               offset={0}
               position="bottom"
@@ -329,8 +336,8 @@ const DynamicCities = ({
             />
             <ArticleComments
               article={null}
-              product={productContent.id}
-              slug={`${process.env.NEXT_PUBLIC_SITE_URL}/urunler/${productContext.slug}/${cityContext.slug}/fiyati`}
+              product={cityContent.prices.data[0].attributes.product.data.id}
+              slug={`${process.env.NEXT_PUBLIC_SITE_URL}/urunler/${cityContent.prices.data[0].attributes.product.data.attributes.slug}/${cityContext.slug}/fiyati`}
               city={cityContent.id}
               infinite={false}
             />
@@ -439,8 +446,6 @@ export async function getStaticProps(context) {
     slug,
     localizations,
   }
-
-  //const localizedPaths = getLocalizedPaths(productContext)
 
   return {
     props: {

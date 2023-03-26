@@ -1187,6 +1187,7 @@ export async function getAllPricesData({ product, limit }) {
                   data {
                     attributes {
                       title
+                      slug
                     }
                   }
                 }
