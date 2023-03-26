@@ -1,5 +1,4 @@
 import React, { useEffect } from "react"
-import ErrorPage from "next/error"
 import Image from "next/image"
 import { useRouter } from "next/router"
 import { useDispatch } from "react-redux"

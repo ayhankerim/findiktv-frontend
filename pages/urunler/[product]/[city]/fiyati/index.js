@@ -1,5 +1,4 @@
 import React, { useState, useEffect, Fragment } from "react"
-import ErrorPage from "next/error"
 import {
   getProductCityData,
   getAdsData,
@@ -20,7 +19,7 @@ import Image from "next/image"
 import { useRouter } from "next/router"
 import Layout from "@/components/layout"
 import AverageCard from "@/components/elements/price/average-card"
-import TermlyPriceChange from "@/components/elements/price/termly-price-changes"
+//import TermlyPriceChange from "@/components/elements/price/termly-price-changes"
 import LatestArticles from "@/components/elements/latest-articles"
 import ArticleComments from "@/components/elements/comments/comments"
 import AddPrice from "@/components/elements/price/addPrice"
@@ -246,14 +245,14 @@ const DynamicCities = ({
             />
             {priceType.id != "tmo" && (
               <>
-                <TermlyPriceChange
+                {/* <TermlyPriceChange
                   type={priceType.id}
                   product={
                     cityContent.prices.data[0].attributes.product.data
                       .attributes.slug
                   }
                   priceData={priceData}
-                />
+                /> */}
                 <div className="w-full h-[300px] lg:h-[120px] -mx-2 sm:mx-0">
                   <Advertisement position="price-page-middle-3" />
                 </div>

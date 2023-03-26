@@ -1,6 +1,5 @@
 import React from "react"
 import { useRouter } from "next/router"
-import ErrorPage from "next/error"
 import useSWRInfinite from "swr/infinite"
 import {
   getCategoryData,

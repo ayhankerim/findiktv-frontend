@@ -21,7 +21,7 @@ import { useRouter } from "next/router"
 import Layout from "@/components/layout"
 import AverageCard from "@/components/elements/price/average-card"
 import CityPriceList from "@/components/elements/price/city-price-list"
-import TermlyPriceChange from "@/components/elements/price/termly-price-changes"
+//import TermlyPriceChange from "@/components/elements/price/termly-price-changes"
 import LatestArticles from "@/components/elements/latest-articles"
 import ArticleComments from "@/components/elements/comments/comments"
 import AddPrice from "@/components/elements/price/addPrice"
@@ -181,11 +181,11 @@ const DynamicProducts = ({
               product={productContext.slug}
               grapghData={priceData}
             />
-            <TermlyPriceChange
+            {/* <TermlyPriceChange
               type={priceType.id}
               product={productContext.slug}
               priceData={priceData}
-            />
+            /> */}
             <div className="w-full h-[300px] lg:h-[120px] -mx-2 sm:mx-0">
               <Advertisement position="price-page-middle-3" />
             </div>

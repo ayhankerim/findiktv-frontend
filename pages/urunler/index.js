@@ -1,7 +1,6 @@
 import { useRouter } from "next/router"
 import { getAdsData, fetchAPI, getGlobalData } from "@/utils/api"
 import Link from "next/link"
-import ErrorPage from "next/error"
 import Layout from "@/components/layout"
 import Breadcrumb from "@/components/elements/breadcrumb"
 import Seo from "@/components/elements/seo"
