@@ -17,7 +17,6 @@ const ViewCounter = ({
 }) => {
   const [loading, setLoading] = useState(false)
   const [view, setView] = useState(300)
-
   useEffect(() => {
     setLoading(true)
     const fetchData = async () => {
@@ -85,12 +84,12 @@ const ViewCounter = ({
               body: JSON.stringify({
                 data: {
                   view: 1,
-                  article: article,
-                  city: city,
-                  merchant: merchant,
-                  page: page,
-                  product: product,
-                  tag: tag,
+                  article: parseInt(article),
+                  city: parseInt(city),
+                  merchant: parseInt(merchant),
+                  page: parseInt(page),
+                  product: parseInt(product),
+                  tag: parseInt(tag),
                 },
               }),
             }
