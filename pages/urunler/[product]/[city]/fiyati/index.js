@@ -53,6 +53,7 @@ const DynamicCities = ({
   const [priceData, setPriceData] = useState(null)
   const [cityList, setCityList] = useState(null)
   const dispatch = useDispatch()
+  //const AllAdvertisements = useSelector((state) => state.advertisement.adsData)
 
   useEffect(() => {
     fetchAPI("/prices", {
@@ -64,7 +65,7 @@ const DynamicCities = ({
         },
         city: {
           id: {
-            $eq: cityContent.prices.data[0].attributes.product.data.id,
+            $eq: cityContent.id,
           },
         },
         type: {
@@ -104,6 +105,7 @@ const DynamicCities = ({
     priceType,
     cityContext.slug,
     cityContent.prices.data,
+    cityContent.id,
   ])
 
   const router = useRouter()
@@ -160,10 +162,7 @@ const DynamicCities = ({
         "/fiyati",
     },
   ]
-  console.log(
-    "cityContext",
-    cityContent.prices.data[0].attributes.product.data.id
-  )
+  //console.log("cityContext", cityContext)
   return (
     <Layout global={global} cityContext={cityContext}>
       {/* Add meta tags for SEO*/}
@@ -320,13 +319,13 @@ const DynamicCities = ({
               />
               <ViewCounter
                 product={cityContent.prices.data[0].attributes.product.data.id}
-                city={cityContent.prices.data[0].attributes.product.data.id}
+                city={cityContent.id}
               />
             </div>
             <LatestArticles
               current={null}
               product={cityContent.prices.data[0].attributes.product.data.id}
-              city={cityContent.prices.data[0].attributes.product.data.id}
+              city={cityContent.id}
               count={3}
               offset={0}
               position="bottom"
@@ -446,6 +445,8 @@ export async function getStaticProps(context) {
     slug,
     localizations,
   }
+
+  //const localizedPaths = getLocalizedPaths(productContext)
 
   return {
     props: {
