@@ -6,15 +6,7 @@ import { BiLoaderCircle } from "react-icons/bi"
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ")
 }
-const ViewCounter = ({
-  visible = true,
-  article,
-  city,
-  tag,
-  merchant,
-  page,
-  product,
-}) => {
+const ViewCounter = ({ article }) => {
   const [loading, setLoading] = useState(false)
   const [view, setView] = useState(300)
   useEffect(() => {
@@ -25,31 +17,6 @@ const ViewCounter = ({
           article: {
             id: {
               $eq: article,
-            },
-          },
-          city: {
-            id: {
-              $eq: city,
-            },
-          },
-          merchant: {
-            id: {
-              $eq: merchant,
-            },
-          },
-          page: {
-            id: {
-              $eq: page,
-            },
-          },
-          product: {
-            id: {
-              $eq: product,
-            },
-          },
-          tag: {
-            id: {
-              $eq: tag,
             },
           },
         },
@@ -84,12 +51,7 @@ const ViewCounter = ({
               body: JSON.stringify({
                 data: {
                   view: 1,
-                  article: parseInt(article),
-                  city: parseInt(city),
-                  merchant: parseInt(merchant),
-                  page: parseInt(page),
-                  product: parseInt(product),
-                  tag: parseInt(tag),
+                  article: article,
                 },
               }),
             }
@@ -99,15 +61,10 @@ const ViewCounter = ({
     }
 
     fetchData()
-  }, [article, city, merchant, page, product, setLoading, setView, tag])
+  }, [article, setLoading, setView])
   return (
     <>
-      <div
-        className={classNames(
-          visible ? "" : "hidden",
-          "flex flex-col md:flex-row items-center md:gap-1 text-xs text-midgray"
-        )}
-      >
+      <div className="flex flex-col md:flex-row items-center md:gap-1 text-xs text-midgray">
         <span className="flex flex-col md:flex-row items-center md:gap-1">
           <MdOutlineRemoveRedEye className="inline-block" />
           {loading ? (

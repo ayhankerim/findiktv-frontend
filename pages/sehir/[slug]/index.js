@@ -4,7 +4,6 @@ import useSWRInfinite from "swr/infinite"
 import { getCityData, getAdsData, fetchAPI, getGlobalData } from "@/utils/api"
 import Layout from "@/components/layout"
 import ArticleBlock from "@/components/elements/article/articles-block"
-import ViewCounter from "@/components/elements/pageviews"
 import Seo from "@/components/elements/seo"
 import LatestComments from "@/components/elements/comments/latest-comments"
 import ArticleMostVisited from "@/components/elements/article/articles-most-visited"
@@ -87,7 +86,6 @@ const DynamicCities = ({
   return (
     <Layout global={global} pageContext={cityContext}>
       <Seo metadata={metadataWithDefaults} />
-      <ViewCounter visible={false} city={cityContent.id} />
       <main className="container flex flex-col justify-between gap-4 pt-2 bg-white">
         <div className="flex flex-col lg:flex-row items-start justify-between gap-4 pt-2">
           <div className="flex flex-col flex-1 w-full gap-3">

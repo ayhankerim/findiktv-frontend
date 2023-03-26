@@ -13,7 +13,6 @@ import { TbChevronDown } from "react-icons/tb"
 import Breadcrumb from "@/components/elements/breadcrumb"
 import Advertisement from "@/components/elements/advertisement"
 import ArticleDates from "@/components/elements/date"
-import ViewCounter from "@/components/elements/pageviews"
 import ArticleShare from "@/components/elements/share"
 import PriceChart from "@/components/elements/price/chart"
 import Seo from "@/components/elements/seo"
@@ -243,7 +242,6 @@ const DynamicProducts = ({
                 publishedAt={priceData?.data[0].attributes.date}
                 updatedAt={priceData?.data[0].attributes.date}
               />
-              <ViewCounter product={productContent.id} />
             </div>
             <LatestArticles
               current={null}

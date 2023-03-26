@@ -1,5 +1,4 @@
 import React, { useEffect } from "react"
-import ViewCounter from "@/components/elements/pageviews"
 import { getPageData, fetchAPI, getAdsData, getGlobalData } from "utils/api"
 import Sections from "@/components/sections"
 import Seo from "@/components/elements/seo"
@@ -55,7 +54,6 @@ const DynamicPage = ({
       <Seo metadata={metadataWithDefaults} />
       {/* Display content sections */}
       <Sections sections={sections} preview={preview} />
-      <ViewCounter visible={false} page={pageId} />
     </Layout>
   )
 }
