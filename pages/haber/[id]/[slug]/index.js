@@ -14,16 +14,59 @@ import {
 } from "@/utils/api"
 import Layout from "@/components/layout"
 import Seo from "@/components/elements/seo"
-import Breadcrumb from "@/components/elements/breadcrumb"
-import Advertisement from "@/components/elements/advertisement"
-import ArticleDates from "@/components/elements/date"
-import ViewCounter from "@/components/elements/pageviews"
-import ArticleShare from "@/components/elements/share"
-//import ArticleReactions from "@/components/elements/reactions"
-//import ArticleComments from "@/components/elements/comments/comments"
-//import ArticleRelations from "@/components/elements/article/article-relations"
-//import LatestArticles from "@/components/elements/latest-articles"
 import ArticleSidebar from "@/components/elements/article/article-sidebar"
+
+const Advertisement = dynamic(
+  () => import("@/components/elements/advertisement"),
+  {
+    loading: () => <p>Yükleniyor...</p>,
+    ssr: false,
+  }
+)
+const Breadcrumb = dynamic(() => import("@/components/elements/breadcrumb"), {
+  loading: () => <p>Yükleniyor...</p>,
+  ssr: false,
+})
+const ViewCounter = dynamic(() => import("@/components/elements/pageviews"), {
+  loading: () => <p>Yükleniyor...</p>,
+  ssr: false,
+})
+const ArticleDates = dynamic(() => import("@/components/elements/date"), {
+  loading: () => <p>Yükleniyor...</p>,
+  ssr: false,
+})
+const ArticleShare = dynamic(() => import("@/components/elements/share"), {
+  loading: () => <p>Yükleniyor...</p>,
+  ssr: false,
+})
+const ArticleReactions = dynamic(
+  () => import("@/components/elements/reactions"),
+  {
+    loading: () => <p>Yükleniyor...</p>,
+    ssr: false,
+  }
+)
+const ArticleComments = dynamic(
+  () => import("@/components/elements/comments/comments"),
+  {
+    loading: () => <p>Yükleniyor...</p>,
+    ssr: false,
+  }
+)
+const ArticleRelations = dynamic(
+  () => import("@/components/elements/article/article-relations"),
+  {
+    loading: () => <p>Yükleniyor...</p>,
+    ssr: false,
+  }
+)
+const LatestArticles = dynamic(
+  () => import("@/components/elements/latest-articles"),
+  {
+    loading: () => <p>Yükleniyor...</p>,
+    ssr: false,
+  }
+)
 
 const DynamicArticle = ({
   articleContent,
@@ -34,34 +77,6 @@ const DynamicArticle = ({
 }) => {
   const router = useRouter()
   const dispatch = useDispatch()
-  const ArticleReactions = dynamic(
-    () => import("@/components/elements/reactions"),
-    {
-      loading: () => <p>Yükleniyor...</p>,
-      ssr: false,
-    }
-  )
-  const ArticleComments = dynamic(
-    () => import("@/components/elements/comments/comments"),
-    {
-      loading: () => <p>Yükleniyor...</p>,
-      ssr: false,
-    }
-  )
-  const ArticleRelations = dynamic(
-    () => import("@/components/elements/article/article-relations"),
-    {
-      loading: () => <p>Yükleniyor...</p>,
-      ssr: false,
-    }
-  )
-  const LatestArticles = dynamic(
-    () => import("@/components/elements/latest-articles"),
-    {
-      loading: () => <p>Yükleniyor...</p>,
-      ssr: false,
-    }
-  )
   useEffect(() => {
     advertisement && dispatch(updateAds(advertisement))
   }, [advertisement, dispatch])
@@ -298,7 +313,7 @@ export async function getStaticProps(context) {
         localizedPaths,
       },
     },
-    revalidate: 60,
+    revalidate: 60 * 60,
   }
 }
 
