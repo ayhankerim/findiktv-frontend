@@ -25,6 +25,7 @@ const Advertisement = dynamic(
 )
 const Breadcrumb = dynamic(() => import("@/components/elements/breadcrumb"), {
   loading: () => <p>Yükleniyor...</p>,
+  ssr: false,
 })
 const ViewCounter = dynamic(() => import("@/components/elements/pageviews"), {
   loading: () => <p>Yükleniyor...</p>,
@@ -32,9 +33,11 @@ const ViewCounter = dynamic(() => import("@/components/elements/pageviews"), {
 })
 const ArticleDates = dynamic(() => import("@/components/elements/date"), {
   loading: () => <p>Yükleniyor...</p>,
+  ssr: false,
 })
 const ArticleShare = dynamic(() => import("@/components/elements/share"), {
   loading: () => <p>Yükleniyor...</p>,
+  ssr: false,
 })
 const ArticleReactions = dynamic(
   () => import("@/components/elements/reactions"),
@@ -54,6 +57,7 @@ const ArticleRelations = dynamic(
   () => import("@/components/elements/article/article-relations"),
   {
     loading: () => <p>Yükleniyor...</p>,
+    ssr: false,
   }
 )
 const LatestArticles = dynamic(
