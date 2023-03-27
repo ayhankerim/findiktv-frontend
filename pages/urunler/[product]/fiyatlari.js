@@ -1,5 +1,6 @@
 import React, { useState, useEffect, Fragment } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import dynamic from "next/dynamic"
 import {
   getProductData,
@@ -8,29 +9,90 @@ import {
   fetchAPI,
   getGlobalData,
 } from "@/utils/api"
+import { useRouter } from "next/router"
 import { useDispatch } from "react-redux"
 import { updateAds } from "@/store/advertisements"
 import { Popover, Transition } from "@headlessui/react"
 import { TbChevronDown } from "react-icons/tb"
-import Breadcrumb from "@/components/elements/breadcrumb"
-import Advertisement from "@/components/elements/advertisement"
-import ArticleDates from "@/components/elements/date"
-import ArticleShare from "@/components/elements/share"
-//import PriceChart from "@/components/elements/price/chart"
 import Seo from "@/components/elements/seo"
-import Image from "next/image"
-import { useRouter } from "next/router"
 import Layout from "@/components/layout"
-import AverageCard from "@/components/elements/price/average-card"
-import CityPriceList from "@/components/elements/price/city-price-list"
 //import TermlyPriceChange from "@/components/elements/price/termly-price-changes"
-import LatestArticles from "@/components/elements/latest-articles"
-import ArticleComments from "@/components/elements/comments/comments"
-import AddPrice from "@/components/elements/price/addPrice"
-import EfficiencyCalculation from "@/components/elements/price/priceCalculator"
-import LatestPriceEntries from "@/components/elements/price/latest-price-entries"
-import ArticleMostVisited from "@/components/elements/article/articles-most-visited"
-import LatestComments from "@/components/elements/comments/latest-comments"
+
+const Advertisement = dynamic(
+  () => import("@/components/elements/advertisement"),
+  {
+    loading: () => <p>Yükleniyor...</p>,
+    ssr: false,
+  }
+)
+const Breadcrumb = dynamic(() => import("@/components/elements/breadcrumb"), {
+  loading: () => <p>Yükleniyor...</p>,
+})
+const AverageCard = dynamic(
+  () => import("@/components/elements/price/average-card"),
+  {
+    loading: () => <p>Yükleniyor...</p>,
+  }
+)
+const ArticleShare = dynamic(() => import("@/components/elements/share"), {
+  loading: () => <p>Yükleniyor...</p>,
+  ssr: false,
+})
+const PriceChart = dynamic(() => import("@/components/elements/price/chart"), {
+  loading: () => <p>Yükleniyor...</p>,
+})
+const CityPriceList = dynamic(
+  () => import("@/components/elements/price/city-price-list"),
+  {
+    loading: () => <p>Yükleniyor...</p>,
+  }
+)
+const LatestPriceEntries = dynamic(
+  () => import("@/components/elements/price/latest-price-entries"),
+  {
+    loading: () => <p>Yükleniyor...</p>,
+  }
+)
+const AddPrice = dynamic(() => import("@/components/elements/price/addPrice"), {
+  loading: () => <p>Yükleniyor...</p>,
+})
+const ArticleMostVisited = dynamic(
+  () => import("@/components/elements/article/articles-most-visited"),
+  {
+    loading: () => <p>Yükleniyor...</p>,
+    ssr: false,
+  }
+)
+const EfficiencyCalculation = dynamic(
+  () => import("@/components/elements/price/priceCalculator"),
+  {
+    loading: () => <p>Yükleniyor...</p>,
+  }
+)
+const ArticleDates = dynamic(() => import("@/components/elements/date"), {
+  loading: () => <p>Yükleniyor...</p>,
+})
+const LatestArticles = dynamic(
+  () => import("@/components/elements/latest-articles"),
+  {
+    loading: () => <p>Yükleniyor...</p>,
+    ssr: false,
+  }
+)
+const ArticleComments = dynamic(
+  () => import("@/components/elements/comments/comments"),
+  {
+    loading: () => <p>Yükleniyor...</p>,
+    ssr: false,
+  }
+)
+const LatestComments = dynamic(
+  () => import("@/components/elements/comments/latest-comments"),
+  {
+    loading: () => <p>Yükleniyor...</p>,
+    ssr: false,
+  }
+)
 
 const pricetypes = [
   {
@@ -60,15 +122,6 @@ const DynamicProducts = ({
   const [priceType, setPriceType] = useState(pricetypes[0])
   const [cityList, setCityList] = useState(null)
   const dispatch = useDispatch()
-
-  const PriceChart = dynamic(
-    () => import("@/components/elements/price/chart"),
-    {
-      loading: () => <p>Yükleniyor...</p>,
-      ssr: false,
-    }
-  )
-
   useEffect(() => {
     const citydata = [
       ...new Set(
