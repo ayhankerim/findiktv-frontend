@@ -90,6 +90,7 @@ const Navbar = ({ navbar, pageContext }) => {
             <button
               onClick={() => setMobileMenuIsShown(true)}
               className="p-1 block md:hidden"
+              aria-label="Mobile Hamburger Menu"
             >
               <MdMenu className="h-8 w-auto" />
             </button>

@@ -88,7 +88,7 @@ const ArticleDates = ({ position, title, slug }) => {
               className="flex flex-row items-center text-xs hover:bg-[#ff9d00] text-[#ff9d00] hover:text-white border border-[#ff9d00] transition duration-150 ease-out hover:ease-in px-2 py-1 rounded"
             >
               <FaComment className="inline-flex text-base mr-2" />
-              <span>{countedComment}</span>
+              <span className="font-bold">{countedComment}</span>
             </button>
           </div>
           <div className="flex flex-row justify-center sm:justifiy-start items-center gap-2 text-midgray">

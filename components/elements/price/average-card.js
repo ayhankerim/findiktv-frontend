@@ -139,8 +139,8 @@ const AverageCard = ({ cardData }) => {
                     case changeRate > 0:
                       return (
                         <>
-                          <div className="flex justify-center items-center h-12 w-10 bg-up/20 rounded p-2">
-                            <TbArrowUp className="text-lg text-up" />
+                          <div className="flex justify-center items-center h-12 w-10 bg-up/80 rounded p-2">
+                            <TbArrowUp className="text-lg text-lightgray" />
                           </div>
                           <div className="flex flex-col flex-1">
                             <span className="font-bold text-xl">
@@ -158,8 +158,8 @@ const AverageCard = ({ cardData }) => {
                     case changeRate < 0:
                       return (
                         <>
-                          <div className="flex justify-center items-center h-12 w-10 bg-down/20 rounded p-2">
-                            <TbArrowDown className="text-lg text-down" />
+                          <div className="flex justify-center items-center h-12 w-10 bg-down/80 rounded p-2">
+                            <TbArrowDown className="text-lg text-lightgray" />
                           </div>
                           <div className="flex flex-col flex-1">
                             <span className="font-bold text-xl">
