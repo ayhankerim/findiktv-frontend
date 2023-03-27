@@ -1,39 +1,67 @@
 import React, { useEffect } from "react"
 import Image from "next/image"
+import dynamic from "next/dynamic"
 import { useRouter } from "next/router"
 import { useDispatch } from "react-redux"
+import { getLocalizedPaths } from "@/utils/localize"
+import { updateAds } from "@/store/advertisements"
+import { contentWithAds } from "@/utils/content-with-ads"
 import {
   getArticleData,
   getAdsData,
   fetchAPI,
   getGlobalData,
 } from "@/utils/api"
-import { updateAds } from "@/store/advertisements"
-import { contentWithAds } from "@/utils/content-with-ads"
+import Layout from "@/components/layout"
 import Seo from "@/components/elements/seo"
 import Breadcrumb from "@/components/elements/breadcrumb"
 import Advertisement from "@/components/elements/advertisement"
 import ArticleDates from "@/components/elements/date"
 import ViewCounter from "@/components/elements/pageviews"
 import ArticleShare from "@/components/elements/share"
-import ArticleReactions from "@/components/elements/reactions"
-import ArticleComments from "@/components/elements/comments/comments"
-import Layout from "@/components/layout"
-import { getLocalizedPaths } from "@/utils/localize"
-import ArticleRelations from "@/components/elements/article/article-relations"
-import LatestArticles from "@/components/elements/latest-articles"
+//import ArticleReactions from "@/components/elements/reactions"
+//import ArticleComments from "@/components/elements/comments/comments"
+//import ArticleRelations from "@/components/elements/article/article-relations"
+//import LatestArticles from "@/components/elements/latest-articles"
 import ArticleSidebar from "@/components/elements/article/article-sidebar"
 
 const DynamicArticle = ({
   articleContent,
   advertisement,
   metadata,
-  preview,
   global,
   articleContext,
 }) => {
   const router = useRouter()
   const dispatch = useDispatch()
+  const ArticleReactions = dynamic(
+    () => import("@/components/elements/reactions"),
+    {
+      loading: () => <p>Yükleniyor...</p>,
+      ssr: false,
+    }
+  )
+  const ArticleComments = dynamic(
+    () => import("@/components/elements/comments/comments"),
+    {
+      loading: () => <p>Yükleniyor...</p>,
+      ssr: false,
+    }
+  )
+  const ArticleRelations = dynamic(
+    () => import("@/components/elements/article/article-relations"),
+    {
+      loading: () => <p>Yükleniyor...</p>,
+      ssr: false,
+    }
+  )
+  const LatestArticles = dynamic(
+    () => import("@/components/elements/latest-articles"),
+    {
+      loading: () => <p>Yükleniyor...</p>,
+      ssr: false,
+    }
+  )
   useEffect(() => {
     advertisement && dispatch(updateAds(advertisement))
   }, [advertisement, dispatch])

@@ -8,7 +8,7 @@ import {
   fetchAPI,
   getGlobalData,
 } from "@/utils/api"
-import { useSelector, useDispatch } from "react-redux"
+import { useDispatch } from "react-redux"
 import { updateAds } from "@/store/advertisements"
 import { Popover, Transition } from "@headlessui/react"
 import { TbChevronDown } from "react-icons/tb"
@@ -53,7 +53,6 @@ const DynamicProducts = ({
   productContent,
   advertisement,
   metadata,
-  preview,
   global,
   priceData,
   productContext,
