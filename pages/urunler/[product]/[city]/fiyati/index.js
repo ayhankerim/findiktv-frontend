@@ -120,7 +120,7 @@ const DynamicCities = ({
     return <div className="container">Yükleniyor...</div>
   }
   const metadataUpdated = {
-    metaTitle: `${metadata.metaTitle} Fındık Fiyat | FINDIK TV`,
+    metaTitle: `${metadata.metaTitle} Fındık Fiyat`,
   }
 
   // Merge default site SEO settings with page specific SEO settings

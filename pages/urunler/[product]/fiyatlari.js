@@ -27,13 +27,11 @@ const Advertisement = dynamic(
 )
 const Breadcrumb = dynamic(() => import("@/components/elements/breadcrumb"), {
   loading: () => <p>Yükleniyor...</p>,
-  ssr: false,
 })
 const AverageCard = dynamic(
   () => import("@/components/elements/price/average-card"),
   {
     loading: () => <p>Yükleniyor...</p>,
-    ssr: false,
   }
 )
 const ArticleShare = dynamic(() => import("@/components/elements/share"), {
@@ -42,20 +40,17 @@ const ArticleShare = dynamic(() => import("@/components/elements/share"), {
 })
 const PriceChart = dynamic(() => import("@/components/elements/price/chart"), {
   loading: () => <p>Yükleniyor...</p>,
-  ssr: false,
 })
 const CityPriceList = dynamic(
   () => import("@/components/elements/price/city-price-list"),
   {
     loading: () => <p>Yükleniyor...</p>,
-    ssr: true,
   }
 )
 const LatestPriceEntries = dynamic(
   () => import("@/components/elements/price/latest-price-entries"),
   {
     loading: () => <p>Yükleniyor...</p>,
-    ssr: false,
   }
 )
 const AddPrice = dynamic(() => import("@/components/elements/price/addPrice"), {
@@ -73,12 +68,10 @@ const EfficiencyCalculation = dynamic(
   () => import("@/components/elements/price/priceCalculator"),
   {
     loading: () => <p>Yükleniyor...</p>,
-    ssr: false,
   }
 )
 const ArticleDates = dynamic(() => import("@/components/elements/date"), {
   loading: () => <p>Yükleniyor...</p>,
-  ssr: false,
 })
 const LatestArticles = dynamic(
   () => import("@/components/elements/latest-articles"),
