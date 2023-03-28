@@ -1,4 +1,4 @@
-import React, { useMemo } from "react"
+import React from "react"
 import Link from "next/link"
 import Moment from "moment"
 import "moment/locale/tr"
@@ -20,61 +20,58 @@ function currencyFormatter(value) {
   }).format(value)
   return amount
 }
-const CityPriceList = ({ product, priceData, cityList }) => {
-  const lastCityPrice = useMemo(
-    () => (type, priceData, priceType, item) => {
-      let theValue = type === 1 ? "-" : 0
-      switch (type) {
-        case 1:
-          theValue = priceData.data.filter(
+function lastCityPrice(type, priceData, priceType, item) {
+  let theValue = type === 1 ? "-" : 0
+  switch (type) {
+    case 1:
+      theValue = priceData.data.filter(
+        (price) =>
+          price.attributes.city.data?.attributes.title === item &&
+          price.attributes.quality === priceType.name
+      )[0] ? (
+        currencyFormatter(
+          priceData.data.filter(
             (price) =>
-              price.attributes.city.data.attributes.title === item &&
+              price.attributes.city.data?.attributes.title === item &&
               price.attributes.quality === priceType.name
-          )[0] ? (
-            currencyFormatter(
-              priceData.data.filter(
-                (price) =>
-                  price.attributes.city.data.attributes.title === item &&
-                  price.attributes.quality === priceType.name
-              )[0].attributes.average
-            )
-          ) : (
-            <span className="text-midgray">-</span>
-          )
-          break
-        case -1:
-          theValue =
+          )[0].attributes.average
+        )
+      ) : (
+        <span className="text-midgray">-</span>
+      )
+      break
+    case -1:
+      theValue =
+        priceData.data.filter(
+          (price) =>
+            price.attributes.city.data?.attributes.title === item &&
+            price.attributes.quality === priceType.name
+        )[0] &&
+        priceData.data.filter(
+          (price) =>
+            price.attributes.city.data?.attributes.title === item &&
+            price.attributes.quality === priceType.name
+        )[1]
+          ? priceData.data.filter(
+              (price) =>
+                price.attributes.city.data?.attributes.title === item &&
+                price.attributes.quality === priceType.name
+            )[0].attributes.average -
             priceData.data.filter(
               (price) =>
-                price.attributes.city.data.attributes.title === item &&
+                price.attributes.city.data?.attributes.title === item &&
                 price.attributes.quality === priceType.name
-            )[0] &&
-            priceData.data.filter(
-              (price) =>
-                price.attributes.city.data.attributes.title === item &&
-                price.attributes.quality === priceType.name
-            )[1]
-              ? priceData.data.filter(
-                  (price) =>
-                    price.attributes.city.data.attributes.title === item &&
-                    price.attributes.quality === priceType.name
-                )[0].attributes.average -
-                priceData.data.filter(
-                  (price) =>
-                    price.attributes.city.data.attributes.title === item &&
-                    price.attributes.quality === priceType.name
-                )[1].attributes.average
-              : 0
-          break
+            )[1].attributes.average
+          : 0
+      break
 
-        default:
-          break
-      }
+    default:
+      break
+  }
 
-      return theValue
-    },
-    []
-  )
+  return theValue
+}
+const CityPriceList = ({ product, priceData, cityList }) => {
   return (
     <div className="flex flex-col">
       <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -133,18 +130,18 @@ const CityPriceList = ({ product, priceData, cityList }) => {
                               "/" +
                               priceData.data.filter(
                                 (price) =>
-                                  price.attributes.city.data.attributes
+                                  price.attributes.city.data?.attributes
                                     .title === item
-                              )[0].attributes.city.data.attributes.slug +
+                              )[0].attributes.city.data?.attributes.slug +
                               "/fiyati"
                             }
                           >
                             {
                               priceData.data.filter(
                                 (price) =>
-                                  price.attributes.city.data.attributes
+                                  price.attributes.city.data?.attributes
                                     .title === item
-                              )[0].attributes.city.data.attributes.title
+                              )[0].attributes.city.data?.attributes.title
                             }
                           </Link>
                         </td>
@@ -180,7 +177,7 @@ const CityPriceList = ({ product, priceData, cityList }) => {
                                 ["Sivri", "Levant", "Giresun"].includes(
                                   price.attributes.quality
                                 ) &&
-                                price.attributes.city.data.attributes.title ===
+                                price.attributes.city.data?.attributes.title ===
                                   item
                             )[0].attributes.date
                           ).fromNow(true)}{" "}

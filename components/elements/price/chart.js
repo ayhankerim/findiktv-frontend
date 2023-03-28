@@ -202,6 +202,9 @@ const PriceChart = ({ city, product, type, grapghData }) => {
       enabled: true,
       radius: 3,
     },
+    accessibility: {
+      enabled: false,
+    },
     legend: {
       enabled: false,
     },
