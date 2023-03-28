@@ -959,6 +959,7 @@ export async function getProductData({ product, locale }) {
               attributes {
                 title
                 slug
+                summary
                 content
                 featured {
                   ...FileParts

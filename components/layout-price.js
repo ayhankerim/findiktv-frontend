@@ -221,6 +221,9 @@ const Layout = ({
                 )}
               </Popover>
             </div>
+            <article className="font-semibold text-lg text-darkgray">
+              {productContent.summary}
+            </article>
           </div>
           <div className="flex flex-col lg:flex-row items-start justify-between gap-4 pt-2">
             <div className="flex flex-col flex-1 w-full gap-3">
@@ -270,9 +273,6 @@ const Layout = ({
           <div className="flex flex-col xl:flex-row items-start justify-between gap-4 pt-2">
             <div className="flex flex-col flex-1 w-full gap-3">
               {/* Featured Image or Video Section*/}
-              <article className="font-semibold text-lg text-darkgray">
-                {productContent.summary}
-              </article>
               <div className="mb-2 relative h-[320px] lg:h-[500px] -mx-4 sm:mx-0 lg:mx-0">
                 <Image
                   src={productContent.featured.data.attributes.url}
