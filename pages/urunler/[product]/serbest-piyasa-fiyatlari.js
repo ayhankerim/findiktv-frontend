@@ -115,12 +115,13 @@ export async function getStaticProps(context) {
   })
 
   // We have the required page data, pass it to the page component
-  const { title, content, featured, metadata, localizations, slug } =
+  const { title, summary, content, featured, metadata, localizations, slug } =
     productData.attributes
 
   const productContent = {
     id: productData.id,
     title,
+    summary,
     content,
     featured,
   }

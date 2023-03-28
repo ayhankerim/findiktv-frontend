@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react"
+import React, { useEffect, useState } from "react"
 import HighchartsReact from "highcharts-react-official"
 import Highcharts from "highcharts/highstock"
 //import HighchartsMore from "highcharts/highcharts-more"
@@ -72,44 +72,40 @@ if (typeof Highcharts === "object") {
     },
   })
 }
+const average = (arr) => {
+  let sums = {},
+    counts = {},
+    volume = {},
+    quality = {},
+    results = [],
+    date
+  for (var i = 0; i < arr.length; i++) {
+    date =
+      new Date(arr[i].attributes.date).setHours(0, 0, 0) + 24 * 60 * 60 * 1000
+    if (!(date in sums)) {
+      sums[date] = 0
+      counts[date] = 0
+      volume[date] = 0
+      quality[date] = ""
+    }
+    sums[date] += arr[i].attributes.average * arr[i].attributes.volume
+    volume[date] += arr[i].attributes.volume
+    quality[date] = arr[i].attributes.quality
+    counts[date]++
+  }
+
+  for (date in sums) {
+    results.push({
+      date: date,
+      average: sums[date] / volume[date],
+      volume: volume[date],
+      quality: quality[date],
+    })
+  }
+  return results
+}
 
 const PriceChart = ({ city, product, type, grapghData }) => {
-  const average = useMemo(
-    () => (arr) => {
-      let sums = {},
-        counts = {},
-        volume = {},
-        quality = {},
-        results = [],
-        date
-      for (var i = 0; i < arr.length; i++) {
-        date =
-          new Date(arr[i].attributes.date).setHours(0, 0, 0) +
-          24 * 60 * 60 * 1000
-        if (!(date in sums)) {
-          sums[date] = 0
-          counts[date] = 0
-          volume[date] = 0
-          quality[date] = ""
-        }
-        sums[date] += arr[i].attributes.average * arr[i].attributes.volume
-        volume[date] += arr[i].attributes.volume
-        quality[date] = arr[i].attributes.quality
-        counts[date]++
-      }
-
-      for (date in sums) {
-        results.push({
-          date: date,
-          average: sums[date] / volume[date],
-          volume: volume[date],
-          quality: quality[date],
-        })
-      }
-      return results
-    },
-    []
-  )
   const [chartOptions, setChartOptions] = useState({
     chart: {
       backgroundColor: "transparent",
@@ -284,7 +280,7 @@ const PriceChart = ({ city, product, type, grapghData }) => {
           },
         ],
       })
-  }, [average, city, grapghData, product, type])
+  }, [city, grapghData, product, type])
   return (
     <>
       <div className="border border-lightgray rounded p-3">

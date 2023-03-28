@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react"
+import React, { useState } from "react"
 import Advertisement from "@/components/elements/advertisement"
 
 import {
@@ -29,82 +29,76 @@ function currencyFormatter(value) {
 const AverageCard = ({ cardData }) => {
   const [openInfo, setInfoOpen] = useState("")
 
-  const priceAverage = useMemo(
-    () => (params) => {
-      const newestDay = new Date(
-        cardData.data.filter(
-          (item) => item.attributes.quality === params
-        )[0]?.attributes.date
-      ).toLocaleDateString()
+  const priceAverage = (params) => {
+    const newestDay = new Date(
+      cardData.data.filter(
+        (item) => item.attributes.quality === params
+      )[0]?.attributes.date
+    ).toLocaleDateString()
 
-      let priceSum = 0
-      let totalvolume = 0
-      cardData.data
-        .filter(
-          (item) =>
-            new Date(item.attributes.date).toLocaleDateString() === newestDay &&
-            item.attributes.quality === params
-        )
-        .map((item) => {
-          priceSum = item.attributes.average * item.attributes.volume + priceSum
-          totalvolume = item.attributes.volume + totalvolume
-        })
-      const averageSum = priceSum / totalvolume
-      return averageSum
-    },
-    [cardData]
-  )
+    let priceSum = 0
+    let totalvolume = 0
+    cardData.data
+      .filter(
+        (item) =>
+          new Date(item.attributes.date).toLocaleDateString() === newestDay &&
+          item.attributes.quality === params
+      )
+      .map((item) => {
+        priceSum = item.attributes.average * item.attributes.volume + priceSum
+        totalvolume = item.attributes.volume + totalvolume
+      })
+    const averageSum = priceSum / totalvolume
+    return averageSum
+  }
 
-  const priceChange = useMemo(
-    () => (params) => {
-      const newestDay = new Date(
-        cardData.data.filter(
-          (item) => item.attributes.quality === params
-        )[0]?.attributes.date
-      ).toLocaleDateString()
-      const secondDay = new Date(
-        cardData.data.filter(
-          (item) =>
-            new Date(item.attributes.date).toLocaleDateString() < newestDay &&
-            item.attributes.quality === params
-        )[0]?.attributes.date
-      ).toLocaleDateString()
+  const priceChange = (params) => {
+    const newestDay = new Date(
+      cardData.data.filter(
+        (item) => item.attributes.quality === params
+      )[0]?.attributes.date
+    ).toLocaleDateString()
+    const secondDay = new Date(
+      cardData.data.filter(
+        (item) =>
+          new Date(item.attributes.date).toLocaleDateString() < newestDay &&
+          item.attributes.quality === params
+      )[0]?.attributes.date
+    ).toLocaleDateString()
 
-      let priceSum = 0
-      let totalvolume = 0
-      let secondpriceSum = 0
-      let secondtotalvolume = 0
+    let priceSum = 0
+    let totalvolume = 0
+    let secondpriceSum = 0
+    let secondtotalvolume = 0
 
-      cardData.data
-        .filter(
-          (item) =>
-            new Date(item.attributes.date).toLocaleDateString() === newestDay &&
-            item.attributes.quality === params
-        )
-        .map((item) => {
-          priceSum = item.attributes.average * item.attributes.volume + priceSum
-          totalvolume = item.attributes.volume + totalvolume
-        })
+    cardData.data
+      .filter(
+        (item) =>
+          new Date(item.attributes.date).toLocaleDateString() === newestDay &&
+          item.attributes.quality === params
+      )
+      .map((item) => {
+        priceSum = item.attributes.average * item.attributes.volume + priceSum
+        totalvolume = item.attributes.volume + totalvolume
+      })
 
-      cardData.data
-        .filter(
-          (item) =>
-            new Date(item.attributes.date).toLocaleDateString() === secondDay &&
-            item.attributes.quality === params
-        )
-        .map((item) => {
-          secondpriceSum =
-            item.attributes.average * item.attributes.volume + secondpriceSum
-          secondtotalvolume = item.attributes.volume + secondtotalvolume
-        })
+    cardData.data
+      .filter(
+        (item) =>
+          new Date(item.attributes.date).toLocaleDateString() === secondDay &&
+          item.attributes.quality === params
+      )
+      .map((item) => {
+        secondpriceSum =
+          item.attributes.average * item.attributes.volume + secondpriceSum
+        secondtotalvolume = item.attributes.volume + secondtotalvolume
+      })
 
-      const averageSum = priceSum / totalvolume
-      const secondaverageSum = secondpriceSum / secondtotalvolume
+    const averageSum = priceSum / totalvolume
+    const secondaverageSum = secondpriceSum / secondtotalvolume
 
-      return (100 * (averageSum - secondaverageSum)) / secondaverageSum
-    },
-    [cardData]
-  )
+    return (100 * (averageSum - secondaverageSum)) / secondaverageSum
+  }
   return (
     <>
       <div className="flex flex-col md:flex-row gap-3">
