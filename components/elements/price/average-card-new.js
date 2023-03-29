@@ -80,7 +80,6 @@ const CardItem = ({ product, type, quality }) => {
           },
           date: {
             $lt: Moment(inDate.data[0].attributes.date)
-              .utcOffset(3)
               .set("hour", 0)
               .set("minute", 0)
               .set("second", 0)
