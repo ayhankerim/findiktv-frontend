@@ -3,6 +3,7 @@ import Image from "next/image"
 import dynamic from "next/dynamic"
 import { useRouter } from "next/router"
 import { useDispatch } from "react-redux"
+import { isMobile } from "react-device-detect"
 import { getLocalizedPaths } from "@/utils/localize"
 import { updateAds } from "@/store/advertisements"
 import { contentWithAds } from "@/utils/content-with-ads"
@@ -16,50 +17,58 @@ import Layout from "@/components/layout"
 import Seo from "@/components/elements/seo"
 import ArticleSidebar from "@/components/elements/article/article-sidebar"
 
+const Loader = () => (
+  <div className="lds-ellipsis">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+)
 const Advertisement = dynamic(
   () => import("@/components/elements/advertisement"),
   {
-    loading: () => <p>Yükleniyor...</p>,
+    loading: () => <Loader />,
     ssr: false,
   }
 )
 const Breadcrumb = dynamic(() => import("@/components/elements/breadcrumb"), {
-  loading: () => <p>Yükleniyor...</p>,
+  loading: () => <Loader />,
 })
 const ViewCounter = dynamic(() => import("@/components/elements/pageviews"), {
-  loading: () => <p>Yükleniyor...</p>,
+  loading: () => <Loader />,
   ssr: false,
 })
 const ArticleDates = dynamic(() => import("@/components/elements/date"), {
-  loading: () => <p>Yükleniyor...</p>,
+  loading: () => <Loader />,
 })
 const ArticleShare = dynamic(() => import("@/components/elements/share"), {
-  loading: () => <p>Yükleniyor...</p>,
+  loading: () => <Loader />,
 })
 const ArticleReactions = dynamic(
   () => import("@/components/elements/reactions"),
   {
-    loading: () => <p>Yükleniyor...</p>,
+    loading: () => <Loader />,
     ssr: false,
   }
 )
 const ArticleComments = dynamic(
   () => import("@/components/elements/comments/comments"),
   {
-    loading: () => <p>Yükleniyor...</p>,
+    loading: () => <Loader />,
     ssr: false,
   }
 )
 const ArticleRelations = dynamic(
   () => import("@/components/elements/article/article-relations"),
   {
-    loading: () => <p>Yükleniyor...</p>,
+    loading: () => <Loader />,
   }
 )
 const LatestArticles = dynamic(
   () => import("@/components/elements/latest-articles"),
   {
-    loading: () => <p>Yükleniyor...</p>,
+    loading: () => <Loader />,
     ssr: false,
   }
 )
@@ -135,11 +144,13 @@ const DynamicArticle = ({
             />
             <ViewCounter article={articleContent.id} />
           </div>
-          <ArticleShare
-            position="articleTop"
-            title={articleContent.title}
-            slug={`${process.env.NEXT_PUBLIC_SITE_URL}/haber/${articleContent.id}/${articleContext.slug}`}
-          />
+          {!isMobile && (
+            <ArticleShare
+              position="articleTop"
+              title={articleContent.title}
+              slug={`${process.env.NEXT_PUBLIC_SITE_URL}/haber/${articleContent.id}/${articleContext.slug}`}
+            />
+          )}
         </div>
         <div className="flex flex-col md:flex-row items-start justify-between gap-4 pt-2">
           <div className="flex-1">
@@ -150,6 +161,8 @@ const DynamicArticle = ({
                 alt={articleContent.title}
                 className="sm:rounded-lg"
                 priority={true}
+                placeholder="blur"
+                blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8/OhZPQAIhwMsJ60FNgAAAABJRU5ErkJggg=="
                 fill
                 sizes="(max-width: 768px) 100vw,
                   (max-width: 800px) 50vw,

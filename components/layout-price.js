@@ -229,18 +229,20 @@ const Layout = ({
           <div className="flex flex-col lg:flex-row items-start justify-between gap-4 pt-2">
             <div className="flex flex-col flex-1 w-full gap-3">
               <AverageCard cardData={priceData} />
-              <ArticleShare
-                position="articleTop"
-                title={`${productContent.title} Fiyatları`}
-                slug={`${process.env.NEXT_PUBLIC_SITE_URL}/urunler/${productContext.slug}/fiyatlari`}
-              />
               {!isMobile && (
-                <PriceChart
-                  type={priceType.id}
-                  city=""
-                  product={productContext.slug}
-                  grapghData={priceData}
-                />
+                <>
+                  <ArticleShare
+                    position="articleTop"
+                    title={`${productContent.title} Fiyatları`}
+                    slug={`${process.env.NEXT_PUBLIC_SITE_URL}/urunler/${productContext.slug}/fiyatlari`}
+                  />
+                  <PriceChart
+                    type={priceType.id}
+                    city=""
+                    product={productContext.slug}
+                    grapghData={priceData}
+                  />
+                </>
               )}
               {priceType.id !== "tmo" && !isMobile && (
                 <>
