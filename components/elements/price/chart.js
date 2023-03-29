@@ -218,49 +218,17 @@ const PriceChart = ({ city, product, type, grapghData }) => {
       setChartOptions({
         series: [
           {
-            name: "Sivri Kalite",
+            name: "Ortalama Fındık Fiyatı",
             marker: {
               fillColor: "transparent",
               lineColor: Highcharts.getOptions().colors[0],
             },
-            data: average(grapghData.data)
-              .filter((item) => item.quality === "Sivri")
-              .map(function (item) {
-                return [
-                  new Date(new Date().setTime(item.date)).setHours(0, 0, 0),
-                  item.average,
-                ]
-              }),
-          },
-          {
-            name: "Levant Kalite",
-            marker: {
-              fillColor: "transparent",
-              lineColor: Highcharts.getOptions().colors[1],
-            },
-            data: average(grapghData.data)
-              .filter((item) => item.quality === "Levant")
-              .map(function (item) {
-                return [
-                  new Date(new Date().setTime(item.date)).setHours(0, 0, 0),
-                  item.average,
-                ]
-              }),
-          },
-          {
-            name: "Giresun Kalite",
-            marker: {
-              fillColor: "transparent",
-              lineColor: Highcharts.getOptions().colors[2],
-            },
-            data: average(grapghData.data)
-              .filter((item) => item.quality === "Giresun")
-              .map(function (item) {
-                return [
-                  new Date(new Date().setTime(item.date)).setHours(0, 0, 0),
-                  item.average,
-                ]
-              }),
+            data: average(grapghData.data).map(function (item) {
+              return [
+                new Date(new Date().setTime(item.date)).setHours(0, 0, 0),
+                item.average,
+              ]
+            }),
           },
           {
             type: "column",
@@ -291,7 +259,7 @@ const PriceChart = ({ city, product, type, grapghData }) => {
         />
         <p className="text-midgray">
           * Bu grafikte belirtilen tarihteki Sivri, Levant ve Giresun Kalite
-          fındık için girilmiş maksimum ve minimum fiyatları görebilirsiniz.
+          fındık için girilmiş fiyatların ortalamasını görebilirsiniz.
         </p>
       </div>
       <div className="w-full min-h-[300px]">
