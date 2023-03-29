@@ -101,11 +101,11 @@ const AverageCard = ({ cardData }) => {
   }
   return (
     <>
-      <div className="flex flex-col md:flex-row gap-3">
+      <div className="flex flex-col md:flex-row gap-1">
         {priceTypes.map((item, i) => (
           <div
             key={i}
-            className="flex relative w-full items-center border border-lightgray rounded gap-3 p-3"
+            className="flex relative w-full items-center border border-lightgray rounded gap-2 p-2"
           >
             {cardData ? (
               <>
@@ -142,7 +142,7 @@ const AverageCard = ({ cardData }) => {
                             </span>
                             <div className="flex justify-between">
                               <span className="text-midgray">
-                                {item.name} Kalite Ort. Fiyat
+                                {item.name} Kalite Ort.
                               </span>
                               <span className="text-up">{changeRate}%</span>
                             </div>
@@ -161,7 +161,7 @@ const AverageCard = ({ cardData }) => {
                             </span>
                             <div className="flex justify-between">
                               <span className="text-midgray">
-                                {item.name} Kalite Ort. Fiyat
+                                {item.name} Kalite Ort.
                               </span>
                               <span className="text-down">{changeRate}%</span>
                             </div>
@@ -180,7 +180,7 @@ const AverageCard = ({ cardData }) => {
                             </span>
                             <div className="flex justify-between">
                               <span className="text-midgray">
-                                {item.name} Kalite Ort. Fiyat
+                                {item.name} Kalite Ort.
                               </span>
                               <span className="text-nochange">0.00%</span>
                             </div>
