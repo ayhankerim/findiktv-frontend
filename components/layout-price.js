@@ -267,7 +267,7 @@ const Layout = ({
             </div>
             <aside className="sticky top-2 flex-none w-full lg:w-[250px] xl:w-[336px]">
               <AddPrice product={productContent.id} cityData="" />
-              <ArticleMostVisited size={5} slug={null} />
+              {!isMobile && <ArticleMostVisited size={5} slug={null} />}
               <EfficiencyCalculation
                 product={productContent.id}
                 city={null}
@@ -329,9 +329,11 @@ const Layout = ({
                 city={null}
               />
             </div>
-            <aside className="sticky top-2 flex-none w-full xl:w-[336px]">
-              <LatestComments size={5} position="sidebar" offset={0} />
-            </aside>
+            {!isMobile && (
+              <aside className="sticky top-2 flex-none w-full xl:w-[336px]">
+                <LatestComments size={5} position="sidebar" offset={0} />
+              </aside>
+            )}
           </div>
         </main>
       </div>
