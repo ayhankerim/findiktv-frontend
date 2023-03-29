@@ -4,6 +4,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { useDispatch } from "react-redux"
 import { updateAds } from "@/store/advertisements"
+import { isMobile } from "react-device-detect"
 import { Popover, Transition } from "@headlessui/react"
 import { TbChevronDown } from "react-icons/tb"
 import Navbar from "./elements/navbar"
@@ -233,22 +234,26 @@ const Layout = ({
                 title={`${productContent.title} Fiyatları`}
                 slug={`${process.env.NEXT_PUBLIC_SITE_URL}/urunler/${productContext.slug}/fiyatlari`}
               />
-              <PriceChart
-                type={priceType.id}
-                city=""
-                product={productContext.slug}
-                grapghData={priceData}
-              />
-              {priceType.id !== "tmo" && (
-                <TermlyPriceChange
+              {!isMobile && (
+                <PriceChart
                   type={priceType.id}
+                  city=""
                   product={productContext.slug}
-                  priceData={priceData}
+                  grapghData={priceData}
                 />
               )}
-              <div className="w-full h-[300px] lg:h-[120px] -mx-2 sm:mx-0">
-                <Advertisement position="price-page-middle-3" />
-              </div>
+              {priceType.id !== "tmo" && !isMobile && (
+                <>
+                  <TermlyPriceChange
+                    type={priceType.id}
+                    product={productContext.slug}
+                    priceData={priceData}
+                  />
+                  <div className="w-full h-[300px] lg:h-[120px] -mx-2 sm:mx-0">
+                    <Advertisement position="price-page-middle-3" />
+                  </div>
+                </>
+              )}
               {priceType.id !== "tmo" && (
                 <>
                   <CityPriceList
