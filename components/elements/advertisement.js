@@ -32,6 +32,24 @@ const Advertisement = ({ position, adformat = "auto" }) => {
               data-adtest={process.env.NEXT_PUBLIC_ADSENSE_TEST}
             ></ins>
           )
+        } else if (adData.attributes.adsenseFormat === "DisplayMobile") {
+          return (
+            <ins
+              className="adsbygoogle"
+              style={{
+                display: "inline-block",
+                marginBottom: "10px",
+                width: "320px",
+                height: "100px",
+                textAlign: "center",
+              }}
+              data-ad-client={process.env.NEXT_PUBLIC_ADSENSE_PUB}
+              data-full-width-responsive="false"
+              data-ad-format="horizontal"
+              data-ad-slot={adData.attributes.adslot}
+              data-adtest={process.env.NEXT_PUBLIC_ADSENSE_TEST}
+            ></ins>
+          )
         } else if (adData.attributes.adsenseFormat === "InFeed") {
           return (
             <ins

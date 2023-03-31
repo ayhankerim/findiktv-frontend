@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react"
 import PropTypes from "prop-types"
 import Link from "next/link"
 import axios from "axios"
+import { isMobile } from "react-device-detect"
 import { useRouter } from "next/router"
 import { signOut, useSession } from "next-auth/react"
 import { useSelector, useDispatch } from "react-redux"
@@ -16,7 +17,6 @@ import {
   MdLibraryBooks,
 } from "react-icons/md"
 import MobileNavMenu from "./mobile-nav-menu"
-import NextImage from "./image"
 import Image from "next/image"
 import CustomLink from "./custom-link"
 import Advertisement from "@/components/elements/advertisement"
@@ -201,11 +201,19 @@ const Navbar = ({ navbar, pageContext }) => {
             </ul>
           </div>
         </nav>
-        <div className="container flex flex-row items-center justify-center gap-2 py-2">
-          <div className="w-full h-[300px] -mx-2 sm:mx-0">
-            <Advertisement position="masthead" />
+        {isMobile ? (
+          <div className="container flex flex-row items-center justify-center gap-2 py-2">
+            <div className="w-full h-[100px] -mx-2 sm:mx-0">
+              <Advertisement position="masthead-mobile" />
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="container flex flex-row items-center justify-center gap-2 py-2">
+            <div className="w-full h-[300px] -mx-2 sm:mx-0">
+              <Advertisement position="masthead" />
+            </div>
+          </div>
+        )}
       </header>
 
       {/* Mobile navigation menu panel */}
