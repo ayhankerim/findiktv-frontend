@@ -8,6 +8,7 @@ import { isMobile } from "react-device-detect"
 import { Popover, Transition } from "@headlessui/react"
 import { TbChevronDown } from "react-icons/tb"
 import Navbar from "./elements/navbar"
+import AverageCard from "./elements/price/average-card-new"
 import Footer from "./elements/footer"
 import NotificationBanner from "./elements/notification-banner"
 
@@ -30,12 +31,12 @@ const Advertisement = dynamic(
 const Breadcrumb = dynamic(() => import("@/components/elements/breadcrumb"), {
   loading: () => <Loader />,
 })
-const AverageCard = dynamic(
-  () => import("@/components/elements/price/average-card"),
-  {
-    loading: () => <Loader />,
-  }
-)
+// const AverageCard = dynamic(
+//   () => import("@/components/elements/price/average-card-new"),
+//   {
+//     loading: () => <Loader />,
+//   }
+// )
 const ArticleShare = dynamic(() => import("@/components/elements/share"), {
   loading: () => <Loader />,
   ssr: false,
@@ -228,7 +229,7 @@ const Layout = ({
           </div>
           <div className="flex flex-col lg:flex-row items-start justify-between gap-4 pt-2">
             <div className="flex flex-col flex-1 w-full gap-3">
-              <AverageCard cardData={priceData} />
+              <AverageCard product={productContent.id} type={priceType.id} />
               {!isMobile && (
                 <>
                   <ArticleShare

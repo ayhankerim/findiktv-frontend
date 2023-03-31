@@ -51,17 +51,17 @@ const CardItem = ({ product, type, quality }) => {
       filters: {
         product: {
           id: {
-            $eq: product, // Değiştir product olacak
+            $eq: product,
           },
         },
         approvalStatus: {
           $eq: "approved",
         },
         type: {
-          $eq: type, //değişken olacak
+          $eq: type,
         },
         quality: {
-          $eq: quality, //değişken olacak
+          $eq: quality,
         },
       },
       fields: ["date"],
@@ -146,17 +146,17 @@ const CardItem = ({ product, type, quality }) => {
           },
           product: {
             id: {
-              $eq: 1, // Değiştir product olacak
+              $eq: 1,
             },
           },
           approvalStatus: {
             $eq: "approved",
           },
           type: {
-            $eq: type, //değişken olacak
+            $eq: type,
           },
           quality: {
-            $eq: quality, //değişken olacak
+            $eq: quality,
           },
         },
         fields: ["average", "volume"],
@@ -228,7 +228,7 @@ const CardItem = ({ product, type, quality }) => {
           <div className="flex flex-col flex-1">
             <Loader />
             <div className="flex justify-between">
-              <span className="text-midgray">{type} Kalite</span>
+              <span className="text-midgray">{quality} Kalite</span>
               <span className="text-midgray">...</span>
             </div>
           </div>
