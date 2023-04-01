@@ -286,21 +286,23 @@ const DynamicCities = ({
             <article className="font-semibold text-lg text-darkgray">
               {cityContent.summary}
             </article>
-            <div className="mb-2 relative h-[320px] lg:h-[500px] -mx-4 sm:mx-0 lg:mx-0">
-              <Image
-                src={cityContent.featured.data.attributes.url}
-                alt={`${cityContent.title} Fiyatları`}
-                className="md:rounded-lg"
-                priority={true}
-                fill
-                sizes="(max-width: 768px) 100vw,
-                  (max-width: 800px) 50vw,
-                  33vw"
-                style={{
-                  objectFit: "cover",
-                }}
-              />
-            </div>
+            {cityContent.featured.data && (
+              <div className="mb-2 relative h-[320px] lg:h-[500px] -mx-4 sm:mx-0 lg:mx-0">
+                <Image
+                  src={cityContent.featured.data.attributes.url}
+                  alt={`${cityContent.title} Fiyatları`}
+                  className="md:rounded-lg"
+                  priority={true}
+                  fill
+                  sizes="(max-width: 768px) 100vw,
+                    (max-width: 800px) 50vw,
+                    33vw"
+                  style={{
+                    objectFit: "cover",
+                  }}
+                />
+              </div>
+            )}
             <article
               className="NewsContent flex flex-col gap-2 mx-0 -lg:mx-2"
               dangerouslySetInnerHTML={{ __html: cityContent.content }}

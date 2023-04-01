@@ -19,7 +19,11 @@ const dosis = Dosis({
   variable: "--font-dosis",
 })
 
-const MyApp = ({ Component, pageProps: { session, ...pageProps } }) => {
+const MyApp = ({
+  Component,
+  pageProps: { session, ...pageProps },
+  pageRout,
+}) => {
   useEffect(() => {
     runOneSignal()
   })
@@ -44,7 +48,11 @@ const MyApp = ({ Component, pageProps: { session, ...pageProps } }) => {
             </Head>
             {/* Global site metadata */}
             <DefaultSeo
-              titleTemplate={`%s | ${metaTitleSuffix}`}
+              titleTemplate={
+                pageRout === "/"
+                  ? `${metaTitleSuffix} | %s`
+                  : `%s | ${metaTitleSuffix}`
+              }
               title="Page"
               description={metadata.metaDescription}
               openGraph={{
@@ -88,6 +96,7 @@ MyApp.getInitialProps = async (appContext) => {
     pageProps: {
       global: globalLocale,
     },
+    pageRout: appContext.router.asPath,
   }
 }
 
