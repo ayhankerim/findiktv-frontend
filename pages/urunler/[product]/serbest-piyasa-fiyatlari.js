@@ -44,7 +44,7 @@ const DynamicProducts = ({
     delete metadata.shareImage
   }
   const metadataUpdated = {
-    metaTitle: "Serbest Piyasa Fındık Fiyat",
+    metaTitle: "Serbest Piyasa Fındık Fiyatları",
     metaDescription:
       "Her gün güncellenen Serbest Piyasa Fındık fiyatları bu sayfada karşınızda. Ordu, Giresun, Trabzon, Samsun, Çarşamba, Sakarya, Zonguldak, Ünye, Fatsa, Terme, Düzce ve Akçakoca serbest piyasa fiyatları burada...",
   }

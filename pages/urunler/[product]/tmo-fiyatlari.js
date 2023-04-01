@@ -44,7 +44,7 @@ const DynamicProducts = ({
     delete metadata.shareImage
   }
   const metadataUpdated = {
-    metaTitle: "TMO Fındık Fiyat",
+    metaTitle: "TMO Fındık Fiyatları",
     metaDescription:
       "Toprak Mahsülleri Ofisi tarafından üreticiye desteklemek amacıyla fındık alımının yapıldığı hukümet yetkilileri tarafından belirlenen fiyatları buradan öğrenebilirsiniz.",
   }

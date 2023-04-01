@@ -44,7 +44,7 @@ const DynamicProducts = ({
     delete metadata.shareImage
   }
   const metadataUpdated = {
-    metaTitle: "Fındık Fiyat",
+    metaTitle: "Fındık Fiyatları",
     metaDescription:
       "Her gün güncellenen Fındık fiyatları bu sayfada karşınızda. Ordu, Giresun, Trabzon, Samsun, Çarşamba, Sakarya, Zonguldak, Ünye, Fatsa, Terme, Düzce ve Akçakoca borsa fiyatları burada...",
   }
