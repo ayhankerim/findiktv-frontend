@@ -149,14 +149,12 @@ article.NewsContent table tbody tr:hover td, article.NewsContent table tbody tr:
 .lds-ellipsis {
   display: block;
   position: relative;
-  width: 40px;
-  height: 80px;
   margin: 0 auto;
-
+  width: 80px;
 }
 .lds-ellipsis div {
   position: absolute;
-  top: 5px;
+  top: calc(50% + 6.5px);
   width: 13px;
   height: 13px;
   border-radius: 50%;

@@ -9,10 +9,11 @@ import { Popover, Transition } from "@headlessui/react"
 import { TbChevronDown } from "react-icons/tb"
 import Navbar from "./elements/navbar"
 import Footer from "./elements/footer"
+import AverageCard from "@/components/elements/price/average-card-new"
 import NotificationBanner from "./elements/notification-banner"
 
-const Loader = () => (
-  <div className="lds-ellipsis">
+const Loader = ({ cssClass }) => (
+  <div className={`lds-ellipsis ${cssClass}`}>
     <div></div>
     <div></div>
     <div></div>
@@ -28,77 +29,77 @@ const Advertisement = dynamic(
   }
 )
 const Breadcrumb = dynamic(() => import("@/components/elements/breadcrumb"), {
-  loading: () => <Loader />,
+  loading: () => <Loader cssClass="h-[25px]" />,
 })
-const AverageCard = dynamic(
+/*const AverageCard = dynamic(
   () => import("@/components/elements/price/average-card"),
   {
     loading: () => <Loader />,
   }
-)
+)*/
 const ArticleShare = dynamic(() => import("@/components/elements/share"), {
-  loading: () => <Loader />,
+  loading: () => <Loader cssClass="h-[32px]" />,
   ssr: false,
 })
 const PriceChart = dynamic(() => import("@/components/elements/price/chart"), {
-  loading: () => <Loader />,
+  loading: () => <Loader cssClass="h-[475px]" />,
 })
 const CityPriceList = dynamic(
   () => import("@/components/elements/price/city-price-list"),
   {
-    loading: () => <Loader />,
+    loading: () => <Loader cssClass="h-[60px]" />,
   }
 )
 const LatestPriceEntries = dynamic(
   () => import("@/components/elements/price/latest-price-entries"),
   {
-    loading: () => <Loader />,
+    loading: () => <Loader cssClass="h-[60px]" />,
   }
 )
 const TermlyPriceChange = dynamic(
   () => import("@/components/elements/price/termly-price-changes"),
   {
-    loading: () => <Loader />,
+    loading: () => <Loader cssClass="h-[60px]" />,
   }
 )
 const AddPrice = dynamic(() => import("@/components/elements/price/addPrice"), {
-  loading: () => <Loader />,
+  loading: () => <Loader cssClass="h-[200px]" />,
   ssr: false,
 })
 const ArticleMostVisited = dynamic(
   () => import("@/components/elements/article/articles-most-visited"),
   {
-    loading: () => <Loader />,
+    loading: () => <Loader cssClass="h-[60px]" />,
     ssr: false,
   }
 )
 const EfficiencyCalculation = dynamic(
   () => import("@/components/elements/price/priceCalculator"),
   {
-    loading: () => <Loader />,
+    loading: () => <Loader cssClass="h-[60px]" />,
   }
 )
 const ArticleDates = dynamic(() => import("@/components/elements/date"), {
-  loading: () => <Loader />,
+  loading: () => <Loader cssClass="h-[25px]" />,
 })
 const LatestArticles = dynamic(
   () => import("@/components/elements/latest-articles"),
   {
-    loading: () => <Loader />,
+    loading: () => <Loader cssClass="h-[250px]" />,
     ssr: false,
   }
 )
 const ArticleComments = dynamic(
   () => import("@/components/elements/comments/comments"),
   {
-    loading: () => <Loader />,
+    loading: () => <Loader cssClass="h-[25px]" />,
     ssr: false,
   }
 )
 const LatestComments = dynamic(
   () => import("@/components/elements/comments/latest-comments"),
   {
-    loading: () => <Loader />,
+    loading: () => <Loader cssClass="h-[25px]" />,
     ssr: false,
   }
 )
@@ -130,6 +131,7 @@ const Layout = ({
   priceTypeSelection,
   productContent,
   priceData,
+  priceCardData,
   productContext,
   advertisement,
 }) => {
@@ -167,7 +169,6 @@ const Layout = ({
           />
         )}
         <Navbar navbar={navbar} pageContext={productContext} />
-
         <main className="container gap-4 pt-2 bg-white">
           <div className="w-full">
             <Breadcrumb items={breadcrumbElement} />
@@ -228,7 +229,7 @@ const Layout = ({
           </div>
           <div className="flex flex-col lg:flex-row items-start justify-between gap-4 pt-2">
             <div className="flex flex-col flex-1 w-full gap-3">
-              <AverageCard cardData={priceData} />
+              <AverageCard priceCardData={priceCardData} />
               {!isMobile && (
                 <>
                   <ArticleShare
