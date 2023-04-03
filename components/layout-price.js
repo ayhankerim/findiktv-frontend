@@ -10,10 +10,10 @@ import { TbChevronDown } from "react-icons/tb"
 import Navbar from "./elements/navbar"
 import Footer from "./elements/footer"
 import AverageCard from "@/components/elements/price/average-card-new"
-import CityPriceList from "@/components/elements/price/city-price-list-new"
-import TermlyPriceChange from "@/components/elements/price/termly-price-changes-new"
-import LatestPriceEntries from "@/components/elements/price/latest-price-entries-new"
-import PriceChart from "@/components/elements/price/chart-new"
+//import CityPriceList from "@/components/elements/price/city-price-list-new"
+//import TermlyPriceChange from "@/components/elements/price/termly-price-changes-new"
+//import LatestPriceEntries from "@/components/elements/price/latest-price-entries-new"
+//import PriceChart from "@/components/elements/price/chart-new"
 import NotificationBanner from "./elements/notification-banner"
 
 const Loader = ({ cssClass }) => (
@@ -35,6 +35,30 @@ const Advertisement = dynamic(
 const Breadcrumb = dynamic(() => import("@/components/elements/breadcrumb"), {
   loading: () => <Loader cssClass="h-[25px]" />,
 })
+const PriceChart = dynamic(
+  () => import("@/components/elements/price/chart-new"),
+  {
+    loading: () => <Loader cssClass="h-[400px]" />,
+  }
+)
+const TermlyPriceChange = dynamic(
+  () => import("@/components/elements/price/termly-price-changes-new"),
+  {
+    loading: () => <Loader cssClass="h-[840px]" />,
+  }
+)
+const CityPriceList = dynamic(
+  () => import("@/components/elements/price/city-price-list-new"),
+  {
+    loading: () => <Loader cssClass="h-[840px]" />,
+  }
+)
+const LatestPriceEntries = dynamic(
+  () => import("@/components/elements/price/latest-price-entries-new"),
+  {
+    loading: () => <Loader cssClass="h-[540px]" />,
+  }
+)
 const ArticleShare = dynamic(() => import("@/components/elements/share"), {
   loading: () => <Loader cssClass="h-[32px]" />,
   ssr: false,
