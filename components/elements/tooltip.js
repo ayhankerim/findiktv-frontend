@@ -1,7 +1,7 @@
 import { useRef } from "react"
 import propTypes from "prop-types"
 
-const Tooltip = ({ children, tooltipText, orientation = "right" }) => {
+const Tooltip = ({ children, tooltipText, orientation = "right", version }) => {
   const tipRef = useRef(null)
   const orientations = {
     right: "right",
@@ -73,20 +73,34 @@ const Tooltip = ({ children, tooltipText, orientation = "right" }) => {
   const pointerClasses = `bg-gray-600 h-3 w-3 absolute z-10 ${setPointerPosition(
     orientation
   )} rotate-45 pointer-events-none`
-
-  return (
-    <div
-      className="relative flex items-center justify-center"
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
-      <div className={classContainer} style={{ opacity: 0 }} ref={tipRef}>
-        <div className={pointerClasses} />
-        {tooltipText}
+  if (version === "clean")
+    return (
+      <div
+        className="relative inline-block"
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        <div className={classContainer} style={{ opacity: 0 }} ref={tipRef}>
+          <div className={pointerClasses} />
+          {tooltipText}
+        </div>
+        {children}
       </div>
-      {children}
-    </div>
-  )
+    )
+  else
+    return (
+      <div
+        className="relative flex items-center justify-center"
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        <div className={classContainer} style={{ opacity: 0 }} ref={tipRef}>
+          <div className={pointerClasses} />
+          {tooltipText}
+        </div>
+        {children}
+      </div>
+    )
 }
 
 Tooltip.propTypes = {

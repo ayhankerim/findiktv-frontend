@@ -10,6 +10,10 @@ import { TbChevronDown } from "react-icons/tb"
 import Navbar from "./elements/navbar"
 import Footer from "./elements/footer"
 import AverageCard from "@/components/elements/price/average-card-new"
+import CityPriceList from "@/components/elements/price/city-price-list-new"
+import TermlyPriceChange from "@/components/elements/price/termly-price-changes-new"
+import LatestPriceEntries from "@/components/elements/price/latest-price-entries-new"
+import PriceChart from "@/components/elements/price/chart-new"
 import NotificationBanner from "./elements/notification-banner"
 
 const Loader = ({ cssClass }) => (
@@ -31,37 +35,10 @@ const Advertisement = dynamic(
 const Breadcrumb = dynamic(() => import("@/components/elements/breadcrumb"), {
   loading: () => <Loader cssClass="h-[25px]" />,
 })
-/*const AverageCard = dynamic(
-  () => import("@/components/elements/price/average-card"),
-  {
-    loading: () => <Loader />,
-  }
-)*/
 const ArticleShare = dynamic(() => import("@/components/elements/share"), {
   loading: () => <Loader cssClass="h-[32px]" />,
   ssr: false,
 })
-const PriceChart = dynamic(() => import("@/components/elements/price/chart"), {
-  loading: () => <Loader cssClass="h-[475px]" />,
-})
-const CityPriceList = dynamic(
-  () => import("@/components/elements/price/city-price-list"),
-  {
-    loading: () => <Loader cssClass="h-[60px]" />,
-  }
-)
-const LatestPriceEntries = dynamic(
-  () => import("@/components/elements/price/latest-price-entries"),
-  {
-    loading: () => <Loader cssClass="h-[60px]" />,
-  }
-)
-const TermlyPriceChange = dynamic(
-  () => import("@/components/elements/price/termly-price-changes"),
-  {
-    loading: () => <Loader cssClass="h-[60px]" />,
-  }
-)
 const AddPrice = dynamic(() => import("@/components/elements/price/addPrice"), {
   loading: () => <Loader cssClass="h-[200px]" />,
   ssr: false,
@@ -130,8 +107,11 @@ const Layout = ({
   global,
   priceTypeSelection,
   productContent,
-  priceData,
   priceCardData,
+  priceCitiesData,
+  termlyPricesData,
+  lastEntriesData,
+  graphData,
   productContext,
   advertisement,
 }) => {
@@ -139,17 +119,10 @@ const Layout = ({
 
   const [bannerIsShown, setBannerIsShown] = useState(true)
   const [priceType, setPriceType] = useState(pricetypes[priceTypeSelection])
-  const [cityList, setCityList] = useState(null)
   const dispatch = useDispatch()
   useEffect(() => {
-    const citydata = [
-      ...new Set(
-        priceData.data.map((q) => q.attributes.city.data?.attributes.title)
-      ),
-    ]
-    setCityList(citydata)
     advertisement && dispatch(updateAds(advertisement))
-  }, [advertisement, dispatch, priceData.data])
+  }, [advertisement, dispatch])
 
   const breadcrumbElement = [
     { title: "ÜRÜNLER", slug: "/urunler" },
@@ -237,21 +210,12 @@ const Layout = ({
                     title={`${productContent.title} Fiyatları`}
                     slug={`${process.env.NEXT_PUBLIC_SITE_URL}/urunler/${productContext.slug}/fiyatlari`}
                   />
-                  <PriceChart
-                    type={priceType.id}
-                    city=""
-                    product={productContext.slug}
-                    grapghData={priceData}
-                  />
+                  <PriceChart grapghData={graphData} />
                 </>
               )}
               {priceType.id !== "tmo" && !isMobile && (
                 <>
-                  <TermlyPriceChange
-                    type={priceType.id}
-                    product={productContext.slug}
-                    priceData={priceData}
-                  />
+                  <TermlyPriceChange termlyPriceData={termlyPricesData} />
                   <div className="w-full h-[300px] lg:h-[120px] -mx-2 sm:mx-0">
                     <Advertisement position="price-page-middle-3" />
                   </div>
@@ -261,10 +225,9 @@ const Layout = ({
                 <>
                   <CityPriceList
                     product={productContext.slug}
-                    priceData={priceData}
-                    cityList={cityList}
+                    priceData={priceCitiesData}
                   />
-                  <LatestPriceEntries priceData={priceData} />
+                  <LatestPriceEntries lastEntries={lastEntriesData} />
                 </>
               )}
             </div>
@@ -307,12 +270,14 @@ const Layout = ({
                 title={`${productContent.title} Fiyatları`}
                 slug={`${process.env.NEXT_PUBLIC_SITE_URL}/urunler/${productContext.slug}/fiyatlari`}
               />
-              <div className="flex flex-row items-center sm:items-start justify-between mt-4 mb-2">
-                <ArticleDates
-                  publishedAt={priceData?.data[0].attributes.date}
-                  updatedAt={priceData?.data[0].attributes.date}
-                />
-              </div>
+              {lastEntriesData && (
+                <div className="flex flex-row items-center sm:items-start justify-between mt-4 mb-2">
+                  <ArticleDates
+                    publishedAt={lastEntriesData[0].attributes.createdAt}
+                    updatedAt={lastEntriesData[0].attributes.updatedAt}
+                  />
+                </div>
+              )}
               <LatestArticles
                 current={null}
                 product={productContent.id}

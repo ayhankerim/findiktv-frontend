@@ -13,12 +13,13 @@ import {
   fetchAPI,
   getGlobalData,
 } from "@/utils/api"
+import { getCitiesPrice } from "@/utils/api-prices"
 import Layout from "@/components/layout"
 import Seo from "@/components/elements/seo"
 import ArticleSidebar from "@/components/elements/article/article-sidebar"
 
-const Loader = () => (
-  <div className="lds-ellipsis">
+const Loader = ({ cssClass }) => (
+  <div className={`lds-ellipsis ${cssClass}`}>
     <div></div>
     <div></div>
     <div></div>
@@ -72,6 +73,12 @@ const LatestArticles = dynamic(
     ssr: false,
   }
 )
+const CityPriceList = dynamic(
+  () => import("@/components/elements/price/city-price-list-new"),
+  {
+    loading: () => <Loader cssClass="h-[60px]" />,
+  }
+)
 
 const DynamicArticle = ({
   articleContent,
@@ -79,6 +86,7 @@ const DynamicArticle = ({
   metadata,
   global,
   articleContext,
+  priceCitiesData,
 }) => {
   const router = useRouter()
   const dispatch = useDispatch()
@@ -180,6 +188,13 @@ const DynamicArticle = ({
               )}
               // preview={preview}
             />
+            {articleContent.AddPricesComponent &&
+              articleContent.products.data[0] && (
+                <CityPriceList
+                  product={articleContent.products.data[0].attributes.slug}
+                  priceData={priceCitiesData}
+                />
+              )}
             <div className="w-full h-[300px] lg:h-[120px] -mx-2 sm:mx-0">
               <Advertisement position="article-bottom-desktop" />
             </div>
@@ -279,6 +294,8 @@ export async function getStaticProps(context) {
     //metadata,
     localizations,
     slug,
+    AddPricesComponent,
+    products,
   } = articleData.attributes
 
   const metadata = {
@@ -299,6 +316,8 @@ export async function getStaticProps(context) {
     category,
     cities,
     tags,
+    AddPricesComponent,
+    products,
   }
 
   const articleContext = {
@@ -308,6 +327,17 @@ export async function getStaticProps(context) {
     slug,
     localizations,
   }
+
+  const priceType = "stockmarket"
+  const priceQualities = ["Sivri", "Levant", "Giresun"]
+  const priceCities =
+    products.data.length > 0 &&
+    AddPricesComponent &&
+    (await getCitiesPrice({
+      product: products.data[0].attributes.slug,
+      priceType: priceType,
+      priceQualities: priceQualities,
+    }))
 
   const localizedPaths = getLocalizedPaths(articleContext)
   return {
@@ -321,6 +351,7 @@ export async function getStaticProps(context) {
         ...articleContext,
         localizedPaths,
       },
+      priceCitiesData: priceCities,
     },
     revalidate: 60 * 60,
   }

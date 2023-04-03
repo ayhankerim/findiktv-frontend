@@ -161,7 +161,7 @@ const CityPriceList = ({ product, priceData, cityList }) => {
                                       priceType,
                                       item
                                     ) < 0
-                                  ? "test-down"
+                                  ? "text-down"
                                   : "text-nochange",
                                 "text-sm"
                               )}
