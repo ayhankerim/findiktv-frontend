@@ -39,28 +39,24 @@ const PriceChart = dynamic(
   () => import("@/components/elements/price/chart-new"),
   {
     loading: () => <Loader cssClass="h-[400px]" />,
-    ssr: false,
   }
 )
 const TermlyPriceChange = dynamic(
   () => import("@/components/elements/price/termly-price-changes-new"),
   {
     loading: () => <Loader cssClass="h-[840px]" />,
-    ssr: false,
   }
 )
 const CityPriceList = dynamic(
   () => import("@/components/elements/price/city-price-list-new"),
   {
     loading: () => <Loader cssClass="h-[840px]" />,
-    ssr: false,
   }
 )
 const LatestPriceEntries = dynamic(
   () => import("@/components/elements/price/latest-price-entries-new"),
   {
     loading: () => <Loader cssClass="h-[540px]" />,
-    ssr: false,
   }
 )
 const ArticleShare = dynamic(() => import("@/components/elements/share"), {
