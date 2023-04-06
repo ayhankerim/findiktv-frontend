@@ -15,12 +15,6 @@ function generateSiteMap(posts) {
           ).toISOString()}</lastmod>
           <changefreq>hourly</changefreq>
           <priority>0.9</priority>
-          <image:image>
-            <image:loc>${
-              post.attributes.featured.data?.attributes.url
-            }</image:loc>
-            <image:title>${post.attributes.title}</image:title>
-          </image:image>
          </url>
      `
        })
