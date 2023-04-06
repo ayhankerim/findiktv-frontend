@@ -4,9 +4,7 @@ import Image from "next/image"
 import { getGlobalData } from "@/utils/api"
 import Layout from "@/components/layout"
 import Seo from "@/components/elements/seo"
-import LatestComments from "@/components/elements/comments/latest-comments"
-import ArticleMostVisited from "@/components/elements/article/articles-most-visited"
-import { BsChevronLeft, BsChevronRight } from "react-icons/bs"
+import SimpleSidebar from "@/components/elements/simple-sidebar"
 import Moment from "moment"
 import "moment/locale/tr"
 import "slick-carousel/slick/slick.css"
@@ -34,54 +32,19 @@ const RandimanHesaplama = ({ global }) => {
     ...global.attributes.metadata,
     ...metadata,
   }
-
-  function SampleNextArrow(props) {
-    const { className, style, onClick } = props
-    return (
-      <div
-        className={`${className} ${
-          className.indexOf("slick-disabled") !== -1
-            ? "cursor-not-allowed opacity-50"
-            : "cursor-pointer"
-        } absolute flex z-10 items-center inset-y-0 right-0`}
-        style={{ ...style, display: "flex" }}
-        onClick={onClick}
-      >
-        <BsChevronRight className="text-xxl text-white drop-shadow self-center" />
-      </div>
-    )
-  }
-
-  function SamplePrevArrow(props) {
-    const { className, style, onClick } = props
-    return (
-      <div
-        className={`${className} ${
-          className.indexOf("slick-disabled") !== -1
-            ? "cursor-not-allowed opacity-50"
-            : "cursor-pointer"
-        } absolute flex z-10 items-center inset-y-0 left-0`}
-        style={{ ...style, display: "flex" }}
-        onClick={onClick}
-      >
-        <BsChevronLeft className="text-xxl text-white drop-shadow self-center" />
-      </div>
-    )
-  }
   const settings = {
     dots: false,
     infinite: true,
     centerMode: true,
     fade: true,
     lazyLoad: true,
-    speed: 500,
-    nextArrow: <SampleNextArrow />,
-    prevArrow: <SamplePrevArrow />,
+    speed: 700,
+    arrows: false,
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
-    speed: 2000,
-    autoplaySpeed: 2000,
+    speed: 700,
+    autoplaySpeed: 700,
   }
   const d = new Date()
   return (
@@ -117,10 +80,7 @@ const RandimanHesaplama = ({ global }) => {
             ))}
           </Slider>
         </div>
-        <div className="sticky top-2 flex-none w-full md:w-[336px] lg:w-[250px] xl:w-[336px] grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 w-full gap-2 md:w-4/12">
-          <ArticleMostVisited size={10} slug={null} />
-          <LatestComments size={5} position="sidebar" offset={0} />
-        </div>
+        <SimpleSidebar />
       </main>
     </Layout>
   )

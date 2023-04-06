@@ -18,7 +18,6 @@ const LatestArticles = ({
   city,
   count,
   position,
-  headTitle,
   offset = 0,
 }) => {
   const [latestArticles, setLatestArticles] = useState([])
@@ -73,13 +72,13 @@ const LatestArticles = ({
   }, [city, count, current, offset, product])
   return (
     <>
-      <div className="flex flex-row items-center justify-between border-b border-secondary/20 relative">
+      {/* <div className="flex flex-row items-center justify-between border-b border-secondary/20 relative">
         <h3 className="font-semibold text-base text-midgray">
           {headTitle ? headTitle : "İLGİNİZİ ÇEKEBİLİR"}
         </h3>
         <MdOutlineArticle className="text-lg text-midgray" />
         <span className="absolute h-[5px] w-2/5 max-w-[180px] left-0 bottom-[-5px] bg-secondary/60"></span>
-      </div>
+      </div> */}
       <div className="flex flex-wrap -mx-2 my-2">
         {latestArticles &&
           latestArticles.map((article, i, latestArticles) => {

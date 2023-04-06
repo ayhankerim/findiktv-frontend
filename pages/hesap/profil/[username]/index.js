@@ -8,8 +8,7 @@ import Image from "next/image"
 import Layout from "@/components/layout"
 import Tooltip from "@/components/elements/tooltip"
 import Seo from "@/components/elements/seo"
-import LatestComments from "@/components/elements/comments/latest-comments"
-import ArticleMostVisited from "@/components/elements/article/articles-most-visited"
+import SimpleSidebar from "@/components/elements/simple-sidebar"
 import { FcApproval } from "react-icons/fc"
 import { Tab } from "@headlessui/react"
 import { RiEditBoxLine, RiSeparator } from "react-icons/ri"
@@ -401,10 +400,7 @@ const DynamicUsers = ({ userContent, advertisement, global, userContext }) => {
               </div>
             )}
           </div>
-          <aside className="sticky top-2 flex-none w-full md:w-[336px] lg:w-[250px] xl:w-[336px]">
-            <ArticleMostVisited size={10} slug={null} />
-            <LatestComments size={5} position="sidebar" offset={0} />
-          </aside>
+          <SimpleSidebar />
         </div>
       </main>
     </Layout>

@@ -4,8 +4,10 @@ import Link from "next/link"
 import Layout from "@/components/layout"
 import Breadcrumb from "@/components/elements/breadcrumb"
 import Seo from "@/components/elements/seo"
+import ModuleLoader from "@/components/elements/module-loader"
 import LatestArticles from "@/components/elements/latest-articles"
 import ArticleMostVisited from "@/components/elements/article/articles-most-visited"
+import SimpleSidebar from "@/components/elements/simple-sidebar"
 
 function Urunler({ advertisement, global, productContext }) {
   const router = useRouter()
@@ -49,16 +51,20 @@ function Urunler({ advertisement, global, productContext }) {
                 </Link>
               </li>
             </ul>
-            <LatestArticles
-              current={null}
-              count={3}
-              offset={0}
-              position="bottom"
-            />
+            <ModuleLoader
+              title="İLGİNİZİ ÇEKEBİLİR"
+              theme="default"
+              component="LatestArticles"
+            >
+              <LatestArticles
+                current={null}
+                count={3}
+                offset={0}
+                position="bottom"
+              />
+            </ModuleLoader>
           </div>
-          <aside className="sticky top-2 flex-none w-full md:w-[336px] lg:w-[250px] xl:w-[336px]">
-            <ArticleMostVisited size={10} slug={null} />
-          </aside>
+          <SimpleSidebar />
         </div>
       </main>
     </Layout>

@@ -2,9 +2,8 @@ import React from "react"
 import { getGlobalData } from "@/utils/api"
 import Layout from "@/components/layout"
 import Seo from "@/components/elements/seo"
-import LatestComments from "@/components/elements/comments/latest-comments"
-import ArticleMostVisited from "@/components/elements/article/articles-most-visited"
 import PriceCalculator from "@/components/elements/price/priceCalculator"
+import SimpleSidebar from "@/components/elements/simple-sidebar"
 
 const RandimanHesaplama = ({ global }) => {
   const metadata = {
@@ -39,13 +38,10 @@ const RandimanHesaplama = ({ global }) => {
               </h1>
             </div>
             <div className="flex flex-col -mx-2">
-              <PriceCalculator title={false} />
+              <PriceCalculator />
             </div>
           </div>
-          <aside className="sticky top-2 flex-none w-full md:w-[336px] lg:w-[250px] xl:w-[336px]">
-            <ArticleMostVisited size={10} slug={null} />
-            <LatestComments size={5} position="sidebar" offset={0} />
-          </aside>
+          <SimpleSidebar />
         </div>
       </main>
     </Layout>

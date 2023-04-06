@@ -3,10 +3,9 @@ import { useRouter } from "next/router"
 import useSWRInfinite from "swr/infinite"
 import { getTagData, getAdsData, fetchAPI, getGlobalData } from "@/utils/api"
 import Layout from "@/components/layout"
-import ArticleBlock from "@/components/elements/article/articles-block"
 import Seo from "@/components/elements/seo"
-import LatestComments from "@/components/elements/comments/latest-comments"
-import ArticleMostVisited from "@/components/elements/article/articles-most-visited"
+import SimpleSidebar from "@/components/elements/simple-sidebar"
+import ArticleBlock from "@/components/elements/article/articles-block"
 
 const fetcher = (url) => fetch(url).then((res) => res.json())
 const PAGE_SIZE = 12
@@ -135,10 +134,7 @@ const DynamicTags = ({ tagContent, preview, global, tagContext }) => {
               )}
             </div>
           </div>
-          <aside className="sticky top-2 flex-none w-full md:w-[336px] lg:w-[250px] xl:w-[336px]">
-            <ArticleMostVisited size={10} slug={null} />
-            <LatestComments size={5} position="sidebar" offset={0} />
-          </aside>
+          <SimpleSidebar />
         </div>
       </main>
     </Layout>

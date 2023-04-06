@@ -31,6 +31,7 @@ import EfficiencyCalculation from "@/components/elements/price/priceCalculator"
 import LatestPriceEntries from "@/components/elements/price/latest-price-entries"
 import ArticleMostVisited from "@/components/elements/article/articles-most-visited"
 import LatestComments from "@/components/elements/comments/latest-comments"
+import ModuleLoader from "@/components/elements/module-loader"
 
 const pricetypes = [
   {
@@ -281,17 +282,22 @@ const DynamicProducts = ({
                 updatedAt={priceData?.data[0].attributes.date}
               />
             </div>
-            <LatestArticles
-              current={null}
-              product={productContent.id}
-              city={null}
-              count={3}
-              offset={0}
-              position="bottom"
-              headTitle={
+            <ModuleLoader
+              title={
                 productContent.title.toLocaleUpperCase("tr") + " HABERLERİ"
               }
-            />
+              theme="default"
+              component="LatestArticles"
+            >
+              <LatestArticles
+                current={null}
+                product={productContent.id}
+                city={null}
+                count={3}
+                offset={0}
+                position="bottom"
+              />
+            </ModuleLoader>
             <ArticleComments
               article={null}
               product={productContent.id}

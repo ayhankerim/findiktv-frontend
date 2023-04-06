@@ -5,7 +5,6 @@ import { fetchAPI } from "@/utils/api"
 import Advertisement from "@/components/elements/advertisement"
 import Moment from "moment"
 import "moment/locale/tr"
-import { MdOutlineWhatshot } from "react-icons/md"
 
 const ArticleMostVisited = ({ size, slug }) => {
   const [mostVisiteds, setMostVisiteds] = useState([])
@@ -43,11 +42,6 @@ const ArticleMostVisited = ({ size, slug }) => {
   }, [size, slug])
   return (
     <>
-      <div className="flex flex-row items-center justify-between border-b border-danger/40 relative">
-        <h3 className="font-semibold text-base text-midgray">ÖNE ÇIKANLAR</h3>
-        <MdOutlineWhatshot className="text-xl text-danger" />
-        <span className="absolute h-[5px] w-2/5 left-0 bottom-[-5px] bg-danger/80"></span>
-      </div>
       <div className="flex flex-wrap -mx-2 my-2">
         {mostVisiteds &&
           mostVisiteds.map((article, i, mostVisiteds) => (

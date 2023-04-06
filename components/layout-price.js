@@ -10,6 +10,7 @@ import { TbChevronDown } from "react-icons/tb"
 import Navbar from "./elements/navbar"
 import Footer from "./elements/footer"
 import AverageCard from "@/components/elements/price/average-card-new"
+import ModuleLoader from "@/components/elements/module-loader"
 //import CityPriceList from "@/components/elements/price/city-price-list-new"
 //import TermlyPriceChange from "@/components/elements/price/termly-price-changes-new"
 //import LatestPriceEntries from "@/components/elements/price/latest-price-entries-new"
@@ -227,6 +228,14 @@ const Layout = ({
           <div className="flex flex-col lg:flex-row items-start justify-between gap-4 pt-2">
             <div className="flex flex-col flex-1 w-full gap-3">
               <AverageCard priceCardData={priceCardData} />
+              {lastEntriesData && (
+                <div className="flex flex-row items-center sm:items-start justify-between mt-4 mb-2">
+                  <ArticleDates
+                    publishedAt={lastEntriesData[0].attributes.createdAt}
+                    updatedAt={lastEntriesData[0].attributes.updatedAt}
+                  />
+                </div>
+              )}
               {!isMobile && (
                 <>
                   <ArticleShare
@@ -256,13 +265,34 @@ const Layout = ({
               )}
             </div>
             <aside className="sticky top-2 flex-none w-full lg:w-[250px] xl:w-[336px]">
-              <AddPrice product={productContent.id} cityData="" />
-              {!isMobile && <ArticleMostVisited size={5} slug={null} />}
-              <EfficiencyCalculation
-                product={productContent.id}
-                city={null}
-                pricetype={priceType.id}
-              />
+              <ModuleLoader
+                title="FİYAT GİR"
+                theme="default"
+                component="AddPrice"
+              >
+                <AddPrice product={productContent.id} cityData="" />
+              </ModuleLoader>
+
+              {!isMobile && (
+                <ModuleLoader
+                  title="ÖNE ÇIKANLAR"
+                  theme="red"
+                  component="ArticleMostVisited"
+                >
+                  <ArticleMostVisited size={5} slug={null} />
+                </ModuleLoader>
+              )}
+              <ModuleLoader
+                title="FİYAT HESAPLAMA"
+                theme="default"
+                component="EfficiencyCalculation"
+              >
+                <EfficiencyCalculation
+                  product={productContent.id}
+                  city={null}
+                  pricetype={priceType.id}
+                />
+              </ModuleLoader>
             </aside>
           </div>
           <div className="flex flex-col xl:flex-row items-start justify-between gap-4 pt-2">
@@ -294,25 +324,22 @@ const Layout = ({
                 title={`${productContent.title} Fiyatları`}
                 slug={`${process.env.NEXT_PUBLIC_SITE_URL}/urunler/${productContext.slug}/fiyatlari`}
               />
-              {lastEntriesData && (
-                <div className="flex flex-row items-center sm:items-start justify-between mt-4 mb-2">
-                  <ArticleDates
-                    publishedAt={lastEntriesData[0].attributes.createdAt}
-                    updatedAt={lastEntriesData[0].attributes.updatedAt}
-                  />
-                </div>
-              )}
-              <LatestArticles
-                current={null}
-                product={productContent.id}
-                city={null}
-                count={3}
-                offset={0}
-                position="bottom"
-                headTitle={
+              <ModuleLoader
+                title={
                   productContent.title.toLocaleUpperCase("tr") + " HABERLERİ"
                 }
-              />
+                theme="default"
+                component="LatestArticles"
+              >
+                <LatestArticles
+                  current={null}
+                  product={productContent.id}
+                  city={null}
+                  count={3}
+                  offset={0}
+                  position="bottom"
+                />
+              </ModuleLoader>
               <ArticleComments
                 article={null}
                 product={productContent.id}
@@ -323,7 +350,13 @@ const Layout = ({
             </div>
             {!isMobile && (
               <aside className="sticky top-2 flex-none w-full xl:w-[336px]">
-                <LatestComments size={5} position="sidebar" offset={0} />
+                <ModuleLoader
+                  title="SON YORUMLAR"
+                  theme="default"
+                  component="LatestComments"
+                >
+                  <LatestComments size={5} position="sidebar" offset={0} />
+                </ModuleLoader>
               </aside>
             )}
           </div>

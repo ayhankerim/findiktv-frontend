@@ -5,6 +5,7 @@ module.exports = {
   sitemapSize: 7000,
   changefreq: "hourly",
   priority: 0.7,
+  exclude: ["/urunler/*"],
   robotsTxtOptions: {
     policies: [
       {

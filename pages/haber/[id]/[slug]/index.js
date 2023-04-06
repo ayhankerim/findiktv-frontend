@@ -17,6 +17,7 @@ import { getCitiesPrice } from "@/utils/api-prices"
 import Layout from "@/components/layout"
 import Seo from "@/components/elements/seo"
 import ArticleSidebar from "@/components/elements/article/article-sidebar"
+import ModuleLoader from "@/components/elements/module-loader"
 
 const Loader = ({ cssClass }) => (
   <div className={`lds-ellipsis ${cssClass}`}>
@@ -204,13 +205,19 @@ const DynamicArticle = ({
               title={articleContent.title}
               slug={`${process.env.NEXT_PUBLIC_SITE_URL}/haber/${articleContent.id}/${articleContext.slug}`}
             />
-            <LatestArticles
-              current={articleContent.id}
-              count={3}
-              position="bottom"
-              product={null}
-              city={null}
-            />
+            <ModuleLoader
+              title="İLGİNİZİ ÇEKEBİLİR"
+              theme="default"
+              component="LatestArticles"
+            >
+              <LatestArticles
+                current={articleContent.id}
+                count={3}
+                position="bottom"
+                product={null}
+                city={null}
+              />
+            </ModuleLoader>
             <ArticleReactions article={articleContent.id} />
             <ArticleComments
               article={articleContent.id}
