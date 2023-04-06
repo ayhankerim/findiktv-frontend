@@ -9,7 +9,7 @@ function generateSiteMap(posts) {
        .map((post) => {
          return `
          <url>
-          <loc>${`${process.env.NEXT_PUBLIC_SITE_URL}/urunler/${post.id}/${post.attributes.slug}/fiyatlari`}</loc>
+          <loc>${`${process.env.NEXT_PUBLIC_SITE_URL}/urunler/${post.attributes.slug}/fiyatlari`}</loc>
           <lastmod>${Moment(
             post.attributes.prices.data[0].attributes.updatedAt
           ).toISOString()}</lastmod>
@@ -23,7 +23,7 @@ function generateSiteMap(posts) {
           </image:image>
          </url>
          <url>
-          <loc>${`${process.env.NEXT_PUBLIC_SITE_URL}/urunler/${post.id}/${post.attributes.slug}/serbest-piyasa-fiyatlari`}</loc>
+          <loc>${`${process.env.NEXT_PUBLIC_SITE_URL}/urunler/${post.attributes.slug}/serbest-piyasa-fiyatlari`}</loc>
           <lastmod>${Moment(
             post.attributes.prices.data[0].attributes.updatedAt
           ).toISOString()}</lastmod>
@@ -37,7 +37,7 @@ function generateSiteMap(posts) {
           </image:image>
          </url>
          <url>
-          <loc>${`${process.env.NEXT_PUBLIC_SITE_URL}/urunler/${post.id}/${post.attributes.slug}/tmo-fiyatlari`}</loc>
+          <loc>${`${process.env.NEXT_PUBLIC_SITE_URL}/urunler/${post.attributes.slug}/tmo-fiyatlari`}</loc>
           <lastmod>${Moment(
             post.attributes.prices.data[0].attributes.updatedAt
           ).toISOString()}</lastmod>
@@ -95,7 +95,6 @@ export async function getServerSideProps({ res }) {
 
   return {
     props: {},
-    revalidate: 60,
   }
 }
 
