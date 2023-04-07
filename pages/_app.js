@@ -1,6 +1,7 @@
 import { useEffect } from "react"
 import App from "next/app"
 import Head from "next/head"
+import { GoogleAnalytics, event } from "nextjs-google-analytics"
 import { DefaultSeo } from "next-seo"
 import { getStrapiMedia } from "utils/media"
 import { getGlobalData } from "utils/api"
@@ -12,6 +13,15 @@ import { Dosis } from "@next/font/google"
 import runOneSignal from "utils/onesignal"
 
 import "@/styles/style.css"
+
+export function reportWebVitals({ id, name, label, value }) {
+  event(name, {
+    category: label === "web-vital" ? "Web Vitals" : "Next.js custom metric",
+    value: Math.round(name === "CLS" ? value * 1000 : value), // values must be integers
+    label: id, // id unique to current page load
+    nonInteraction: true, // avoids affecting bounce rate.
+  })
+}
 
 const dosis = Dosis({
   style: ["normal"],
@@ -36,6 +46,7 @@ const MyApp = ({
   const { metadata, favicon, metaTitleSuffix } = global.attributes
   return (
     <>
+      <GoogleAnalytics trackPageViews strategy="lazyOnload" />
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <SessionProvider session={session}>
