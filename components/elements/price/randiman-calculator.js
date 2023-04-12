@@ -79,7 +79,7 @@ const RandimanCalculator = () => {
       >
         {({ errors, touched, isSubmitting, setFieldValue }) => (
           <div className="mt-5 md:col-span-2 md:mt-0 mb-8">
-            <Form className="bg-lightgray">
+            <Form className="border border-lightgray">
               <div className="px-4 py-5 sm:p-6 lg:px-4 lg:py-5">
                 {isShowing ? (
                   <div className="w-full grid grid-cols-6 md:grid-cols-12 lg:grid-cols-6 gap-3">
@@ -198,27 +198,23 @@ const RandimanCalculator = () => {
                           {errors.api}
                         </p>
                       )}
-                      <div className="-mx-6 -mb-6 md:-mx-4 col-span-6 md:col-span-12 lg:col-span-6">
-                        <div className="bg-lightgray">
-                          <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
-                            <button
-                              className="disabled:opacity-75 w-full bg-secondary hover:bg-secondary/90 text-white rounded p-4 text-base transition duration-150 ease-out md:ease-in"
-                              type="submit"
-                              disabled={loading}
-                            >
-                              {loading ? (
-                                <span role="status">
-                                  <BiLoaderCircle className="mr-2 inline-block align-middle w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" />
-                                  <span className="sr-only">
-                                    Hesaplanıyor...
-                                  </span>
-                                  <span>Hesaplanıyor...</span>
-                                </span>
-                              ) : (
-                                <span>Hesapla</span>
-                              )}
-                            </button>
-                          </div>
+                      <div className="-mb-6 md:-mx-4 col-span-6 md:col-span-12 lg:col-span-6">
+                        <div className="py-3 text-right">
+                          <button
+                            className="disabled:opacity-75 w-full bg-secondary hover:bg-secondary/90 text-white rounded p-4 text-base transition duration-150 ease-out md:ease-in"
+                            type="submit"
+                            disabled={loading}
+                          >
+                            {loading ? (
+                              <span role="status">
+                                <BiLoaderCircle className="mr-2 inline-block align-middle w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" />
+                                <span className="sr-only">Hesaplanıyor...</span>
+                                <span>Hesaplanıyor...</span>
+                              </span>
+                            ) : (
+                              <span>Hesapla</span>
+                            )}
+                          </button>
                         </div>
                       </div>
                     </div>

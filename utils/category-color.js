@@ -13,7 +13,7 @@ export function categoryColor(cat) {
       return "#c37c09"
       break
     case "gundem":
-      return "#42b27c"
+      return "#276344"
       break
     case "kultur-sanat":
       return "#aa007b"

@@ -148,7 +148,7 @@ const Navbar = ({ navbar, pageContext }) => {
                     ) : (
                       <Link
                         href="/hesap/giris-yap"
-                        className="flex flex-col items-center transition duration-150 ease-out hover:ease-in hover:bg-primary shadow-sm hover:shadow-2xl hover:shadow-dark text-center text-primary hover:text-white border border-primary rounded"
+                        className="flex flex-col items-center transition duration-150 ease-out hover:ease-in bg-dark hover:bg-primary shadow-sm hover:shadow-2xl hover:shadow-dark text-center text-white border border-dark hover:border-primary rounded"
                         passHref
                       >
                         <MdLogin className="text-lg lg:text-xl xxl:text-xxl m-4" />
@@ -170,7 +170,12 @@ const Navbar = ({ navbar, pageContext }) => {
             <ul className="hidden list-none w-full md:flex flex-row justify-between gap-2 xl:gap-4 items-center">
               {navbar.links.map((navLink) => (
                 <li
-                  className="border-b-2 border-transparent hover:border-b-2 hover:border-b-secondary hover:bg-lightgray transition duration-150 ease-out md:ease-in"
+                  className={classNames(
+                    navLink.marked === true
+                      ? "bg-secondary border-b-dark hover:border-b-danger hover:bg-danger"
+                      : "hover:border-b-secondary hover:bg-lightgray",
+                    "border-b-2 border-transparent hover:border-b-2 transition duration-150 ease-out md:ease-in"
+                  )}
                   key={navLink.id}
                 >
                   <CustomLink link={navLink} locale={router.locale}>

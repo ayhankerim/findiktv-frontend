@@ -191,7 +191,7 @@ const AddPrice = ({ product, cityData }) => {
         }}
       >
         {({ errors, touched, isSubmitting, setFieldValue }) => (
-          <Form className="bg-lightgray">
+          <Form className="border border-lightgray">
             <div className="px-4 py-5 sm:p-6 lg:px-4 lg:py-5">
               <div className="grid grid-cols-6 gap-3">
                 <div className="col-span-6">
@@ -226,8 +226,8 @@ const AddPrice = ({ product, cityData }) => {
                 >
                   <div className="col-span-6">
                     <label
-                      htmlFor="price"
-                      className="block text-sm font-medium text-gray-700"
+                      htmlFor="AddPriceprice"
+                      className="block text-sm font-medium text-gray-900"
                     >
                       Ürün Fiyatı
                     </label>
@@ -240,6 +240,7 @@ const AddPrice = ({ product, cityData }) => {
                       allowNegative={false}
                       decimalScale={2}
                       name="price"
+                      id="AddPriceprice"
                       className={classNames(
                         errors.price && touched.price
                           ? "border-danger"
@@ -255,14 +256,15 @@ const AddPrice = ({ product, cityData }) => {
                   </div>
                   <div className="col-span-6">
                     <label
-                      htmlFor="city"
-                      className="block text-sm font-medium text-gray-700"
+                      htmlFor="AddPricecity"
+                      className="block text-sm font-medium text-gray-900"
                     >
                       Şehir
                     </label>
                     <Field
                       as="select"
                       name="city"
+                      id="AddPricecity"
                       className={classNames(
                         errors.city && touched.city
                           ? "border-danger"
@@ -289,14 +291,15 @@ const AddPrice = ({ product, cityData }) => {
                   </div>
                   <div className="col-span-6">
                     <label
-                      htmlFor="productType"
-                      className="block text-sm font-medium text-gray-700"
+                      htmlFor="AddPriceproductType"
+                      className="block text-sm font-medium text-gray-900"
                     >
                       Ürün Tipi
                     </label>
                     <Field
                       as="select"
                       name="productType"
+                      id="AddPriceproductType"
                       className={classNames(
                         errors.productType && touched.productType
                           ? "border-danger"
@@ -320,13 +323,14 @@ const AddPrice = ({ product, cityData }) => {
                   </div>
                   <div className="col-span-6">
                     <label
-                      htmlFor="date"
-                      className="block text-sm font-medium text-gray-700"
+                      htmlFor="AddPricedate"
+                      className="block text-sm font-medium text-gray-900"
                     >
                       Tarih
                     </label>
                     <Field
                       name="date"
+                      id="AddPricedate"
                       type="date"
                       className={classNames(
                         errors.date && touched.date
@@ -355,8 +359,8 @@ const AddPrice = ({ product, cityData }) => {
               >
                 <div className="col-span-6">
                   <label
-                    htmlFor="volume"
-                    className="block text-sm font-medium text-gray-700"
+                    htmlFor="AddPricevolume"
+                    className="block text-sm font-medium text-gray-900"
                   >
                     Satılan ürün miktarı
                   </label>
@@ -368,6 +372,7 @@ const AddPrice = ({ product, cityData }) => {
                     allowNegative={false}
                     decimalScale={0}
                     name="volume"
+                    id="AddPricevolume"
                     //onValueChange={(value) => console.log(value.floatValue)}
                     className={classNames(
                       errors.volume && touched.volume
@@ -376,7 +381,7 @@ const AddPrice = ({ product, cityData }) => {
                       "mt-1 block w-full px-3 py-2 text-right rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     )}
                   />
-                  <p className="mt-1 text-sm text-gray-500">
+                  <p className="mt-1 text-sm text-gray-700">
                     Kaç kg ürün sattığınızı girebilirsiniz.
                   </p>
                   {errors.volume && touched.volume && (
@@ -387,8 +392,8 @@ const AddPrice = ({ product, cityData }) => {
                 </div>
                 <div className="col-span-6">
                   <label
-                    htmlFor="efficiency"
-                    className="block text-sm font-medium text-gray-700"
+                    htmlFor="AddPriceefficiency"
+                    className="block text-sm font-medium text-gray-900"
                   >
                     Satılan ürün randımanı
                   </label>
@@ -398,6 +403,7 @@ const AddPrice = ({ product, cityData }) => {
                     allowNegative={false}
                     decimalScale={2}
                     name="efficiency"
+                    id="AddPriceefficiency"
                     className={classNames(
                       errors.efficiency && touched.efficiency
                         ? "border-danger"
@@ -446,6 +452,7 @@ const AddPrice = ({ product, cityData }) => {
                     <Field
                       type="checkbox"
                       name="term"
+                      id="AddPriceterm"
                       className={classNames(
                         errors.term && touched.term
                           ? "border-gray"
@@ -484,25 +491,23 @@ const AddPrice = ({ product, cityData }) => {
                     {errors.api}
                   </p>
                 )}
-                <div className="-mx-6 -mb-6 md:col-span-6">
-                  <div className="bg-lightgray">
-                    <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
-                      <button
-                        className="disabled:opacity-75 w-full bg-secondary hover:bg-secondary/90 text-white rounded p-4 text-base transition duration-150 ease-out md:ease-in"
-                        type="submit"
-                        disabled={loading}
-                      >
-                        {loading ? (
-                          <span role="status">
-                            <BiLoaderCircle className="mr-2 inline-block align-middle w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" />
-                            <span className="sr-only">Gönderiliyor...</span>
-                            <span>Gönderiliyor...</span>
-                          </span>
-                        ) : (
-                          <span>Gönder</span>
-                        )}
-                      </button>
-                    </div>
+                <div className="-mb-6 md:col-span-6">
+                  <div className="py-3 text-right">
+                    <button
+                      className="disabled:opacity-75 w-full bg-secondary hover:bg-secondary/90 text-white rounded p-4 text-base transition duration-150 ease-out md:ease-in"
+                      type="submit"
+                      disabled={loading}
+                    >
+                      {loading ? (
+                        <span role="status">
+                          <BiLoaderCircle className="mr-2 inline-block align-middle w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" />
+                          <span className="sr-only">Gönderiliyor...</span>
+                          <span>Gönderiliyor...</span>
+                        </span>
+                      ) : (
+                        <span>Gönder</span>
+                      )}
+                    </button>
                   </div>
                 </div>
               </Transition>

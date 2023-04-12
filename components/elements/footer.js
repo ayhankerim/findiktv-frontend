@@ -18,9 +18,9 @@ const Footer = ({ footer }) => {
               key={footerColumn.id}
               className="mt-10 lg:mt-0 w-6/12 lg:w-auto"
             >
-              <h4 className="uppercase tracking-wide font-semibold text-midgray">
+              <h3 className="uppercase tracking-wide font-semibold text-midgray">
                 {footerColumn.title}
-              </h4>
+              </h3>
               <ul className="mt-2">
                 {footerColumn.links.map((link) => (
                   <li
@@ -35,7 +35,7 @@ const Footer = ({ footer }) => {
           ))}
         </nav>
       </div>
-      <div className="text-sm py-6 text-midgray bg-black">
+      <div className="text-sm py-6 text-lightgray/60 bg-black">
         <div className="container flex flex-col sm:flex-row justify-between gap-2">
           <div className="">{footer.smallText}</div>
           <div dangerouslySetInnerHTML={{ __html: footer.copyright }} />

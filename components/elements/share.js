@@ -35,7 +35,7 @@ const ArticleDates = ({ position, title, slug }) => {
               passHref
             >
               <FaTelegramPlane className="inline-flex text-base md:mr-2" />
-              <span className="hidden md:inline-block">
+              <span className="hidden md:inline-block font-bold">
                 Telegram ile paylaş
               </span>
             </Link>
@@ -50,7 +50,7 @@ const ArticleDates = ({ position, title, slug }) => {
               passHref
             >
               <FaWhatsapp className="inline-flex text-base md:mr-2" />
-              <span className="hidden md:inline-block">
+              <span className="hidden md:inline-block font-bold">
                 Whatsapp ile paylaş
               </span>
             </Link>
@@ -85,7 +85,7 @@ const ArticleDates = ({ position, title, slug }) => {
                 scrolltoComments()
                 ;("gtag('event', 'detay', {'event_category': 'share','event_label': 'comments'});")
               }}
-              className="flex flex-row items-center text-xs hover:bg-[#ff9d00] text-[#ff9d00] hover:text-white border border-[#ff9d00] transition duration-150 ease-out hover:ease-in px-2 py-1 rounded"
+              className="flex flex-row items-center text-xs bg-[#ff9d00] hover:bg-white hover:text-[#ff9d00] text-white border border-[#ff9d00] transition duration-150 ease-out hover:ease-in px-2 py-1 rounded"
             >
               <FaComment className="inline-flex text-base mr-2" />
               <span className="font-bold">{countedComment}</span>
@@ -100,7 +100,7 @@ const ArticleDates = ({ position, title, slug }) => {
               onClick={() => {
                 ;("gtag('event', 'detay', {'event_category': 'share','event_label': 'googlenews'});")
               }}
-              className="flex flex-row items-center text-xs hover:bg-[#DB4437] text-[#DB4437] hover:text-white border border-[#DB4437] transition duration-150 ease-out hover:ease-in px-2 py-1 rounded"
+              className="flex flex-row items-center text-xs bg-[#DB4437] hover:bg-white hover:text-[#DB4437] text-white border border-[#DB4437] transition duration-150 ease-out hover:ease-in px-2 py-1 rounded"
               passHref
             >
               <SiGooglenews className="inline-flex text-base mr-1" />
@@ -124,7 +124,7 @@ const ArticleDates = ({ position, title, slug }) => {
               passHref
             >
               <FaTelegramPlane className="inline-flex text-base md:mr-2" />
-              <span className="hidden md:inline-block">
+              <span className="hidden md:inline-block font-bold">
                 Telegram ile paylaş
               </span>
             </Link>
@@ -139,7 +139,7 @@ const ArticleDates = ({ position, title, slug }) => {
               passHref
             >
               <FaWhatsapp className="inline-flex text-base md:mr-2" />
-              <span className="hidden md:inline-block">
+              <span className="hidden md:inline-block font-bold">
                 Whatsapp ile paylaş
               </span>
             </Link>
@@ -174,7 +174,7 @@ const ArticleDates = ({ position, title, slug }) => {
                 scrolltoComments()
                 ;("gtag('event', 'detay', {'event_category': 'share','event_label': 'comments'});")
               }}
-              className="flex flex-row items-center text-xs hover:bg-[#ff9d00] text-[#ff9d00] hover:text-white border border-[#ff9d00] transition duration-150 ease-out hover:ease-in px-2 py-1 rounded"
+              className="flex flex-row items-center text-xs bg-[#ff9d00] hover:bg-white hover:text-[#ff9d00] text-white border border-[#ff9d00] transition duration-150 ease-out hover:ease-in px-2 py-1 rounded"
             >
               <FaComment className="inline-flex text-base mr-2" />
               <span>{countedComment}</span>

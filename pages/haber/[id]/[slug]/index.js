@@ -1,6 +1,7 @@
 import React, { useEffect } from "react"
 import Image from "next/image"
 import dynamic from "next/dynamic"
+import { NewsArticleJsonLd } from "next-seo"
 import { useRouter } from "next/router"
 import { useDispatch } from "react-redux"
 import { isMobile } from "react-device-detect"
@@ -18,6 +19,8 @@ import Layout from "@/components/layout"
 import Seo from "@/components/elements/seo"
 import ArticleSidebar from "@/components/elements/article/article-sidebar"
 import ModuleLoader from "@/components/elements/module-loader"
+import Moment from "moment"
+import "moment/locale/tr"
 
 const Loader = ({ cssClass }) => (
   <div className={`lds-ellipsis ${cssClass}`}>
@@ -143,6 +146,28 @@ const DynamicArticle = ({
           <h1 className="font-extrabold text-xl lg:text-xxl">
             {articleContent.title}
           </h1>
+          <NewsArticleJsonLd
+            url={`${process.env.NEXT_PUBLIC_SITE_URL}/haber/${articleContent.id}/${articleContext.slug}`}
+            title={articleContent.title}
+            images={[
+              `${articleContent.homepage_image.data.attributes.url}`,
+              `${articleContent.image.data.attributes.url}`,
+            ]}
+            section={
+              articleContent.category.data
+                ? articleContent.category.data.attributes.title
+                : "Gündem"
+            }
+            keywords={articleContent.tags.data[0]?.attributes.title}
+            datePublished={Moment(articleContent.publishedAt).toISOString()}
+            dateModified={Moment(articleContent.updatedAt).toISOString()}
+            authorName="Kerim Ayhan"
+            publisherName="FINDIK TV"
+            publisherLogo={`${process.env.NEXT_PUBLIC_SITE_URL}/uploads/small_logo_findiktv_2000_92bc7df5ca.png`}
+            description={articleContent.summary}
+            body={articleContent.content.replace(/(<([^>]+)>)/gi, "")}
+            isAccessibleForFree={true}
+          />
           <article className="font-semibold text-lg text-darkgray">
             {articleContent.summary}
           </article>
@@ -320,6 +345,7 @@ export async function getStaticProps(context) {
     publishedAt,
     updatedAt,
     image,
+    homepage_image,
     category,
     cities,
     tags,

@@ -56,9 +56,6 @@ if (typeof Highcharts === "object") {
       ],
       exportButtonTitle: "Dışarı Aktar",
       printButtonTitle: "Yazdır",
-      rangeSelectorFrom: "Başlangış",
-      rangeSelectorTo: "Bitiş",
-      rangeSelectorZoom: "Periyot",
       downloadPNG: "PNG Olarak indir",
       downloadJPEG: "JPEG olarak indir",
       downloadPDF: "PDF olarak indir",
@@ -122,38 +119,9 @@ const PriceChart = ({ city, product, type, grapghData }) => {
       enabled: false,
     },
     rangeSelector: {
-      selected: 4,
-      buttons: [
-        {
-          type: "month",
-          count: 1,
-          text: "1 ay",
-          title: "1 ay göster",
-        },
-        {
-          type: "month",
-          count: 3,
-          text: "3 ay",
-          title: "3 ay göster",
-        },
-        {
-          type: "month",
-          count: 6,
-          text: "6 ay",
-          title: "6 ay göster",
-        },
-        {
-          type: "year",
-          count: 1,
-          text: "1y",
-          title: "Bir yıl göster",
-        },
-        {
-          type: "all",
-          text: "Tümü",
-          title: "Tümünü göster",
-        },
-      ],
+      selected: 0,
+      inputEnabled: false,
+      enabled: false,
     },
     credits: {
       enabled: false,
