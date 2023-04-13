@@ -7,6 +7,7 @@ export function contentWithAds(content, advertisement) {
     paraArray.length > 2 &&
     index > 1 &&
     index % 2 &&
+    index < 8 &&
     paraArray.length - 1 != index
       ? (NewsContentText +=
           `<div class="adsInline"><div class="band"><span>REKLAM</span></div><div class="w-full h-[280px] -mx-2 sm:mx-0"><ins class="adsbygoogle"

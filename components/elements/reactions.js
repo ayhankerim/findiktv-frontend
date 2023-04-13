@@ -3,8 +3,26 @@ import useSWR from "swr"
 import { useSession } from "next-auth/react"
 import { fetchAPI } from "utils/api"
 import { MdOutlineEmojiEmotions } from "react-icons/md"
-import NextImage from "./image"
+import Image from "next/image"
 import Tooltip from "@/components/elements/tooltip"
+
+const cloudflareLoader = ({ src, width, quality }) => {
+  const key = src.includes("imagedelivery.net")
+  switch (key) {
+    case true:
+      const cloudflareSrc = src
+        .substring(26)
+        .replace("/Development", "")
+        .replace("/public", "")
+        .replace("/Test", "")
+      return `https://www.findiktv.com/cdn-cgi/imagedelivery/${cloudflareSrc}/format=auto${
+        quality ? `,quality=${quality}` : ""
+      }${width ? `,width=${width}` : ""}`
+      break
+    default:
+      break
+  }
+}
 
 const Reactions = ({ article }) => {
   const qs = require("qs")
@@ -160,12 +178,18 @@ const Reactions = ({ article }) => {
                   orientation="bottom"
                   tooltipText={emoji.attributes.title}
                 >
-                  <NextImage
+                  <Image
+                    loader={cloudflareLoader}
                     width="44"
                     height="44"
                     className="w-full"
-                    media={emoji.attributes.image}
+                    src={emoji.attributes.image.data.attributes.url}
                     alt={emoji.attributes.title}
+                    style={{
+                      objectFit: "cover",
+                    }}
+                    placeholder="blur"
+                    blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8/OhZPQAIhwMsJ60FNgAAAABJRU5ErkJggg=="
                   />
                 </Tooltip>
               </button>
