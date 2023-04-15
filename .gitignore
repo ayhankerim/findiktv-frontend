@@ -103,12 +103,7 @@ dist
 # TernJS port file
 .tern-port
 
-# Sentry
-.sentryclirc
-
-# Sentry
 next.config.original.js
-pages/sentry_sample_error.js
 yarn.lock
 public/sitemap.xml
 public/sitemap-0.xml
