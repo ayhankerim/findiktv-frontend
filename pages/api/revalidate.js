@@ -1,4 +1,4 @@
-///api/revalidate?url=/haber/14/findik-bahceleri-yeni-sezona-hazirlaniyor-mu&secret=060680d30005ff8d4e4df5a39fc3b2a7914be
+///api/revalidate?url=/haber/14/findik-bahceleri-yeni-sezona-hazirlaniyor-mu&secret=SECRET
 export default async function handler(req, res) {
   // Check for secret to confirm this is a valid request
   if (req.query.secret !== process.env.REVALIDATION_SECRET_TOKEN) {

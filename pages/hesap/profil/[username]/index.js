@@ -210,7 +210,7 @@ const DynamicUsers = ({ userContent, advertisement, global, userContext }) => {
     ...global.attributes.metadata,
     ...metadata,
   }
-  //console.log(userContent)
+  console.log(userContent)
   return (
     <Layout global={global} pageContext={userContext}>
       {/* Add meta tags for SEO*/}
@@ -399,6 +399,17 @@ const DynamicUsers = ({ userContent, advertisement, global, userContext }) => {
                 </div>
               </div>
             )}
+            <div className="flex flex-col">
+              {(userContent.role.data.attributes.name === "Editor" ||
+                userContent.role.data.attributes.name === "Admin") && (
+                <Link
+                  href={`/hesap/profil/${userContent.username}/cache`}
+                  className=""
+                >
+                  Cache Temizle
+                </Link>
+              )}
+            </div>
           </div>
           <SimpleSidebar />
         </div>
