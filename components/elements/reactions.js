@@ -45,7 +45,7 @@ const Reactions = ({ article }) => {
       fields: ["*"],
       populate: {
         image: {
-          populate: ["*"],
+          populate: "*",
         },
       },
       sort: ["sort:asc"],

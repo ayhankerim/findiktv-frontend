@@ -25,7 +25,7 @@ const ArticleMostVisited = ({ size, slug }) => {
       fields: ["title", "slug", "summary"],
       populate: {
         image: {
-          populate: ["*"],
+          populate: "*",
         },
         view: {
           populate: ["view"],

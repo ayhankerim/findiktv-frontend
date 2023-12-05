@@ -53,10 +53,10 @@ const SliderWithSide = ({ data, position = "sidebar" }) => {
       fields: ["title", "slug", "summary"],
       populate: {
         image: {
-          populate: ["*"],
+          populate: "*",
         },
         category: {
-          populate: ["*"],
+          populate: "*",
         },
         view: {
           populate: ["view"],

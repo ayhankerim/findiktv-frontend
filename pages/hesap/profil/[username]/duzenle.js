@@ -36,7 +36,7 @@ const ProfileCover = (username) => {
       fields: ["*"],
       populate: {
         Image: {
-          populate: ["*"],
+          populate: "*",
         },
       },
       sort: ["id:desc"],

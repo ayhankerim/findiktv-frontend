@@ -24,8 +24,6 @@ const SiteneEkle = ({ global }) => {
     ...global.attributes.metadata,
     ...metadata,
   }
-  var myHTML =
-    '<iframe src="/sitene-ekle/modul/findik-fiyatlari" width="500" height="500"></iframe>'
 
   return (
     <Layout global={global} pageContext={null}>

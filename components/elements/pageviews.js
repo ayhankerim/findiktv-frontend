@@ -3,44 +3,52 @@ import { fetchAPI } from "@/utils/api"
 import { MdOutlineRemoveRedEye } from "react-icons/md"
 import { BiLoaderCircle } from "react-icons/bi"
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ")
-}
 const ViewCounter = ({ article }) => {
   const [loading, setLoading] = useState(false)
   const [view, setView] = useState(300)
   useEffect(() => {
     setLoading(true)
     const fetchData = async () => {
-      await fetchAPI("/views", {
-        filters: {
-          article: {
-            id: {
-              $eq: article,
+      try {
+        await fetchAPI("/views", {
+          filters: {
+            article: {
+              id: {
+                $eq: article,
+              },
             },
           },
-        },
-        pagination: {
-          start: 0,
-          limit: 1,
-        },
-      }).then(async (data) => {
-        await fetchAPI(
-          `/views/${data.data[0].id}`,
-          {},
-          {
-            method: "PUT",
-            body: JSON.stringify({
-              data: {
-                view: data.data[0].attributes.view + 1,
-              },
-            }),
+          pagination: {
+            start: 0,
+            limit: 1,
+          },
+        }).then(async (data) => {
+          if (data && data.data[0]) {
+            try {
+              await fetchAPI(
+                `/views/${data.data[0].id}`,
+                {},
+                {
+                  method: "PUT",
+                  body: JSON.stringify({
+                    data: {
+                      view: data.data[0].attributes.view + 1,
+                    },
+                  }),
+                }
+              ).then((data) => {
+                setView(data.data.attributes.view + 1)
+              })
+            } catch (console) {
+              console.log(error)
+            }
           }
-        ).then((data) => {
-          setView(data.data.attributes.view + 1)
-          setLoading(false)
         })
-      })
+      } catch (console) {
+        console.log(error)
+      } finally {
+        setLoading(false)
+      }
     }
 
     fetchData()

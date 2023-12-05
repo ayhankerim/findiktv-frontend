@@ -38,10 +38,10 @@ const ArticleSection = ({ data, position = "bottom" }) => {
       fields: ["title", "slug", "summary"],
       populate: {
         image: {
-          populate: ["*"],
+          populate: "*",
         },
         category: {
-          populate: ["*"],
+          populate: "*",
         },
       },
       sort: ["id:desc"],

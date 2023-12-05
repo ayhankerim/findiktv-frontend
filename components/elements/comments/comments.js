@@ -65,13 +65,13 @@ const Comments = ({ article, product, slug, city }) => {
         user: {
           populate: {
             avatar: {
-              populate: ["*"],
+              populate: "*",
             },
             SystemAvatar: {
-              populate: ["*"],
+              populate: "*",
               populate: {
                 image: {
-                  populate: ["*"],
+                  populate: "*",
                 },
               },
               fields: ["*"],
@@ -140,13 +140,13 @@ const Comments = ({ article, product, slug, city }) => {
         user: {
           populate: {
             avatar: {
-              populate: ["*"],
+              populate: "*",
             },
             SystemAvatar: {
-              populate: ["*"],
+              populate: "*",
               populate: {
                 image: {
-                  populate: ["*"],
+                  populate: "*",
                 },
               },
               fields: ["*"],

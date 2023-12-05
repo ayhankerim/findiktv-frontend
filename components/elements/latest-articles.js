@@ -55,7 +55,7 @@ const LatestArticles = ({
       fields: ["title", "slug"],
       populate: {
         image: {
-          populate: ["*"],
+          populate: "*",
         },
         category: {
           populate: ["slug", "title"],

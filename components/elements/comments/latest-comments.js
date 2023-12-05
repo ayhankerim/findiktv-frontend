@@ -33,13 +33,13 @@ const LatestComments = ({ size, position, offset = 0 }) => {
         user: {
           populate: {
             avatar: {
-              populate: ["*"],
+              populate: "*",
             },
             SystemAvatar: {
-              populate: ["*"],
+              populate: "*",
               populate: {
                 image: {
-                  populate: ["*"],
+                  populate: "*",
                 },
               },
               fields: ["*"],

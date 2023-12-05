@@ -115,7 +115,7 @@ const ProfileCoverAvatarChange = () => {
       populate: ["id", "title"],
       populate: {
         image: {
-          populate: ["*"],
+          populate: "*",
           fields: ["*"],
         },
       },
@@ -137,7 +137,7 @@ const ProfileCoverAvatarChange = () => {
       populate: ["id", "title"],
       populate: {
         Image: {
-          populate: ["*"],
+          populate: "*",
           fields: ["*"],
         },
       },

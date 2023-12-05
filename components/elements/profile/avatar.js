@@ -18,7 +18,7 @@ const Avatar = ({ username, avatar, systemavatar }) => {
         },
         populate: {
           image: {
-            populate: ["*"],
+            populate: "*",
           },
         },
         populate: ["image"],
