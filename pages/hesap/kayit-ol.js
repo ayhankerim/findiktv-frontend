@@ -140,7 +140,7 @@ export default function Register({ global }) {
           <div className="lg:w-5/12 xl:w-4/12 p-12 xl:p-20 fixed left-0 top-0 h-screen overflow-y-hidden hidden lg:flex flex-col">
             <Image
               src={`${process.env.NEXT_PUBLIC_CLOUD_IMAGE_CORE_URL}9db77d3a-1cdb-4bc5-c236-20f990316500/format=auto,height=1000`}
-              alt="Üretici heesabı"
+              alt="Üretici hesabı"
               className="absolute inset-0 h-full w-full object-cover"
               priority={true}
               fill
@@ -181,7 +181,9 @@ export default function Register({ global }) {
                     </p>
                     <p>
                       E-posta kutunuza gönderilen bağlantıya tıklayarak
-                      hesabınızı onaylayabilirsiniz.
+                      hesabınızı onaylayabilir ve{" "}
+                      <Link href={"/hesap/giris-yap"}>buradan</Link> giriş
+                      yapabilirsiniz.
                     </p>
                     <p className="mt-2">
                       <Link
@@ -240,7 +242,7 @@ export default function Register({ global }) {
                         setSubmitting(false)
                       }}
                     >
-                      {({ errors, touched, isSubmitting, setFieldValue }) => (
+                      {({ errors, touched }) => (
                         <Form>
                           <div className="flex flex-col mb-5">
                             <label className="form-label" htmlFor="username">

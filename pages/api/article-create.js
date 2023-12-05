@@ -59,7 +59,7 @@ export default async function handler(req, res) {
       cities.push(21)
     }
     if (
-      articles.data[store.data.article].post_content.includes("Gireesun") ===
+      articles.data[store.data.article].post_content.includes("Giresun") ===
       true
     ) {
       cities.push(22)

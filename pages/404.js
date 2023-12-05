@@ -44,8 +44,8 @@ export default function NotFound({ global }) {
             </div>
             <div className="flex flex-col justify-center gap-4 py-4">
               <div className="flex flex-row items-center justify-center text-center">
-                Ulaşmaya çalıştığınız sayfa silinmiş, taşınmış ya da hiç
-                varolamamış olabilir.
+                Ulaşmaya çalıştığınız sayfa silinmiş, taşınmış ya da hiç olmamış
+                olabilir.
                 <Link
                   href={`/`}
                   className="py-2 px-4 ml-4 rounded border text-secondary hover:text-white border-secondary hover:bg-secondary"

@@ -12,7 +12,10 @@ import SimpleSidebar from "@/components/elements/simple-sidebar"
 import { FcApproval } from "react-icons/fc"
 import { Tab } from "@headlessui/react"
 import { RiEditBoxLine, RiSeparator } from "react-icons/ri"
-import { MdOutlineLocationOn } from "react-icons/md"
+import {
+  MdOutlineLocationOn,
+  MdOutlineAdminPanelSettings,
+} from "react-icons/md"
 import {
   FaTelegramPlane,
   FaFacebookF,
@@ -210,7 +213,6 @@ const DynamicUsers = ({ userContent, advertisement, global, userContext }) => {
     ...global.attributes.metadata,
     ...metadata,
   }
-  console.log(userContent)
   return (
     <Layout global={global} pageContext={userContext}>
       {/* Add meta tags for SEO*/}
@@ -272,7 +274,7 @@ const DynamicUsers = ({ userContent, advertisement, global, userContext }) => {
                       </span>
                     </div>
                     {session && session.id == userContent.id && (
-                      <div className="relative text-right">
+                      <div className="flex flex-col relative text-right gap-2">
                         <Link
                           href={`/hesap/profil/${userContent.username}/duzenle`}
                           className="flex w-full border items-center rounded-md px-2 py-1 text-sm hover:shadow-lg"
@@ -283,6 +285,20 @@ const DynamicUsers = ({ userContent, advertisement, global, userContext }) => {
                           />
                           Düzenle
                         </Link>
+                        {(userContent.role.data.attributes.name === "Editor" ||
+                          userContent.role.data.attributes.name ===
+                            "Admin") && (
+                          <Link
+                            href={`/hesap/profil/${userContent.username}/cache`}
+                            className="flex w-full border items-center rounded-md px-2 py-1 text-sm hover:shadow-lg"
+                          >
+                            <MdOutlineAdminPanelSettings
+                              className="mr-2 text-sm text-secondary"
+                              aria-hidden="true"
+                            />
+                            Editör Paneli
+                          </Link>
+                        )}
                       </div>
                     )}
                   </div>
@@ -399,17 +415,6 @@ const DynamicUsers = ({ userContent, advertisement, global, userContext }) => {
                 </div>
               </div>
             )}
-            <div className="flex flex-col">
-              {(userContent.role.data.attributes.name === "Editor" ||
-                userContent.role.data.attributes.name === "Admin") && (
-                <Link
-                  href={`/hesap/profil/${userContent.username}/cache`}
-                  className=""
-                >
-                  Cache Temizle
-                </Link>
-              )}
-            </div>
           </div>
           <SimpleSidebar />
         </div>
