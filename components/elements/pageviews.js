@@ -25,38 +25,21 @@ const ViewCounter = ({ article }) => {
           limit: 1,
         },
       }).then(async (data) => {
-        if (data.data.length > 0) {
-          await fetchAPI(
-            `/views/${data.data[0].id}`,
-            {},
-            {
-              method: "PUT",
-              body: JSON.stringify({
-                data: {
-                  view: data.data[0].attributes.view + 1,
-                },
-              }),
-            }
-          ).then((data) => {
-            setView(data.data.attributes.view + 1)
-            setLoading(false)
-          })
-        } else {
+        await fetchAPI(
+          `/views/${data.data[0].id}`,
+          {},
+          {
+            method: "PUT",
+            body: JSON.stringify({
+              data: {
+                view: data.data[0].attributes.view + 1,
+              },
+            }),
+          }
+        ).then((data) => {
+          setView(data.data.attributes.view + 1)
           setLoading(false)
-          await fetchAPI(
-            `/views`,
-            {},
-            {
-              method: "POST",
-              body: JSON.stringify({
-                data: {
-                  view: 1,
-                  article: article,
-                },
-              }),
-            }
-          )
-        }
+        })
       })
     }
 
