@@ -49,12 +49,12 @@ const SiteneEkle = ({ global }) => {
                 Fındık Fiyatları Modülü
               </label>
               <div className="mt-2">
-                <iframe
+                {/* <iframe
                   src="/sitene-ekle/modul/findik-fiyatlari"
                   width={500}
                   height={845}
                   className="bg-white m-0 p-0 w-full h-100"
-                ></iframe>
+                ></iframe> */}
                 <textarea
                   id="findik-fiyatlari"
                   name="findik-fiyatlari"
