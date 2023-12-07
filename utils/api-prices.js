@@ -931,9 +931,9 @@ export async function getGraphData({ product, city, priceType }) {
 
   for (date in sums) {
     results.push({
-      date: date,
-      average: sums[date] / volume[date],
-      volume: volume[date],
+      date: Number(date),
+      average: Number((sums[date] / volume[date]).toFixed(2)),
+      //volume: volume[date],
       quality: quality[date],
     })
   }

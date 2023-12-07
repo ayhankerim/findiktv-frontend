@@ -160,22 +160,22 @@ const PriceChart = ({ grapghData }) => {
               ]
             }),
           },
-          {
-            type: "column",
-            name: "Hacim",
-            color: "rgb(67, 67, 72)",
-            tooltip: {
-              valueSuffix: " kg",
-              valueDecimals: 2,
-            },
-            data: grapghData.map(function (item) {
-              return [
-                new Date(new Date().setTime(item.date)).setHours(0, 0, 0),
-                item.volume,
-              ]
-            }),
-            yAxis: 1,
-          },
+          // {
+          //   type: "column",
+          //   name: "Hacim",
+          //   color: "rgb(67, 67, 72)",
+          //   tooltip: {
+          //     valueSuffix: " kg",
+          //     valueDecimals: 2,
+          //   },
+          //   data: grapghData.map(function (item) {
+          //     return [
+          //       new Date(new Date().setTime(item.date)).setHours(0, 0, 0),
+          //       Number(item.volume),
+          //     ]
+          //   }),
+          //   yAxis: 1,
+          // },
         ],
       })
   }, [grapghData])

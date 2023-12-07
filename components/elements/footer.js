@@ -52,7 +52,7 @@ Footer.propTypes = {
       PropTypes.shape({
         id: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
           .isRequired,
-        title: PropTypes.string.isRequired,
+        title: PropTypes.string,
         links: PropTypes.arrayOf(linkPropTypes),
       })
     ),
