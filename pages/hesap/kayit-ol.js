@@ -27,6 +27,7 @@ const notify = (type, message) => {
 export default function Register({ global }) {
   const [loading, setLoading] = useState(false)
   const [accountCreated, setAccountCreated] = useState(false)
+  const [registered, SetRegistered] = useState(false)
   const router = useRouter()
   const [userData, setUserData] = useState({
     username: "",
@@ -74,6 +75,7 @@ export default function Register({ global }) {
                 ).then((data) => {
                   if (data.length > 0) {
                     resolve(false)
+                    SetRegistered(true)
                   } else {
                     resolve(true)
                   }
@@ -91,31 +93,27 @@ export default function Register({ global }) {
       .string()
       .email("Lütfen geçerli bir mail adresi giriniz!")
       .required("E-posta adresi gereklidir!")
-      .test(
-        "Unique Email",
-        "Bu mail adresi kayıtlı!", // <- key, message
-        function (value) {
-          return new Promise((resolve, reject) => {
-            if (/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{1,4}$/i.test(value)) {
-              fetchAPI(
-                `/users?filters[email][$eq]=${value}&filters[confirmed][$eq]=true&fields[0]=email`,
-                {},
-                {
-                  method: "GET",
-                }
-              ).then((data) => {
-                if (data.length > 0) {
-                  resolve(false)
-                } else {
-                  resolve(true)
-                }
-              })
-            } else {
-              resolve(true)
-            }
-          })
-        }
-      ),
+      .test("Unique Email", "Bu mail adresi kayıtlı!", function (value) {
+        return new Promise((resolve, reject) => {
+          if (/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{1,4}$/i.test(value)) {
+            fetchAPI(
+              `/users?filters[email][$eq]=${value}&fields[0]=email`,
+              {},
+              {
+                method: "GET",
+              }
+            ).then((data) => {
+              if (data.length > 0) {
+                resolve(false)
+              } else {
+                resolve(true)
+              }
+            })
+          } else {
+            resolve(true)
+          }
+        })
+      }),
     password: yup
       .string()
       .required("Lütfen şifrenizi giriniz!")
@@ -278,6 +276,19 @@ export default function Register({ global }) {
                             />
                             {errors.email && touched.email && (
                               <p className="text-danger">{errors.email}</p>
+                            )}
+                            {errors.email && touched.email && registered && (
+                              <p className="text-danger">
+                                Hesabınız onaylı olmadığı için giriş
+                                yapamıyorsanız{" "}
+                                <Link
+                                  className="underline"
+                                  href="/hesap/hesap-onaylama-mailini-tekrar-gonder"
+                                >
+                                  buradan
+                                </Link>{" "}
+                                onay mailini tekrar gönderebilirsiniz.
+                              </p>
                             )}
                           </div>
                           <div className="flex flex-col mb-5">

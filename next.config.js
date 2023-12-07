@@ -92,6 +92,10 @@ const nextConfig = {
         destination: `${process.env.STRAPI_API_URL}/api/auth/email-confirmation`,
       },
       {
+        source: "/api/auth/send-email-confirmation",
+        destination: `${process.env.STRAPI_API_URL}/api/auth/send-email-confirmation`,
+      },
+      {
         source: "/api/auth/:path*",
         destination: "/api/auth/:path*",
       },
