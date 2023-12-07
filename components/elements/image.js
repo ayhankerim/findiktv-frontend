@@ -6,10 +6,6 @@ import { mediaPropTypes } from "utils/types"
 const NextImage = ({ media, alt, ...props }) => {
   const { url, alternativeText, width, height } = media.data.attributes
 
-  const loader = ({ src, width }) => {
-    return getStrapiMedia(src)
-  }
-
   const cloudflareLoader = ({ src, width, quality }) => {
     const key = src.includes("imagedelivery.net")
     switch (key) {
@@ -35,7 +31,7 @@ const NextImage = ({ media, alt, ...props }) => {
       <Image
         loader={cloudflareLoader}
         src={url}
-        alt={alt || alternativeText ? alternativeText : ""}
+        alt={alt ? alt : alternativeText ? alternativeText : ""}
         style={{
           objectFit: "cover",
         }}
@@ -56,7 +52,7 @@ const NextImage = ({ media, alt, ...props }) => {
         objectFit: "contain",
       }}
       src={url}
-      alt={alt || alternativeText ? alternativeText : ""}
+      alt={alt ? alt : alternativeText ? alternativeText : ""}
     />
   )
 }
