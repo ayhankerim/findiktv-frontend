@@ -158,7 +158,7 @@ const AddPrice = ({ product, cityData }) => {
                             ? values.efficiency.toString().replace(",", ".")
                             : 50
                         ),
-                        product: product,
+                        product: product || 2,
                         approvalStatus: "waiting",
                         type: "openmarket",
                         city: values.city,

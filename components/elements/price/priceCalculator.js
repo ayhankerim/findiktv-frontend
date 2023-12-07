@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useSession } from "next-auth/react"
 import { useSelector } from "react-redux"
 import * as yup from "yup"
@@ -65,6 +65,30 @@ const PriceCalculator = ({ product, city, pricetype }) => {
   const { data: session } = useSession()
   const [isShowing, setIsShowing] = useState(false)
   const [calculationResult, setCalculationResult] = useState(0)
+  const [cities, setCityList] = useState([])
+  useEffect(() => {
+    console.log(city)
+    !city &&
+      fetchAPI("/cities", {
+        filters: {
+          prices: {
+            product: {
+              id: {
+                $eq: product,
+              },
+            },
+          },
+        },
+        fields: ["title", "slug"],
+        sort: ["title:asc"],
+        pagination: {
+          start: 0,
+          limit: 100,
+        },
+      }).then((data) => {
+        setCityList(data)
+      })
+  }, [city, product])
   return (
     <>
       <Formik
@@ -121,7 +145,7 @@ const PriceCalculator = ({ product, city, pricetype }) => {
                         product: product,
                         approvalStatus: "calculation",
                         type: "openmarket",
-                        city: city,
+                        city: city ? city : values.city,
                         user: session ? userData.id : null,
                         ip: clientIP.ip,
                       },
@@ -278,6 +302,46 @@ const PriceCalculator = ({ product, city, pricetype }) => {
                           </>
                         )}
                       </div>
+                      {!city && (
+                        <div className="col-span-6">
+                          <label
+                            htmlFor="AddPricecity"
+                            className="block text-sm font-medium text-gray-900"
+                          >
+                            Şehir
+                          </label>
+                          <Field
+                            as="select"
+                            name="city"
+                            id="AddPricecity"
+                            className={classNames(
+                              errors.city && touched.city
+                                ? "border-danger"
+                                : "border-midgray",
+                              "mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                            )}
+                          >
+                            <option value={""} disabled defaultValue>
+                              Lütfen seçiniz
+                            </option>
+                            {cities &&
+                              cities.data &&
+                              cities.data.map((item) => (
+                                <option
+                                  value={item.id}
+                                  key={item.attributes.slug}
+                                >
+                                  {item.attributes.title}
+                                </option>
+                              ))}
+                          </Field>
+                          {errors.city && touched.city && (
+                            <>
+                              <p className="text-danger">{errors.city}</p>
+                            </>
+                          )}
+                        </div>
+                      )}
                       <div className="col-span-6">
                         <label
                           htmlFor="price"
