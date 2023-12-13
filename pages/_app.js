@@ -56,6 +56,11 @@ const MyApp = ({
                 rel="shortcut icon"
                 href={getStrapiMedia(favicon.data.attributes.url)}
               />
+              <link
+                rel="preconnect"
+                href="https://googleads.g.doubleclick.net"
+              ></link>
+              <link rel="preconnect" href="https://cdn.onesignal.com"></link>
             </Head>
             {/* Global site metadata */}
             <DefaultSeo
