@@ -9,7 +9,7 @@ import { SessionProvider } from "next-auth/react"
 import { Provider } from "react-redux"
 import { store, persistor } from "@/store/index"
 import { PersistGate } from "redux-persist/integration/react"
-import { Dosis } from "@next/font/google"
+import { Dosis } from "next/font/google"
 import runOneSignal from "utils/onesignal"
 
 import "@/styles/style.css"
