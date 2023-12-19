@@ -3,6 +3,7 @@ import Link from "next/link"
 import { useRouter } from "next/router"
 import Image from "next/image"
 import * as yup from "yup"
+import { signIn } from "next-auth/react"
 import { Formik, Form, Field } from "formik"
 import toast, { Toaster } from "react-hot-toast"
 import { fetchAPI, getGlobalData } from "@/utils/api"
@@ -344,22 +345,22 @@ export default function Register({ global }) {
                     </div>
                     <div className="flex gap-2">
                       <div className="w-full">
-                        <a
-                          href="#"
+                        <button
+                          onClick={() => signIn("facebook")}
                           className="flex flex-col items-center hover:bg-lightgray/90 text-midgray hover:text-secondary border hover:border-lightgray/90 text-center rounded px-6 py-2 text-sm w-full transition duration-150 ease-out md:ease-in"
                         >
                           <MdFacebook className="inline-block" />
                           Facebook
-                        </a>
+                        </button>
                       </div>
                       <div className="w-full">
-                        <a
-                          href="#"
+                        <button
+                          onClick={() => signIn("google")}
                           className="flex flex-col items-center hover:bg-lightgray/90 text-midgray hover:text-secondary border hover:border-lightgray/90 text-center rounded px-6 py-2 text-sm w-full transition duration-150 ease-out md:ease-in"
                         >
                           <FcGoogle className="inline-block" />
                           Google
-                        </a>
+                        </button>
                       </div>
                     </div>
                     <div className="my-6">

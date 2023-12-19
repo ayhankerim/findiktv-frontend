@@ -129,13 +129,6 @@ const nextConfig = {
   },
   swcMinify: true,
   productionBrowserSourceMaps: true,
-  "users-permissions": {
-    config: {
-      jwt: {
-        expiresIn: "30d",
-      },
-    },
-  },
   experimental: {
     scrollRestoration: true,
   },

@@ -107,3 +107,6 @@ next.config.original.js
 yarn.lock
 public/sitemap.xml
 public/sitemap-0.xml
+
+certificates
+public/robots.txt

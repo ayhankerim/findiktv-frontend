@@ -386,7 +386,7 @@ export async function getStaticProps(context) {
       },
       priceCitiesData: priceCities,
     },
-    revalidate: 60 * 60,
+    revalidate: 60 * 60 * 24,
   }
 }
 

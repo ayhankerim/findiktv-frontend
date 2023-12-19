@@ -169,7 +169,7 @@ export async function getStaticProps(context) {
         //localizedPaths,
       },
     },
-    revalidate: 60 * 60,
+    revalidate: 60 * 60 * 24,
   }
 }
 
