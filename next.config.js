@@ -124,9 +124,6 @@ const nextConfig = {
     loader: "custom",
     loaderFile: "./utils/imageLoader.js",
   },
-  api: {
-    externalResolver: true,
-  },
   swcMinify: true,
   productionBrowserSourceMaps: true,
   experimental: {

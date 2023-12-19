@@ -10,7 +10,7 @@ export function contentWithAds(content, advertisement) {
     index < 8 &&
     paraArray.length - 1 != index
       ? (NewsContentText +=
-          `<div class="adsInline"><div class="band"><span>REKLAM</span></div><div class="w-full h-[280px] -mx-2 sm:mx-0"><ins class="adsbygoogle"
+          `<div class="adsInline"><div class="w-full h-[280px] -mx-2 sm:mx-0"><ins class="adsbygoogle"
      style="display:block; text-align:center;"
      data-ad-layout="in-article"
      data-ad-format="fluid"
@@ -20,9 +20,8 @@ export function contentWithAds(content, advertisement) {
          (ads) => ads.attributes.placeholder === "article-inline-desktop"
        )[0].attributes.adslot
      }
-     data-adtest=${
-       process.env.NEXT_PUBLIC_ADSENSE_TEST
-     }></ins></div><div class="band"></div></div>` + item)
+     data-adtest=${process.env.NEXT_PUBLIC_ADSENSE_TEST}></ins></div></div>` +
+          item)
       : (NewsContentText += item)
   }
 

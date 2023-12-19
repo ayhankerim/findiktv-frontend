@@ -35,7 +35,7 @@ const MyApp = ({
   pageRout,
 }) => {
   useEffect(() => {
-    runOneSignal()
+    process.env.NEXT_PUBLIC_DISABLE_EXTERNAL_SCRIPTS != "on" && runOneSignal()
   })
   // Extract the data we need
   const { global } = pageProps

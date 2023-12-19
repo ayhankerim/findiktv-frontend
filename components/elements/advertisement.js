@@ -14,6 +14,9 @@ const Advertisement = ({ position, adformat = "auto" }) => {
   if (!AllAdvertisements && !AllAdvertisements?.length === 0) {
     return null
   }
+  if (process.env.NEXT_PUBLIC_DISABLE_EXTERNAL_SCRIPTS === "on") {
+    return null
+  }
   if (AllAdvertisements?.length > 0) {
     const adData = AllAdvertisements.filter(
       (ads) => ads.attributes.placeholder === position
