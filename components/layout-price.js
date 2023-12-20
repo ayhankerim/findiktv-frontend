@@ -134,6 +134,7 @@ const Layout = ({
   productContent,
   priceCardData,
   priceCitiesData,
+  priceDefaultsData,
   termlyPricesData,
   lastEntriesData,
   graphData,
@@ -259,6 +260,7 @@ const Layout = ({
                   <CityPriceList
                     product={productContext.slug}
                     priceData={priceCitiesData}
+                    defaultPriceData={priceDefaultsData}
                   />
                   <LatestPriceEntries lastEntries={lastEntriesData} />
                 </>

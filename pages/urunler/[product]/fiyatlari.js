@@ -11,6 +11,7 @@ import {
   getTermlyPriceList,
   getPriceEntries,
   getGraphData,
+  getDefaultPriceValues,
 } from "@/utils/api-prices"
 import { useRouter } from "next/router"
 import Seo from "@/components/elements/seo"
@@ -23,6 +24,7 @@ const DynamicProducts = ({
   global,
   priceCardData,
   priceCitiesData,
+  priceDefaultsData,
   termlyPricesData,
   lastEntriesData,
   graphData,
@@ -63,6 +65,7 @@ const DynamicProducts = ({
       productContent={productContent}
       priceCardData={priceCardData}
       priceCitiesData={priceCitiesData}
+      priceDefaultsData={priceDefaultsData}
       termlyPricesData={termlyPricesData}
       lastEntriesData={lastEntriesData}
       graphData={graphData}
@@ -133,6 +136,12 @@ export async function getStaticProps(context) {
     priceQualities: priceQualities,
   })
 
+  const priceDefaults = await getDefaultPriceValues({
+    product: params.product,
+    type: priceType,
+    priceQualities: priceQualities,
+  })
+
   const termlyPrices = await getTermlyPriceList({
     product: params.product,
     priceType: priceType,
@@ -177,6 +186,7 @@ export async function getStaticProps(context) {
       global: globalLocale.data,
       priceCardData: priceCard,
       priceCitiesData: priceCities,
+      priceDefaultsData: priceDefaults,
       termlyPricesData: termlyPrices,
       lastEntriesData: lastEntries,
       graphData: graphData,
