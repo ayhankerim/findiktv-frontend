@@ -47,7 +47,10 @@ export async function getLastPriceDate({ product, city, type, quality }) {
               city: { id: { eq: $city } }
               type: { eq: $type }
               quality: { eq: $quality }
-              approvalStatus: { eq: "approved" }
+              or: [
+                { approvalStatus: { eq: "approved" }},
+                { approvalStatus: { eq: "calculation" }}
+              ]
             }
             sort: "date:desc"
             pagination: { limit: 1 }
@@ -114,7 +117,10 @@ export async function getPreviousPriceDate({
               type: { eq: $type }
               date: {lt: $date }
               quality: { eq: $quality }
-              approvalStatus: { eq: "approved" }
+              or: [
+                { approvalStatus: { eq: "approved" }},
+                { approvalStatus: { eq: "calculation" }}
+              ]
             }
             sort: "date:desc"
             pagination: { limit: 1 }
@@ -194,7 +200,10 @@ export async function getPriceValues({
                 },
               ],
               quality: { eq: $quality }
-              approvalStatus: { eq: "approved" }
+              or: [
+                { approvalStatus: { eq: "approved" }},
+                { approvalStatus: { eq: "calculation" }}
+              ]
             }
             sort: "date:desc"
             pagination: { limit: 100 }
@@ -468,7 +477,10 @@ export async function getDefaultPriceValue({ product, type, quality }) {
               type: { eq: $type }
               date: { lte: $date_limit }
               quality: { eq: $quality }
-              approvalStatus: { eq: "approved" }
+              or: [
+                { approvalStatus: { eq: "approved" }},
+                { approvalStatus: { eq: "calculation" }}
+              ]
             }
             sort: "date:desc"
             pagination: { limit: 1 }
@@ -547,7 +559,10 @@ export async function getMaxPrice({ product, type, quality, date }) {
               type: { eq: $type }
               date: { gte: $date }
               quality: { eq: $quality }
-              approvalStatus: { eq: "approved" }
+              or: [
+                { approvalStatus: { eq: "approved" }},
+                { approvalStatus: { eq: "calculation" }}
+              ]
             }
             sort: "max:desc"
             pagination: { limit: 1 }
@@ -605,7 +620,10 @@ export async function getMinPrice({ product, type, quality, date }) {
               type: { eq: $type }
               date: { gte: $date }
               quality: { eq: $quality }
-              approvalStatus: { eq: "approved" }
+              or: [
+                { approvalStatus: { eq: "approved" }},
+                { approvalStatus: { eq: "calculation" }}
+              ]
             }
             sort: "min:asc"
             pagination: { limit: 1 }
@@ -663,7 +681,10 @@ export async function getOldestDate({ product, type, quality, date }) {
               type: { eq: $type }
               date: { gte: $date }
               quality: { eq: $quality }
-              approvalStatus: { eq: "approved" }
+              or: [
+                { approvalStatus: { eq: "approved" }},
+                { approvalStatus: { eq: "calculation" }}
+              ]
             }
             sort: "date:asc"
             pagination: { limit: 1 }
@@ -894,7 +915,10 @@ export async function getPriceEntries({ product, city, priceType }) {
               product: { slug: { eq: $product } }
               city: { id: { eq: $city } }
               type: { eq: $priceType }
-              approvalStatus: { eq: "approved" }
+              or: [
+                { approvalStatus: { eq: "approved" }},
+                { approvalStatus: { eq: "calculation" }}
+              ]
             }
             sort: "date:desc"
             pagination: { limit: 10 }
@@ -952,7 +976,10 @@ export async function getGraphData({ product, city, priceType }) {
               product: { slug: { eq: $product } }
               city: { id: { eq: $city } }
               type: { eq: $priceType }
-              approvalStatus: { eq: "approved" }
+              or: [
+                { approvalStatus: { eq: "approved" }},
+                { approvalStatus: { eq: "calculation" }}
+              ]
             }
             sort: "date:desc"
             pagination: { limit: 1000 }
