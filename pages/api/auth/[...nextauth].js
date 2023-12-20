@@ -7,15 +7,20 @@ import { signIn } from "../../../services/auth"
 export default NextAuth({
   providers: [
     GoogleProvider({
+      id: "google",
+      name: "google",
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
     FacebookProvider({
+      id: "facebook",
+      name: "facebook",
       clientId: process.env.FACEBOOK_CLIENT_ID,
       clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
     }),
     CredentialsProvider({
-      name: "Sign in with Email",
+      id: "credentials",
+      name: "credentials",
       credentials: {
         email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" },

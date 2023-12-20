@@ -16,7 +16,7 @@ function currencyFormatter(value) {
   }).format(value)
   return amount
 }
-const CityPriceList = ({ product, priceData }) => {
+const CityPriceList = ({ product, priceData, defaultPriceData }) => {
   return (
     <div className="flex flex-col">
       <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -71,26 +71,37 @@ const CityPriceList = ({ product, priceData }) => {
                           className="text-sm text-gray-900 px-2 sm:px-4 py-1 sm:py-2 text-right align-middle"
                         >
                           <Tooltip
-                            orientation="bottom"
+                            orientation={i === 2 ? "left" : "bottom"}
                             version="clean"
-                            tooltipText={`${Moment(priceType.date1)
+                            tooltipText={`${(Moment(priceType.date1) >
+                            Moment().subtract(15, "days")
+                              ? Moment(priceType.date1)
+                              : Moment().subtract(15, "days")
+                            )
                               .fromNow(true)
                               .toLocaleUpperCase("tr")}
                             ÖNCE`}
                           >
-                            <span
-                              className={classNames(
-                                priceType.value1 > priceType.value2 &&
-                                  "text-up",
-                                priceType.value1 < priceType.value2 &&
-                                  "text-down",
-                                priceType.value1 === priceType.value2 &&
-                                  "text-nochange",
-                                ""
-                              )}
-                            >
-                              {currencyFormatter(priceType.value1)}
-                            </span>
+                            {Moment(priceType.date1) <
+                            Moment().subtract(15, "days") ? (
+                              <span className="text-nochange">
+                                {currencyFormatter(defaultPriceData[i].average)}
+                              </span>
+                            ) : (
+                              <span
+                                className={classNames(
+                                  priceType.value1 > priceType.value2 &&
+                                    "text-up",
+                                  priceType.value1 < priceType.value2 &&
+                                    "text-down",
+                                  priceType.value1 === priceType.value2 &&
+                                    "text-nochange",
+                                  ""
+                                )}
+                              >
+                                {currencyFormatter(priceType.value1)}
+                              </span>
+                            )}
                           </Tooltip>
                         </td>
                       ))}

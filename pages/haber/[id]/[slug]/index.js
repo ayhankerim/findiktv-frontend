@@ -14,7 +14,7 @@ import {
   fetchAPI,
   getGlobalData,
 } from "@/utils/api"
-import { getCitiesPrice } from "@/utils/api-prices"
+import { getCitiesPrice, getDefaultPriceValues } from "@/utils/api-prices"
 import Layout from "@/components/layout"
 import Seo from "@/components/elements/seo"
 import ArticleSidebar from "@/components/elements/article/article-sidebar"
@@ -91,6 +91,7 @@ const DynamicArticle = ({
   global,
   articleContext,
   priceCitiesData,
+  priceDefaultsData,
 }) => {
   const router = useRouter()
   const dispatch = useDispatch()
@@ -219,6 +220,7 @@ const DynamicArticle = ({
                 <CityPriceList
                   product={articleContent.products.data[0].attributes.slug}
                   priceData={priceCitiesData}
+                  defaultPriceData={priceDefaultsData}
                 />
               )}
             <div className="w-full h-[300px] lg:h-[120px] -mx-2 sm:mx-0">
@@ -371,6 +373,14 @@ export async function getStaticProps(context) {
       priceType: priceType,
       priceQualities: priceQualities,
     }))
+  const priceDefaults =
+    products.data.length > 0 &&
+    AddPricesComponent &&
+    (await getDefaultPriceValues({
+      product: products.data[0].attributes.slug,
+      type: priceType,
+      priceQualities: priceQualities,
+    }))
 
   const localizedPaths = getLocalizedPaths(articleContext)
   return {
@@ -385,6 +395,7 @@ export async function getStaticProps(context) {
         localizedPaths,
       },
       priceCitiesData: priceCities,
+      priceDefaultsData: priceDefaults,
     },
     revalidate: 60 * 60 * 24,
   }

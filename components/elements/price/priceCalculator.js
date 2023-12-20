@@ -67,7 +67,6 @@ const PriceCalculator = ({ product, city, pricetype }) => {
   const [calculationResult, setCalculationResult] = useState(0)
   const [cities, setCityList] = useState([])
   useEffect(() => {
-    console.log(city)
     !city &&
       fetchAPI("/cities", {
         filters: {

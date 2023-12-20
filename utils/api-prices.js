@@ -440,6 +440,88 @@ export async function getCitiesPrice({ product, priceType, priceQualities }) {
   return priceCitiesArray
 }
 
+export async function getDefaultPriceValue({ product, type, quality }) {
+  const gqlEndpoint = getStrapiURL("/graphql")
+  const date_limit = Moment()
+    .subtract(15, "days")
+    .set("hour", 0)
+    .set("minute", 0)
+    .set("second", 0)
+    .format()
+  const pricesRes = await fetch(gqlEndpoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.NEXT_PUBLIC_SECRET_TOKEN}`,
+    },
+    body: JSON.stringify({
+      query: `
+        query getPriceValues(
+          $product: String!
+          $type: String!
+          $quality: String!
+          $date_limit: DateTime!
+        ) {
+          prices(
+            filters: {
+              product: { slug: { eq: $product } }
+              type: { eq: $type }
+              date: { lte: $date_limit }
+              quality: { eq: $quality }
+              approvalStatus: { eq: "approved" }
+            }
+            sort: "date:desc"
+            pagination: { limit: 1 }
+          ) {
+            data {
+              id
+              attributes {
+                average
+                volume
+                date
+                quality
+              }
+            }
+          }
+        }
+      `,
+      variables: {
+        product,
+        type,
+        quality,
+        date_limit,
+      },
+    }),
+  })
+
+  const pricesData = await pricesRes.json()
+  // Make sure we found something, otherwise return null
+  if (pricesData.data?.prices == null || pricesData.data.prices.length === 0) {
+    return null
+  }
+
+  // Return the first item since there should only be one result per slug
+  return pricesData.data.prices.data
+}
+
+export async function getDefaultPriceValues({ product, type, priceQualities }) {
+  let defaultPriceValuesArray = []
+  for (let y = 0; y < priceQualities.length; y++) {
+    const defaultPriceValue = await getDefaultPriceValue({
+      product: product,
+      type: type,
+      quality: priceQualities[y],
+    })
+    defaultPriceValuesArray.push({
+      average: defaultPriceValue[0].attributes.average,
+      volume: defaultPriceValue[0].attributes.volume,
+      date: defaultPriceValue[0].attributes.date,
+      quality: defaultPriceValue[0].attributes.quality,
+    })
+  }
+  return defaultPriceValuesArray
+}
+
 export async function getMaxPrice({ product, type, quality, date }) {
   // Find the pages that match this slug
   const gqlEndpoint = getStrapiURL("/graphql")
