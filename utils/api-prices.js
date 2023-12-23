@@ -239,13 +239,19 @@ export async function getPriceValues({
   return pricesData.data.prices.data
 }
 
-export async function getPriceCard({ product, priceType, priceQualities }) {
+export async function getPriceCard({
+  product,
+  priceType,
+  priceQualities,
+  city,
+}) {
   let priceCardArray = []
   for (let i = 0; i < priceQualities.length; i++) {
     const latestPricedate = await getLastPriceDate({
       product: product,
       type: priceType,
       quality: priceQualities[i],
+      city: city,
     })
     const PreviousPricedate = await getPreviousPriceDate({
       product: product,
@@ -256,6 +262,7 @@ export async function getPriceCard({ product, priceType, priceQualities }) {
         .set("second", 0)
         .toISOString(),
       quality: priceQualities[i],
+      city: city,
     })
     const getPriceValue = await getPriceValues({
       product: product,
@@ -271,6 +278,7 @@ export async function getPriceCard({ product, priceType, priceQualities }) {
         .set("second", 59)
         .toISOString(),
       quality: priceQualities[i],
+      city: city,
     })
     let priceSum = 0
     let totalvolume = 0
@@ -293,6 +301,7 @@ export async function getPriceCard({ product, priceType, priceQualities }) {
         .set("second", 59)
         .toISOString(),
       quality: priceQualities[i],
+      city: city,
     })
     let pricePrevSum = 0
     let totalPrevvolume = 0
@@ -721,6 +730,7 @@ export async function getTermlyPriceList({
   product,
   priceType,
   priceQualities,
+  city,
 }) {
   const priceTerms = [
     [
@@ -758,6 +768,7 @@ export async function getTermlyPriceList({
           product: product,
           type: priceType,
           quality: priceQualities[i],
+          city: city,
         })
         const PreviousPricedate = await getPreviousPriceDate({
           product: product,
@@ -769,6 +780,7 @@ export async function getTermlyPriceList({
             .set("second", 0)
             .toISOString(),
           quality: priceQualities[i],
+          city: city,
         })
         const getPriceValue = await getPriceValues({
           product: product,
@@ -784,6 +796,7 @@ export async function getTermlyPriceList({
             .set("second", 59)
             .toISOString(),
           quality: priceQualities[i],
+          city: city,
         })
         let priceSum = 0
         let totalvolume = 0
@@ -808,6 +821,7 @@ export async function getTermlyPriceList({
                 .set("second", 59)
                 .toISOString(),
               quality: priceQualities[i],
+              city: city,
             })
           : getPriceValue
         let pricePrevSum = 0
@@ -849,6 +863,7 @@ export async function getTermlyPriceList({
               product: product,
               type: priceType,
               quality: priceQualities[i],
+              city: city,
               date: Moment(latestPricedate)
                 .subtract(priceTerms[a][b].day, "days")
                 .set("hour", 0)
@@ -866,6 +881,7 @@ export async function getTermlyPriceList({
               product: product,
               type: priceType,
               quality: priceQualities[i],
+              city: city,
               date: Moment(latestPricedate)
                 .subtract(priceTerms[a][b].day, "days")
                 .set("hour", 0)

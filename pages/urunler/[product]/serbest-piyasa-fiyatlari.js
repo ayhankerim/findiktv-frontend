@@ -57,10 +57,38 @@ const DynamicProducts = ({
     ...metadata,
     ...metadataUpdated,
   }
+  const breadcrumbElement = [
+    { title: "ÜRÜNLER", slug: "/urunler" },
+    {
+      title: `${productContent.title.toLocaleUpperCase("tr")} FİYATLARI`,
+      slug: "/urunler/" + productContext.slug + "/fiyatlari",
+    },
+  ]
+  const pricetypes = [
+    {
+      name: "Borsa Fiyatları",
+      title: `${productContent.title} Fiyatları`,
+      id: "stockmarket",
+      url: "fiyatlari",
+    },
+    {
+      name: "Serbest Piyasa Fiyatları",
+      title: `Serbest Piyasa ${productContent.title} Fiyatları`,
+      id: "openmarket",
+      url: "serbest-piyasa-fiyatlari",
+    },
+    {
+      name: "TMO Fiyatları",
+      title: "TMO Fındık Fiyatları",
+      id: "tmo",
+      url: "tmo-fiyatlari",
+    },
+  ]
   return (
     <Layout
       global={global}
       pageContext={productContext}
+      pricetypes={pricetypes}
       priceTypeSelection={1}
       productContent={productContent}
       priceCardData={priceCardData}
@@ -70,6 +98,7 @@ const DynamicProducts = ({
       lastEntriesData={lastEntriesData}
       graphData={graphData}
       productContext={productContext}
+      breadcrumbElement={breadcrumbElement}
       advertisement={advertisement}
     >
       <Seo metadata={metadataWithDefaults} />
@@ -195,7 +224,7 @@ export async function getStaticProps(context) {
         //localizedPaths,
       },
     },
-    revalidate: 60 * 60 * 4,
+    revalidate: 60 * 60,
   }
 }
 

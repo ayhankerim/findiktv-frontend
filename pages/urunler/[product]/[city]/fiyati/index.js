@@ -1,132 +1,50 @@
-import React, { useState, useEffect, Fragment } from "react"
+import React from "react"
 import {
+  getProductData,
   getProductCityData,
   getAdsData,
   fetchAPI,
   getGlobalData,
 } from "@/utils/api"
-import { useDispatch } from "react-redux"
-import { updateAds } from "@/store/advertisements"
-import { Popover, Transition } from "@headlessui/react"
-import { TbChevronDown } from "react-icons/tb"
-import Breadcrumb from "@/components/elements/breadcrumb"
-import Advertisement from "@/components/elements/advertisement"
-import ArticleDates from "@/components/elements/date"
-import ArticleShare from "@/components/elements/share"
-import PriceChart from "@/components/elements/price/chart"
-import Seo from "@/components/elements/seo"
-import Image from "next/image"
+import {
+  getPriceCard,
+  getTermlyPriceList,
+  getPriceEntries,
+  getGraphData,
+} from "@/utils/api-prices"
 import { useRouter } from "next/router"
-import Layout from "@/components/layout"
-import AverageCard from "@/components/elements/price/average-card"
-//import TermlyPriceChange from "@/components/elements/price/termly-price-changes"
-import LatestArticles from "@/components/elements/latest-articles"
-import ArticleComments from "@/components/elements/comments/comments"
-import AddPrice from "@/components/elements/price/addPrice"
-import EfficiencyCalculation from "@/components/elements/price/priceCalculator"
-import LatestPriceEntries from "@/components/elements/price/latest-price-entries"
-import ArticleMostVisited from "@/components/elements/article/articles-most-visited"
-import LatestComments from "@/components/elements/comments/latest-comments"
-import ModuleLoader from "@/components/elements/module-loader"
+import Seo from "@/components/elements/seo"
+import Layout from "@/components/layout-price"
 
-const pricetypes = [
-  {
-    name: "BORSA FİYATLARI",
-    id: "stockmarket",
-  },
-  {
-    name: "SERBEST PİYASA FİYATLARI",
-    id: "openmarket",
-  },
-]
-
-const DynamicCities = ({
-  cityContent,
+const DynamicProducts = ({
+  productContent,
   advertisement,
   metadata,
-  preview,
   global,
-  cityContext,
+  priceCardData,
+  termlyPricesData,
+  lastEntriesData,
+  graphData,
+  productContext,
 }) => {
-  const [priceType, setPriceType] = useState(pricetypes[0])
-  const [priceData, setPriceData] = useState(null)
-  const [cityList, setCityList] = useState(null)
-  const dispatch = useDispatch()
-  //const AllAdvertisements = useSelector((state) => state.advertisement.adsData)
-
-  useEffect(() => {
-    fetchAPI("/prices", {
-      filters: {
-        product: {
-          id: {
-            $eq: cityContent.prices.data[0].attributes.product.data.id,
-          },
-        },
-        city: {
-          id: {
-            $eq: cityContent.id,
-          },
-        },
-        type: {
-          $eq: priceType.id,
-        },
-        approvalStatus: {
-          $eq: "approved",
-        },
-      },
-      fields: ["min", "max", "average", "quality", "volume"],
-      populate: {
-        city: {
-          fields: ["title", "slug"],
-        },
-      },
-      sort: ["date:desc"],
-      pagination: {
-        start: 0,
-        limit: 100,
-      },
-    }).then((data) => {
-      const citydata =
-        priceType.id != "tmo"
-          ? [
-              ...new Set(
-                data.data.map((q) => q.attributes.city.data.attributes.title)
-              ),
-            ]
-          : null
-      setCityList(citydata)
-      setPriceData(data)
-    })
-    advertisement && dispatch(updateAds(advertisement))
-  }, [
-    advertisement,
-    dispatch,
-    priceType,
-    cityContext.slug,
-    cityContent.prices.data,
-    cityContent.id,
-  ])
-
   const router = useRouter()
   // Check if the required data was provided
-
-  if (!router.isFallback && !cityContent.content?.length) {
+  if (!router.isFallback && !productContent.content?.length) {
     return {
       notFound: true,
     }
   }
-
   // Loading screen (only possible in preview mode)
   if (router.isFallback) {
     return <div className="container">Yükleniyor...</div>
-  }
-  const metadataUpdated = {
-    metaTitle: `${metadata.metaTitle} Fındık Fiyatı`,
   }
 
   // Merge default site SEO settings with page specific SEO settings
   if (metadata.shareImage?.data == null) {
     delete metadata.shareImage
+  }
+  const metadataUpdated = {
+    metaTitle: `${metadata.metaTitle} ${productContent.productTitle} Fiyatı`,
   }
   const metadataWithDefaults = {
     ...global.attributes.metadata,
@@ -136,220 +54,51 @@ const DynamicCities = ({
   const breadcrumbElement = [
     { title: "ÜRÜNLER", slug: "/urunler" },
     {
-      title:
-        cityContent.prices.data[0].attributes.product.data.attributes.title.toLocaleUpperCase(
-          "tr"
-        ) + " FİYATLARI",
-      slug:
-        "/urunler/" +
-        cityContent.prices.data[0].attributes.product.data.attributes.slug +
-        "/fiyatlari",
+      title: `${productContent.productTitle.toLocaleUpperCase("tr")} FİYATLARI`,
+      slug: `/urunler/${productContent.productSlug}/fiyatlari`,
     },
     {
-      title:
-        cityContent.title.toLocaleUpperCase("tr") +
-        " " +
-        cityContent.prices.data[0].attributes.product.data.attributes.title.toLocaleUpperCase(
-          "tr"
-        ) +
-        " FİYATI",
-      slug:
-        "/urunler/" +
-        cityContent.prices.data[0].attributes.product.data.attributes.slug +
-        "/" +
-        cityContext.slug +
-        "/fiyati",
+      title: `${metadata.metaTitle.toLocaleUpperCase(
+        "tr"
+      )} ${productContent.productTitle.toLocaleUpperCase("tr")} FİYATI`,
+      slug: `/urunler/${productContent.productSlug}/${productContext.slug}/fiyati`,
     },
   ]
-  //console.log("cityContext", cityContext)
+  const pricetypes = [
+    {
+      name: `${metadata.metaTitle} ${productContent.productTitle} Borsa Fiyatı`,
+      title: `${metadata.metaTitle} ${productContent.productTitle} Fiyatı`,
+      id: "stockmarket",
+      url: "fiyatlari",
+    },
+    {
+      name: `${productContent.productTitle} Serbest Piyasa Fiyatı`,
+      title: `Serbest Piyasa ${productContent.productTitle} ${productContent.productTitle} Fiyatı`,
+      id: "openmarket",
+      url: "serbest-piyasa-fiyati",
+    },
+  ]
   return (
-    <Layout global={global} cityContext={cityContext}>
-      {/* Add meta tags for SEO*/}
+    <Layout
+      global={global}
+      pageContext={productContext}
+      pricetypes={pricetypes}
+      priceTypeSelection={0}
+      productContent={productContent}
+      priceCardData={priceCardData}
+      priceCitiesData={null}
+      priceDefaultsData={null}
+      termlyPricesData={termlyPricesData}
+      lastEntriesData={lastEntriesData}
+      graphData={graphData}
+      productContext={productContext}
+      breadcrumbElement={breadcrumbElement}
+      advertisement={advertisement}
+    >
       <Seo metadata={metadataWithDefaults} />
-      <main className="container gap-4 pt-2 bg-white">
-        <div className="w-full">
-          <Breadcrumb items={breadcrumbElement} />
-          <div className="flex flex-col md:flex-row items-center justify-between">
-            <h1 className="font-extrabold text-xxl">
-              {cityContent.title}{" "}
-              {
-                cityContent.prices.data[0].attributes.product.data.attributes
-                  .title
-              }{" "}
-              Fiyatı
-            </h1>
-            <Popover className="relative">
-              {({ open }) => (
-                <>
-                  <Popover.Button
-                    className={`
-                ${open ? "" : "text-opacity-90"}
-                group inline-flex items-center rounded-md bg-orange-700 px-3 py-2 text-base font-medium hover:text-opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75`}
-                  >
-                    <span>{priceType.name}</span>
-                    <TbChevronDown
-                      className={`${open ? "" : "text-opacity-70"}
-                  ml-2 h-5 w-5 text-orange-300 transition duration-150 ease-in-out group-hover:text-opacity-80`}
-                      aria-hidden="true"
-                    />
-                  </Popover.Button>
-                  <Transition
-                    as={Fragment}
-                    enter="transition ease-out duration-200"
-                    enterFrom="opacity-0 translate-y-1"
-                    enterTo="opacity-100 translate-y-0"
-                    leave="transition ease-in duration-150"
-                    leaveFrom="opacity-100 translate-y-0"
-                    leaveTo="opacity-0 translate-y-1"
-                  >
-                    <Popover.Panel className="absolute right-0 z-10 mt-3 w-[16rem] px-4 sm:px-0">
-                      <div className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
-                        <div className="relative grid gap-8 bg-white p-7 grid-cols-1">
-                          {pricetypes.map((item, i) => (
-                            <Popover.Button
-                              key={item.name}
-                              onClick={() => setPriceType(pricetypes[i])}
-                              className="-m-3 flex items-center rounded-lg p-2 transition duration-150 ease-in-out hover:bg-gray-50 focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50"
-                            >
-                              <div className="ml-0">
-                                <p className="text-sm font-medium text-gray-900">
-                                  {item.name}
-                                </p>
-                              </div>
-                            </Popover.Button>
-                          ))}
-                        </div>
-                      </div>
-                    </Popover.Panel>
-                  </Transition>
-                </>
-              )}
-            </Popover>
-          </div>
-        </div>
-        <div className="flex flex-col lg:flex-row items-start justify-between gap-4 pt-2">
-          <div className="flex flex-col flex-1 w-full gap-3">
-            <AverageCard cardData={priceData} />
-            <ArticleShare
-              position="articleTop"
-              title={`${cityContent.prices.data[0].attributes.product.data.attributes.title} Fiyatları`}
-              slug={`${process.env.NEXT_PUBLIC_SITE_URL}/urunler/${cityContent.prices.data[0].attributes.product.data.attributes.slug}/fiyatlari`}
-            />
-            <PriceChart
-              type={priceType.id}
-              city={cityContext.slug}
-              product={
-                cityContent.prices.data[0].attributes.product.data.attributes
-                  .slug
-              }
-              grapghData={priceData}
-            />
-            {priceType.id != "tmo" && (
-              <>
-                {/* <TermlyPriceChange
-                  type={priceType.id}
-                  product={
-                    cityContent.prices.data[0].attributes.product.data
-                      .attributes.slug
-                  }
-                  priceData={priceData}
-                /> */}
-                <div className="w-full h-[300px] lg:h-[120px] -mx-2 sm:mx-0">
-                  <Advertisement position="price-page-middle-3" />
-                </div>
-                <LatestPriceEntries
-                  product={
-                    cityContent.prices.data[0].attributes.product.data
-                      .attributes.slug
-                  }
-                  priceData={priceData}
-                  cityList={cityList}
-                />
-              </>
-            )}
-          </div>
-          <aside className="sticky top-2 flex-none w-full md:w-[336px] lg:w-[250px] xl:w-[336px]">
-            <AddPrice
-              product={cityContent.prices.data[0].attributes.product.data.id}
-              cityData={cityContent}
-            />
-            <ArticleMostVisited size={10} slug={null} />
-            <EfficiencyCalculation
-              product={cityContent.prices.data[0].attributes.product.data.id}
-              city={cityContent.id}
-              pricetype={priceType.id}
-            />
-          </aside>
-        </div>
-        <div className="flex flex-col xl:flex-row items-start justify-between gap-4 pt-2">
-          <div className="flex flex-col flex-1 w-full gap-3">
-            {/* Featured Image or Video Section*/}
-            <article className="font-semibold text-lg text-darkgray">
-              {cityContent.summary}
-            </article>
-            {cityContent.featured.data && (
-              <div className="mb-2 relative h-[320px] lg:h-[500px] -mx-4 sm:mx-0 lg:mx-0">
-                <Image
-                  src={cityContent.featured.data.attributes.url}
-                  alt={`${cityContent.title} Fiyatları`}
-                  className="md:rounded-lg"
-                  priority={true}
-                  fill
-                  sizes="(max-width: 768px) 100vw,
-                    (max-width: 800px) 50vw,
-                    33vw"
-                  style={{
-                    objectFit: "cover",
-                  }}
-                />
-              </div>
-            )}
-            <article
-              className="NewsContent flex flex-col gap-2 mx-0 -lg:mx-2"
-              dangerouslySetInnerHTML={{ __html: cityContent.content }}
-            />
-            <ArticleShare
-              position="articleBottom"
-              title={`${cityContent.title} Fiyatları`}
-              slug={`${process.env.NEXT_PUBLIC_SITE_URL}/urunler/${cityContent.prices.data[0].attributes.product.data.attributes.slug}/${cityContext.slug}/fiyati`}
-            />
-            <div className="flex flex-row items-center sm:items-start justify-between mt-4 mb-2">
-              <ArticleDates
-                publishedAt={priceData?.data[0]?.attributes.date}
-                updatedAt={priceData?.data[0]?.attributes.date}
-              />
-            </div>
-            <ModuleLoader
-              title={cityContent.title.toLocaleUpperCase("tr") + " HABERLERİ"}
-              theme="default"
-              component="LatestArticles"
-            >
-              <LatestArticles
-                current={null}
-                product={cityContent.prices.data[0].attributes.product.data.id}
-                city={cityContent.id}
-                count={3}
-                offset={0}
-                position="bottom"
-              />
-            </ModuleLoader>
-            <ArticleComments
-              article={null}
-              product={cityContent.prices.data[0].attributes.product.data.id}
-              slug={`${process.env.NEXT_PUBLIC_SITE_URL}/urunler/${cityContent.prices.data[0].attributes.product.data.attributes.slug}/${cityContext.slug}/fiyati`}
-              city={cityContent.id}
-              infinite={false}
-            />
-          </div>
-          <aside className="sticky top-2 flex-none w-full xl:w-[336px]">
-            <LatestComments size={5} position="sidebar" offset={0} />
-          </aside>
-        </div>
-      </main>
     </Layout>
   )
 }
-
 export async function getStaticPaths(context) {
   // Get all pages from Strapi
   const cities = await context.locales.reduce(
@@ -401,66 +150,92 @@ export async function getStaticPaths(context) {
 }
 
 export async function getStaticProps(context) {
+  const priceType = "stockmarket"
   const { params, locale, locales, defaultLocale } = context
 
   const globalLocale = await getGlobalData(locale)
   const advertisement = await getAdsData()
-  //const comments = params ? await getCommentsData(params.id) : null
-  // Fetch pages. Include drafts if preview mode is on
+
+  const productData = await getProductData({
+    product: params.product,
+    locale,
+  })
+
   const cityData = await getProductCityData({
     city: params.city,
     product: params.product,
     locale,
   })
 
-  if (!cityData) {
+  if (productData == null || !cityData || cityData == null) {
     return {
       notFound: true,
     }
   }
+  const priceQualities = ["Sivri", "Levant", "Giresun"]
+  const priceCard = await getPriceCard({
+    product: params.product,
+    priceType: priceType,
+    priceQualities: priceQualities,
+    city: cityData.id,
+  })
 
-  if (cityData == null) {
-    // Giving the page no props will trigger a 404 page
-    return {
-      notFound: true,
-    }
-  }
+  const termlyPrices = await getTermlyPriceList({
+    product: params.product,
+    priceType: priceType,
+    priceQualities: priceQualities,
+    city: cityData.id,
+  })
+
+  const lastEntries = await getPriceEntries({
+    product: params.product,
+    priceType: priceType,
+    city: cityData.id,
+  })
+
+  const graphData = await getGraphData({
+    product: params.product,
+    priceType: priceType,
+    city: cityData.id,
+  })
 
   // We have the required page data, pass it to the page component
-  const { title, content, prices, featured, metadata, localizations, slug } =
-    cityData.attributes
+  const { title, content, featured, metadata, localizations, slug } =
+    params.city ? cityData.attributes : productData.attributes
 
-  const cityContent = {
-    id: cityData.id,
+  const productContent = {
+    id: productData.id,
     title,
     content,
-    prices,
     featured,
+    productTitle: productData.attributes.title,
+    productSlug: productData.attributes.slug,
   }
 
-  const cityContext = {
+  const productContext = {
     locale,
     locales,
     defaultLocale,
     slug,
     localizations,
   }
-
-  //const localizedPaths = getLocalizedPaths(productContext)
-
   return {
     props: {
-      cityContent: cityContent,
+      productContent: productContent,
       advertisement: advertisement,
       metadata,
       global: globalLocale.data,
-      cityContext: {
-        ...cityContext,
+      priceCardData: priceCard,
+      termlyPricesData: termlyPrices,
+      lastEntriesData: lastEntries,
+      graphData: graphData,
+      productContext: {
+        ...productContext,
         //localizedPaths,
       },
     },
-    revalidate: 60,
+    revalidate: 60 * 60 * 3,
   }
 }
 
-export default DynamicCities
+export default DynamicProducts

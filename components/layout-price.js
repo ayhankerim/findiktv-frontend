@@ -11,10 +11,6 @@ import Navbar from "./elements/navbar"
 import Footer from "./elements/footer"
 import AverageCard from "@/components/elements/price/average-card-new"
 import ModuleLoader from "@/components/elements/module-loader"
-//import CityPriceList from "@/components/elements/price/city-price-list-new"
-//import TermlyPriceChange from "@/components/elements/price/termly-price-changes-new"
-//import LatestPriceEntries from "@/components/elements/price/latest-price-entries-new"
-//import PriceChart from "@/components/elements/price/chart-new"
 import NotificationBanner from "./elements/notification-banner"
 
 const Loader = ({ cssClass }) => (
@@ -106,30 +102,10 @@ const LatestComments = dynamic(
   }
 )
 
-const pricetypes = [
-  {
-    name: "Borsa Fiyatları",
-    title: "Fındık Fiyatları",
-    id: "stockmarket",
-    url: "fiyatlari",
-  },
-  {
-    name: "Serbest Piyasa Fiyatları",
-    title: "Serbest Piyasa Fındık Fiyatları",
-    id: "openmarket",
-    url: "serbest-piyasa-fiyatlari",
-  },
-  {
-    name: "TMO Fiyatları",
-    title: "TMO Fındık Fiyatları",
-    id: "tmo",
-    url: "tmo-fiyatlari",
-  },
-]
-
 const Layout = ({
   children,
   global,
+  pricetypes,
   priceTypeSelection,
   productContent,
   priceCardData,
@@ -139,24 +115,16 @@ const Layout = ({
   lastEntriesData,
   graphData,
   productContext,
+  breadcrumbElement,
   advertisement,
 }) => {
   const { navbar, footer, notificationBanner } = global.attributes
-
   const [bannerIsShown, setBannerIsShown] = useState(true)
   const [priceType, setPriceType] = useState(pricetypes[priceTypeSelection])
   const dispatch = useDispatch()
   useEffect(() => {
     advertisement && dispatch(updateAds(advertisement))
   }, [advertisement, dispatch])
-
-  const breadcrumbElement = [
-    { title: "ÜRÜNLER", slug: "/urunler" },
-    {
-      title: priceType.title.toLocaleUpperCase("tr"),
-      slug: "/urunler/" + productContext.slug + "/fiyatlari",
-    },
-  ]
   return (
     <div className="flex flex-col flex-grow justify-between min-h-screen">
       {/* Aligned to the top */}
@@ -173,58 +141,57 @@ const Layout = ({
             <Breadcrumb items={breadcrumbElement} />
             <div className="flex flex-col md:flex-row items-center justify-between">
               <h1 className="font-extrabold text-xxl">{priceType.title}</h1>
-              <Popover className="relative">
-                {({ open }) => (
-                  <>
-                    <Popover.Button
-                      className={`
+              {priceCitiesData && (
+                <Popover className="relative">
+                  {({ open }) => (
+                    <>
+                      <Popover.Button
+                        className={`
                 ${open ? "" : "text-opacity-90"}
                 group inline-flex items-center rounded-md bg-orange-700 px-3 py-2 text-base font-medium hover:text-opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75`}
-                    >
-                      <span>{priceType.name.toLocaleUpperCase("tr")}</span>
-                      <TbChevronDown
-                        className={`${open ? "" : "text-opacity-70"}
+                      >
+                        <span>{priceType.name.toLocaleUpperCase("tr")}</span>
+                        <TbChevronDown
+                          className={`${open ? "" : "text-opacity-70"}
                   ml-2 h-5 w-5 text-orange-300 transition duration-150 ease-in-out group-hover:text-opacity-80`}
-                        aria-hidden="true"
-                      />
-                    </Popover.Button>
-                    <Transition
-                      as={Fragment}
-                      enter="transition ease-out duration-200"
-                      enterFrom="opacity-0 translate-y-1"
-                      enterTo="opacity-100 translate-y-0"
-                      leave="transition ease-in duration-150"
-                      leaveFrom="opacity-100 translate-y-0"
-                      leaveTo="opacity-0 translate-y-1"
-                    >
-                      <Popover.Panel className="absolute right-0 z-10 mt-3 w-[16rem] px-4 sm:px-0">
-                        <div className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
-                          <div className="relative grid gap-8 bg-white p-7 grid-cols-1">
-                            {pricetypes.map((item, i) => (
-                              <Link
-                                key={item.name}
-                                //onClick={() => setPriceType(pricetypes[i])}
-                                href={`/urunler/${productContext.slug}/${item.url}`}
-                                className="-m-3 flex items-center rounded-lg p-2 transition duration-150 ease-in-out hover:bg-gray-50 focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50"
-                              >
-                                <div className="ml-0">
-                                  <p className="text-sm font-medium text-gray-900">
-                                    {item.name.toLocaleUpperCase("tr")}
-                                  </p>
-                                </div>
-                              </Link>
-                            ))}
+                          aria-hidden="true"
+                        />
+                      </Popover.Button>
+                      <Transition
+                        as={Fragment}
+                        enter="transition ease-out duration-200"
+                        enterFrom="opacity-0 translate-y-1"
+                        enterTo="opacity-100 translate-y-0"
+                        leave="transition ease-in duration-150"
+                        leaveFrom="opacity-100 translate-y-0"
+                        leaveTo="opacity-0 translate-y-1"
+                      >
+                        <Popover.Panel className="absolute right-0 z-10 mt-3 w-[16rem] px-4 sm:px-0">
+                          <div className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
+                            <div className="relative grid gap-8 bg-white p-7 grid-cols-1">
+                              {pricetypes.map((item, i) => (
+                                <Link
+                                  key={item.name}
+                                  //onClick={() => setPriceType(pricetypes[i])}
+                                  href={`/urunler/${productContext.slug}/${item.url}`}
+                                  className="-m-3 flex items-center rounded-lg p-2 transition duration-150 ease-in-out hover:bg-gray-50 focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50"
+                                >
+                                  <div className="ml-0">
+                                    <p className="text-sm font-medium text-gray-900">
+                                      {item.name.toLocaleUpperCase("tr")}
+                                    </p>
+                                  </div>
+                                </Link>
+                              ))}
+                            </div>
                           </div>
-                        </div>
-                      </Popover.Panel>
-                    </Transition>
-                  </>
-                )}
-              </Popover>
+                        </Popover.Panel>
+                      </Transition>
+                    </>
+                  )}
+                </Popover>
+              )}
             </div>
-            <article className="font-semibold text-lg text-darkgray">
-              {productContent.summary}
-            </article>
           </div>
           <div className="flex flex-col lg:flex-row items-start justify-between gap-4 pt-2">
             <div className="flex flex-col flex-1 w-full gap-3">
@@ -255,13 +222,17 @@ const Layout = ({
                   </div>
                 </>
               )}
-              {priceType.id !== "tmo" && (
+              {priceType.id !== "tmo" && priceCitiesData && (
                 <>
                   <CityPriceList
                     product={productContext.slug}
                     priceData={priceCitiesData}
                     defaultPriceData={priceDefaultsData}
                   />
+                </>
+              )}
+              {priceType.id !== "tmo" && (
+                <>
                   <LatestPriceEntries lastEntries={lastEntriesData} />
                 </>
               )}

@@ -41,23 +41,54 @@ const DynamicProducts = ({
   const metadataUpdated = {
     metaTitle: "TMO Fındık Fiyatları",
     metaDescription:
-      "Toprak Mahsülleri Ofisi tarafından üreticiye desteklemek amacıyla fındık alımının yapıldığı hukümet yetkilileri tarafından belirlenen fiyatları buradan öğrenebilirsiniz.",
+      "Toprak Mahsülleri Ofisi tarafından üreticiye desteklemek amacıyla fındık alımının yapıldığı Hükûmet yetkilileri tarafından belirlenen fiyatları buradan öğrenebilirsiniz.",
   }
   const metadataWithDefaults = {
     ...global.attributes.metadata,
     ...metadata,
     ...metadataUpdated,
   }
+  const breadcrumbElement = [
+    { title: "ÜRÜNLER", slug: "/urunler" },
+    {
+      title: `TOPRAK MAHSÜLLERİ OFİSİ ${productContent.title.toLocaleUpperCase(
+        "tr"
+      )} FİYATLARI`,
+      slug: "/urunler/" + productContext.slug + "/fiyatlari",
+    },
+  ]
+  const pricetypes = [
+    {
+      name: "Borsa Fiyatları",
+      title: `${productContent.title} Fiyatları`,
+      id: "stockmarket",
+      url: "fiyatlari",
+    },
+    {
+      name: "Serbest Piyasa Fiyatları",
+      title: `Serbest Piyasa ${productContent.title} Fiyatları`,
+      id: "openmarket",
+      url: "serbest-piyasa-fiyatlari",
+    },
+    {
+      name: "TMO Fiyatları",
+      title: "TMO Fındık Fiyatları",
+      id: "tmo",
+      url: "tmo-fiyatlari",
+    },
+  ]
   return (
     <Layout
       global={global}
       pageContext={productContext}
+      pricetypes={pricetypes}
       priceTypeSelection={2}
       productContent={productContent}
       priceCardData={priceCardData}
       lastEntriesData={lastEntriesData}
       graphData={graphData}
       productContext={productContext}
+      breadcrumbElement={breadcrumbElement}
       advertisement={advertisement}
     >
       <Seo metadata={metadataWithDefaults} />

@@ -48,7 +48,7 @@ if (typeof Highcharts === "object") {
       ],
       exportButtonTitle: "Dışarı Aktar",
       printButtonTitle: "Yazdır",
-      rangeSelectorFrom: "Başlangış",
+      rangeSelectorFrom: "Başlangıç",
       rangeSelectorTo: "Bitiş",
       rangeSelectorZoom: "Periyot",
       downloadPNG: "PNG Olarak indir",
@@ -101,24 +101,11 @@ const PriceChart = ({ grapghData }) => {
         title: {
           text: "Fiyat",
         },
-        height: "80%",
+        height: "100%",
         lineWidth: 2,
         resize: {
           enabled: true,
         },
-      },
-      {
-        labels: {
-          align: "right",
-          x: -3,
-        },
-        title: {
-          text: "Hacim",
-        },
-        top: "85%",
-        height: "15%",
-        offset: 0,
-        lineWidth: 2,
       },
     ],
     tooltip: {
