@@ -230,12 +230,9 @@ export async function getPriceValues({
   })
 
   const pricesData = await pricesRes.json()
-  // Make sure we found something, otherwise return null
-  if (pricesData.data?.prices == null || pricesData.data.prices.length === 0) {
+  if (pricesData.data?.prices == null || pricesData.data?.prices.length === 0) {
     return null
   }
-
-  // Return the first item since there should only be one result per slug
   return pricesData.data.prices.data
 }
 
@@ -517,7 +514,7 @@ export async function getDefaultPriceValue({ product, type, quality }) {
 
   const pricesData = await pricesRes.json()
   // Make sure we found something, otherwise return null
-  if (pricesData.data?.prices == null || pricesData.data.prices.length === 0) {
+  if (pricesData.data?.prices == null || pricesData.data?.prices.length === 0) {
     return null
   }
 
@@ -596,7 +593,7 @@ export async function getMaxPrice({ product, type, quality, date }) {
 
   const itemsData = await itemsRes.json()
   // Make sure we found something, otherwise return null
-  if (itemsData.data?.prices == null || itemsData.data.prices.length === 0) {
+  if (itemsData.data?.prices == null || itemsData.data?.prices.length === 0) {
     return null
   }
 
@@ -657,7 +654,7 @@ export async function getMinPrice({ product, type, quality, date }) {
 
   const itemsData = await itemsRes.json()
   // Make sure we found something, otherwise return null
-  if (itemsData.data?.prices == null || itemsData.data.prices.length === 0) {
+  if (itemsData.data?.prices == null || itemsData.data?.prices.length === 0) {
     return null
   }
 
@@ -718,7 +715,7 @@ export async function getOldestDate({ product, type, quality, date }) {
 
   const itemsData = await itemsRes.json()
   // Make sure we found something, otherwise return null
-  if (itemsData.data?.prices == null || itemsData.data.prices.length === 0) {
+  if (itemsData.data?.prices == null || itemsData.data?.prices.length === 0) {
     return null
   }
 
@@ -965,7 +962,7 @@ export async function getPriceEntries({ product, city, priceType }) {
 
   const itemsData = await itemsRes.json()
   // Make sure we found something, otherwise return null
-  if (itemsData.data?.prices == null || itemsData.data.prices.length === 0) {
+  if (itemsData.data?.prices == null || itemsData.data?.prices.length === 0) {
     return null
   }
   // Return the first item since there should only be one result per slug
@@ -1022,7 +1019,7 @@ export async function getGraphData({ product, city, priceType }) {
 
   const itemsData = await itemsRes.json()
   // Make sure we found something, otherwise return null
-  if (itemsData.data?.prices == null || itemsData.data.prices.length === 0) {
+  if (itemsData.data?.prices == null || itemsData.data?.prices.length === 0) {
     return null
   }
 
