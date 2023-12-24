@@ -110,3 +110,6 @@ public/sitemap-0.xml
 
 certificates
 public/robots.txt
+
+# Sentry Config File
+.sentryclirc

@@ -69,9 +69,9 @@ const TermlyPriceChange = ({ termlyPriceData }) => {
                           "border-b hover:bg-lightgray"
                         )}
                       >
-                        <td className="text-sm font-medium text-darkgray px-2 sm:px-4 py-1 sm:py-2 text-left">
+                        <th className="text-sm font-medium text-darkgray px-2 sm:px-4 py-1 sm:py-2 text-left">
                           {term.name}
-                        </td>
+                        </th>
                         {term.data.map((item, i) => {
                           if (term.type === 2) {
                             return (
