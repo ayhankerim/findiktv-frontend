@@ -1,17 +1,20 @@
-import axios from "axios"
+import { fetchAPI } from "utils/api"
 
 export async function signIn({ email, password }) {
-  const res = await axios.post(
-    `${process.env.STRAPI_URL}/api/auth/local`,
-    {
-      identifier: email,
-      password,
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${process.env.NEXT_PUBLIC_SECRET_TOKEN}`,
-      },
-    }
-  )
-  return res.data
+  try {
+    const res = await fetchAPI(
+      `/auth/local`,
+      {},
+      {
+        method: "POST",
+        body: JSON.stringify({
+          identifier: email,
+          password,
+        }),
+      }
+    )
+    return res
+  } catch (err) {
+    console.error({ api: err.message })
+  }
 }
