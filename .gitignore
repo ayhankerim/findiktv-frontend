@@ -113,3 +113,5 @@ public/robots.txt
 
 # Sentry Config File
 .sentryclirc
+pages/sentry-example-page.jsx
+pages/api/sentry-example-api.js
