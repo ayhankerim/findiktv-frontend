@@ -338,7 +338,7 @@ export default function Register({ global }) {
                       )}
                     </Formik>
 
-                    <div className="py-5 text-center">
+                    {/* <div className="py-5 text-center">
                       <span className="text-xs text-uppercase font-semibold">
                         veya
                       </span>
@@ -362,7 +362,7 @@ export default function Register({ global }) {
                           Google
                         </button>
                       </div>
-                    </div>
+                    </div> */}
                     <div className="my-6">
                       <p>
                         <span className="mr-1">Hesabınız var mı?</span>
