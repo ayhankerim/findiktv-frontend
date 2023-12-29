@@ -29,7 +29,7 @@ const loggedInSchema = yup.object().shape({
       var number = Number(
         parseInt(value ? value.replaceAll(".", "").slice(1) : 0)
       )
-      if (number > 100 || number < 1) {
+      if (number > 200 || number < 1) {
         return false
       } else {
         return true

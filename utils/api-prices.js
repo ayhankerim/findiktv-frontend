@@ -49,6 +49,7 @@ export async function getLastPriceDate({ product, city, type, quality }) {
               quality: { eq: $quality }
               or: [
                 { approvalStatus: { eq: "approved" }},
+                { approvalStatus: { eq: "adjustment" }},
                 { approvalStatus: { eq: "calculation" }}
               ]
             }
@@ -119,6 +120,7 @@ export async function getPreviousPriceDate({
               quality: { eq: $quality }
               or: [
                 { approvalStatus: { eq: "approved" }},
+                { approvalStatus: { eq: "adjustment" }},
                 { approvalStatus: { eq: "calculation" }}
               ]
             }
@@ -202,6 +204,7 @@ export async function getPriceValues({
               quality: { eq: $quality }
               or: [
                 { approvalStatus: { eq: "approved" }},
+                { approvalStatus: { eq: "adjustment" }},
                 { approvalStatus: { eq: "calculation" }}
               ]
             }
@@ -485,6 +488,7 @@ export async function getDefaultPriceValue({ product, type, quality }) {
               quality: { eq: $quality }
               or: [
                 { approvalStatus: { eq: "approved" }},
+                { approvalStatus: { eq: "adjustment" }},
                 { approvalStatus: { eq: "calculation" }}
               ]
             }
@@ -567,6 +571,7 @@ export async function getMaxPrice({ product, type, quality, date }) {
               quality: { eq: $quality }
               or: [
                 { approvalStatus: { eq: "approved" }},
+                { approvalStatus: { eq: "adjustment" }},
                 { approvalStatus: { eq: "calculation" }}
               ]
             }
@@ -628,6 +633,7 @@ export async function getMinPrice({ product, type, quality, date }) {
               quality: { eq: $quality }
               or: [
                 { approvalStatus: { eq: "approved" }},
+                { approvalStatus: { eq: "adjustment" }},
                 { approvalStatus: { eq: "calculation" }}
               ]
             }
@@ -689,6 +695,7 @@ export async function getOldestDate({ product, type, quality, date }) {
               quality: { eq: $quality }
               or: [
                 { approvalStatus: { eq: "approved" }},
+                { approvalStatus: { eq: "adjustment" }},
                 { approvalStatus: { eq: "calculation" }}
               ]
             }
@@ -930,6 +937,7 @@ export async function getPriceEntries({ product, city, priceType }) {
               type: { eq: $priceType }
               or: [
                 { approvalStatus: { eq: "approved" }},
+                { approvalStatus: { eq: "adjustment" }},
                 { approvalStatus: { eq: "calculation" }}
               ]
             }
@@ -991,6 +999,7 @@ export async function getGraphData({ product, city, priceType }) {
               type: { eq: $priceType }
               or: [
                 { approvalStatus: { eq: "approved" }},
+                { approvalStatus: { eq: "adjustment" }},
                 { approvalStatus: { eq: "calculation" }}
               ]
             }

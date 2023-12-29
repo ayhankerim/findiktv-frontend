@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, Fragment } from "react"
 import { useRouter } from "next/router"
 import ErrorPage from "next/error"
 import { useSession } from "next-auth/react"
@@ -12,10 +12,8 @@ import SimpleSidebar from "@/components/elements/simple-sidebar"
 import { FcApproval } from "react-icons/fc"
 import { Tab } from "@headlessui/react"
 import { RiEditBoxLine, RiSeparator } from "react-icons/ri"
-import {
-  MdOutlineLocationOn,
-  MdOutlineAdminPanelSettings,
-} from "react-icons/md"
+import { Menu, Transition } from "@headlessui/react"
+import { MdOutlineLocationOn, MdAddChart } from "react-icons/md"
 import {
   FaTelegramPlane,
   FaFacebookF,
@@ -288,16 +286,60 @@ const DynamicUsers = ({ userContent, advertisement, global, userContext }) => {
                         {(userContent.role.data.attributes.name === "Editor" ||
                           userContent.role.data.attributes.name ===
                             "Admin") && (
-                          <Link
-                            href={`/hesap/profil/${userContent.username}/cache`}
-                            className="flex w-full border items-center rounded-md px-2 py-1 text-sm hover:shadow-lg"
-                          >
-                            <MdOutlineAdminPanelSettings
-                              className="mr-2 text-sm text-secondary"
-                              aria-hidden="true"
-                            />
-                            Editör Paneli
-                          </Link>
+                          <Menu as="div" className="flex w-full relative">
+                            {({ open }) => (
+                              <>
+                                <div>
+                                  <Menu.Button className="flex border items-center rounded-md px-2 py-1 text-sm hover:shadow-lg">
+                                    <span className="sr-only">Menü aç</span>
+                                    <MdAddChart
+                                      className="mr-2 text-sm text-secondary"
+                                      aria-hidden="true"
+                                    />
+                                    Editör Paneli
+                                  </Menu.Button>
+                                </div>
+                                <Transition
+                                  as={Fragment}
+                                  enter="transition ease-out duration-100"
+                                  enterFrom="transform opacity-0 scale-95"
+                                  enterTo="transform opacity-100 scale-100"
+                                  leave="transition ease-in duration-75"
+                                  leaveFrom="transform opacity-100 scale-100"
+                                  leaveTo="transform opacity-0 scale-95"
+                                >
+                                  <Menu.Items className="absolute right-0 z-10 mt-10 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                    <Menu.Item>
+                                      {({ active }) => (
+                                        <Link
+                                          href={`/hesap/profil/${userContent.username}/cache`}
+                                          className={classNames(
+                                            active ? "bg-gray-100" : "",
+                                            "block w-full text-left px-4 py-2 text-sm text-midgray"
+                                          )}
+                                        >
+                                          Cache Temizle
+                                        </Link>
+                                      )}
+                                    </Menu.Item>
+                                    <Menu.Item>
+                                      {({ active }) => (
+                                        <Link
+                                          href={`/hesap/profil/${userContent.username}/fiyat-gir`}
+                                          className={classNames(
+                                            active ? "bg-gray-100" : "",
+                                            "block w-full text-left px-4 py-2 text-sm text-midgray"
+                                          )}
+                                        >
+                                          Fiyat Gir
+                                        </Link>
+                                      )}
+                                    </Menu.Item>
+                                  </Menu.Items>
+                                </Transition>
+                              </>
+                            )}
+                          </Menu>
                         )}
                       </div>
                     )}
