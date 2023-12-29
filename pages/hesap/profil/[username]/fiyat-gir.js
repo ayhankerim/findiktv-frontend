@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react"
-import { getSession, useSession } from "next-auth/react"
+import { getSession } from "next-auth/react"
 import { useSelector } from "react-redux"
 import { useRouter } from "next/router"
 import { NumericFormat } from "react-number-format"
@@ -24,7 +24,7 @@ const notify = (type, message) => {
   }
 }
 
-const DynamicUsers = ({ userContent, global, userContext }) => {
+const PriceEntries = ({ global, userContext }) => {
   const [cities, setCityList] = useState([])
   const [productQuality, setProductQuality] = useState("Levant")
   const [priceType, setPriceType] = useState("stockmarket")
@@ -229,7 +229,7 @@ const DynamicUsers = ({ userContent, global, userContext }) => {
                 <Toaster position="top-right" reverseOrder={false} />
 
                 <div className="px-4 py-5 sm:p-6 lg:px-4 lg:py-5">
-                  <div className="grid grid-cols-6 gap-3">
+                  <div className="grid grid-cols-6 p-2 gap-3">
                     <div className="col-span">
                       <label
                         htmlFor="AddPriceprice"
@@ -296,7 +296,6 @@ const DynamicUsers = ({ userContent, global, userContext }) => {
                             { setSubmitting, setErrors, setStatus, resetForm }
                           ) => {
                             setLoading(true)
-                            setStatus("-")
                             try {
                               setErrors({ api: null })
                               fetchAPI(
@@ -355,7 +354,7 @@ const DynamicUsers = ({ userContent, global, userContext }) => {
                             setSubmitting(false)
                           }}
                         >
-                          {({ errors, touched, isSubmitting, status }) => (
+                          {({ errors, touched, status }) => (
                             <Form
                               className={`p-2 mb-2 border ${
                                 errors.api
@@ -414,32 +413,32 @@ const DynamicUsers = ({ userContent, global, userContext }) => {
                                     </>
                                   )}
                                 </div>
-                                <div className="col-span">{status}</div>
+                                <div className="col-span">
+                                  {status ? status : "-"}
+                                </div>
                                 <div className="col-span">
                                   {errors.api && (
-                                    <div className="text-red-500 h-12 text-sm mt-1 ml-2 text-left">
+                                    <div className="text-red-500 text-sm mt-1 ml-2 text-left">
                                       {errors.api}
                                     </div>
                                   )}
-                                  <div className="py-3 text-right">
-                                    <button
-                                      className="disabled:opacity-75 w-full bg-secondary hover:bg-secondary/90 text-white rounded p-4 text-base transition duration-150 ease-out md:ease-in"
-                                      type="submit"
-                                      disabled={loading}
-                                    >
-                                      {loading ? (
-                                        <span role="status">
-                                          <BiLoaderCircle className="mr-2 inline-block align-middle w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" />
-                                          <span className="sr-only">
-                                            Gönderiliyor...
-                                          </span>
-                                          <span>Gönderiliyor...</span>
+                                  <button
+                                    className="disabled:opacity-75 w-full bg-secondary hover:bg-secondary/90 text-sm text-white rounded p-2 text-base transition duration-150 ease-out md:ease-in"
+                                    type="submit"
+                                    disabled={loading}
+                                  >
+                                    {loading ? (
+                                      <span role="status">
+                                        <BiLoaderCircle className="inline-block align-middle w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" />
+                                        <span className="sr-only">
+                                          Gönderiliyor...
                                         </span>
-                                      ) : (
-                                        <span>Gönder</span>
-                                      )}
-                                    </button>
-                                  </div>
+                                        <span>Gönderiliyor...</span>
+                                      </span>
+                                    ) : (
+                                      <span>Gönder</span>
+                                    )}
+                                  </button>
                                 </div>
                               </div>
                             </Form>
@@ -447,25 +446,6 @@ const DynamicUsers = ({ userContent, global, userContext }) => {
                         </Formik>
                       )
                     })}
-                  {/* <div className="-mb-6 col-span">
-                    <div className="py-3 text-right">
-                      <button
-                        className="disabled:opacity-75 w-full bg-secondary hover:bg-secondary/90 text-white rounded p-4 text-base transition duration-150 ease-out md:ease-in"
-                        type="submit"
-                        disabled={loading}
-                      >
-                        {loading ? (
-                          <span role="status">
-                            <BiLoaderCircle className="mr-2 inline-block align-middle w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" />
-                            <span className="sr-only">Gönderiliyor...</span>
-                            <span>Gönderiliyor...</span>
-                          </span>
-                        ) : (
-                          <span>Gönder</span>
-                        )}
-                      </button>
-                    </div>
-                  </div> */}
                 </div>
               </div>
             </div>
@@ -485,11 +465,8 @@ export const getServerSideProps = async (context) => {
   })
 
   if (userData === null) {
-    // Giving the page no props will trigger a 404 page
     return { props: {} }
   }
-
-  // We have the required page data, pass it to the page component
   const { username, role } = userData.attributes
 
   const userContent = {
@@ -497,7 +474,7 @@ export const getServerSideProps = async (context) => {
     username,
     role,
   }
-  // Check if session exists or not, if not, redirect
+
   if (session == null) {
     return {
       redirect: {
@@ -514,4 +491,4 @@ export const getServerSideProps = async (context) => {
   }
 }
 
-export default DynamicUsers
+export default PriceEntries
