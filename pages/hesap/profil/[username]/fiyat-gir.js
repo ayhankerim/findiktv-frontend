@@ -165,12 +165,14 @@ const DynamicUsers = ({ userContent, global, userContext }) => {
                 <div className="flex justify-between">
                   <h1 className="font-semibold text-xl text-dark">Fiyat Gir</h1>
                   <div className="flex items-center gap-6">
-                    <div className="flex items-center gap-3">
-                      Tip:
+                    <div className="grid grid-cols-2 items-center justify-end gap-3">
+                      <label className="col-span-2 text-center font-bold">
+                        Tip
+                      </label>
                       <button
-                        className={`flex w-full ${
+                        className={` ${
                           priceType === "stockmarket" &&
-                          "bg-secondary text-white border-secondary"
+                          "bg-warning text-white border-warning"
                         } border items-center rounded-md px-2 py-1 text-sm hover:shadow-lg`}
                         onClick={() =>
                           handleButtonClick(productQuality, "stockmarket")
@@ -179,9 +181,9 @@ const DynamicUsers = ({ userContent, global, userContext }) => {
                         Borsa Fiyatı
                       </button>
                       <button
-                        className={`flex w-full ${
+                        className={` ${
                           priceType === "openmarket" &&
-                          "bg-secondary text-white border-secondary"
+                          "bg-warning text-white border-warning"
                         } border items-center rounded-md px-2 py-1 text-sm hover:shadow-lg`}
                         onClick={() =>
                           handleButtonClick(productQuality, "openmarket")
@@ -190,30 +192,32 @@ const DynamicUsers = ({ userContent, global, userContext }) => {
                         Serbest Piyasa Fiyatı
                       </button>
                     </div>
-                    <div className="flex items-center gap-3">
-                      Kalite:
+                    <div className="grid grid-cols-3 items-center justify-end gap-3">
+                      <label className="col-span-3 text-center font-bold">
+                        Kalite
+                      </label>
                       <button
-                        className={`flex w-full ${
+                        className={` ${
                           productQuality === "Sivri" &&
-                          "bg-secondary text-white border-secondary"
+                          "bg-danger text-white border-danger"
                         } border items-center rounded-md px-2 py-1 text-sm hover:shadow-lg`}
                         onClick={() => handleButtonClick("Sivri", priceType)}
                       >
                         Sivri
                       </button>
                       <button
-                        className={`flex w-full ${
+                        className={` ${
                           productQuality === "Levant" &&
-                          "bg-secondary text-white border-secondary"
+                          "bg-danger text-white border-danger"
                         } border items-center rounded-md px-2 py-1 text-sm hover:shadow-lg`}
                         onClick={() => handleButtonClick("Levant", priceType)}
                       >
                         Levant
                       </button>
                       <button
-                        className={`flex w-full ${
+                        className={` ${
                           productQuality === "Giresun" &&
-                          "bg-secondary text-white border-secondary"
+                          "bg-danger text-white border-danger"
                         } border items-center rounded-md px-2 py-1 text-sm hover:shadow-lg`}
                         onClick={() => handleButtonClick("Giresun", priceType)}
                       >
@@ -267,14 +271,21 @@ const DynamicUsers = ({ userContent, global, userContext }) => {
                   {cities &&
                     cities.data &&
                     cities.data.map((item, index) => {
+                      const formatter = new Intl.NumberFormat("tr-TR", {
+                        style: "currency",
+                        currency: "TRY",
+                      })
                       return (
                         <Formik
                           key={index}
                           enableReinitialize={true}
                           initialValues={{
-                            price:
-                              item.attributes.prices.data[0]?.attributes
-                                .average || 100,
+                            price: item.attributes.prices.data[0]
+                              ? formatter.format(
+                                  item.attributes.prices.data[0]?.attributes
+                                    .average
+                                )
+                              : formatter.format(100),
                             date: Moment(new Date()).format("YYYY-MM-DD"),
                             volume: "",
                             efficiency: 50,
@@ -345,7 +356,13 @@ const DynamicUsers = ({ userContent, global, userContext }) => {
                           }}
                         >
                           {({ errors, touched, isSubmitting, status }) => (
-                            <Form className="border border-lightgray">
+                            <Form
+                              className={`p-2 mb-2 border ${
+                                errors.api
+                                  ? "border-danger"
+                                  : "border-lightgray"
+                              }`}
+                            >
                               <div className="grid grid-cols-6 gap-3 items-center">
                                 <div className="col-span">
                                   <Field
@@ -396,14 +413,14 @@ const DynamicUsers = ({ userContent, global, userContext }) => {
                                       </p>
                                     </>
                                   )}
-                                  {errors.api && (
-                                    <p className="text-red-500 h-12 text-sm mt-1 ml-2 text-left">
-                                      {errors.api}
-                                    </p>
-                                  )}
                                 </div>
                                 <div className="col-span">{status}</div>
                                 <div className="col-span">
+                                  {errors.api && (
+                                    <div className="text-red-500 h-12 text-sm mt-1 ml-2 text-left">
+                                      {errors.api}
+                                    </div>
+                                  )}
                                   <div className="py-3 text-right">
                                     <button
                                       className="disabled:opacity-75 w-full bg-secondary hover:bg-secondary/90 text-white rounded p-4 text-base transition duration-150 ease-out md:ease-in"
