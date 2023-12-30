@@ -47,46 +47,46 @@ const MyApp = ({
   return (
     <>
       <GoogleAnalytics trackPageViews strategy="lazyOnload" />
+      {/* Favicon */}
+      <Head>
+        <link
+          rel="shortcut icon"
+          href={getStrapiMedia(favicon.data.attributes.url)}
+        />
+        <link
+          rel="preconnect"
+          href="https://googleads.g.doubleclick.net"
+        ></link>
+        <link rel="preconnect" href="https://cdn.onesignal.com"></link>
+      </Head>
+      {/* Global site metadata */}
+      <DefaultSeo
+        titleTemplate={
+          pageRout === "/"
+            ? `${metaTitleSuffix} | %s`
+            : `%s | ${metaTitleSuffix}`
+        }
+        title="Page"
+        description={metadata.metaDescription}
+        openGraph={{
+          images: Object.values(
+            metadata.shareImage.data.attributes.formats
+          ).map((image) => {
+            return {
+              url: getStrapiMedia(image.url),
+              width: image.width,
+              height: image.height,
+            }
+          }),
+        }}
+        twitter={{
+          cardType: metadata.twitterCardType,
+          handle: metadata.twitterUsername,
+        }}
+      />
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <SessionProvider session={session}>
-            {/* Favicon */}
-            <Head>
-              <link
-                rel="shortcut icon"
-                href={getStrapiMedia(favicon.data.attributes.url)}
-              />
-              <link
-                rel="preconnect"
-                href="https://googleads.g.doubleclick.net"
-              ></link>
-              <link rel="preconnect" href="https://cdn.onesignal.com"></link>
-            </Head>
-            {/* Global site metadata */}
-            <DefaultSeo
-              titleTemplate={
-                pageRout === "/"
-                  ? `${metaTitleSuffix} | %s`
-                  : `%s | ${metaTitleSuffix}`
-              }
-              title="Page"
-              description={metadata.metaDescription}
-              openGraph={{
-                images: Object.values(
-                  metadata.shareImage.data.attributes.formats
-                ).map((image) => {
-                  return {
-                    url: getStrapiMedia(image.url),
-                    width: image.width,
-                    height: image.height,
-                  }
-                }),
-              }}
-              twitter={{
-                cardType: metadata.twitterCardType,
-                handle: metadata.twitterUsername,
-              }}
-            />
             {/* Display the content */}
             <div className={`${dosis.variable} font-sans`}>
               <Component {...pageProps} />
