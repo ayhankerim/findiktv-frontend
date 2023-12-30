@@ -409,7 +409,7 @@ export async function getStaticProps(context) {
       },
       allCities: productAllCityData,
     },
-    revalidate: 60,
+    revalidate: 60 * 60 * 24 * 30,
   }
 }
 

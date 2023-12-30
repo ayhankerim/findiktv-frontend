@@ -93,7 +93,7 @@ export async function getStaticProps(context) {
         ...productContext,
       },
     },
-    revalidate: 60,
+    revalidate: 60 * 60 * 24 * 30,
   }
 }
 

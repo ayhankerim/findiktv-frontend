@@ -397,7 +397,7 @@ export async function getStaticProps(context) {
       priceCitiesData: priceCities,
       priceDefaultsData: priceDefaults,
     },
-    revalidate: 60 * 60 * 24,
+    revalidate: 60 * 60 * 24 * 30,
   }
 }
 

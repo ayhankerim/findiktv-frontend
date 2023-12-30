@@ -393,6 +393,6 @@ export async function getStaticProps(context) {
     props: {
       global: globalLocale.data,
     },
-    revalidate: 15,
+    revalidate: 60 * 60 * 24 * 30,
   }
 }
