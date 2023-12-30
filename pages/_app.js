@@ -83,6 +83,9 @@ const MyApp = ({
           cardType: metadata.twitterCardType,
           handle: metadata.twitterUsername,
         }}
+        facebook={{
+          appId: "419414316513559",
+        }}
       />
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>

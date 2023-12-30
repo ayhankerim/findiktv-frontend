@@ -30,9 +30,15 @@ export default function NotFound({ global }) {
     ...global.attributes.metadata,
     ...metadata,
   }
+  const articleSeoData = {
+    slug: "/404",
+    datePublished: "2023-02-21T21:16:43.786Z",
+    dateModified: "2023-02-21T21:16:43.786Z",
+    tags: [],
+  }
   return (
     <Layout global={global} pageContext={null}>
-      <Seo metadata={metadataWithDefaults} />
+      <Seo metadata={metadataWithDefaults} others={articleSeoData} />
       <main className="container flex flex-col justify-between gap-4 pt-2 bg-white">
         <div className="flex flex-col lg:flex-row items-start justify-between gap-4 pt-2">
           <div className="flex flex-col flex-1 w-full gap-3">

@@ -6,6 +6,8 @@ import Layout from "@/components/layout"
 import Seo from "@/components/elements/seo"
 import SimpleSidebar from "@/components/elements/simple-sidebar"
 import ArticleBlock from "@/components/elements/article/articles-block"
+import Moment from "moment"
+import "moment/locale/tr"
 
 const fetcher = (url) => fetch(url).then((res) => res.json())
 const PAGE_SIZE = 12
@@ -81,10 +83,16 @@ const DynamicTags = ({ tagContent, preview, global, tagContext }) => {
     ...global.attributes.metadata,
     ...metadata,
   }
+  const articleSeoData = {
+    slug: "/etiket/" + tagContext.slug,
+    datePublished: Moment(tagContext.createdAt).toISOString(),
+    dateModified: Moment(tagContext.updatedAt).toISOString(),
+    tags: [],
+  }
   return (
     <Layout global={global} pageContext={tagContext}>
       {/* Add meta tags for SEO*/}
-      <Seo metadata={metadataWithDefaults} />
+      <Seo metadata={metadataWithDefaults} others={articleSeoData} />
       {/* Display content sections */}
       {/* <Sections sections={sections} preview={preview} /> */}
       <main className="container flex flex-col justify-between gap-4 pt-2 bg-white">
@@ -189,7 +197,8 @@ export async function getStaticProps(context) {
   }
 
   // We have the required page data, pass it to the page component
-  const { title, localizations, slug } = tagData.attributes
+  const { title, localizations, slug, createdAt, updatedAt } =
+    tagData.attributes
 
   const tagContent = {
     id: tagData.id,
@@ -202,6 +211,8 @@ export async function getStaticProps(context) {
     defaultLocale,
     slug,
     localizations,
+    createdAt,
+    updatedAt,
   }
 
   //const localizedPaths = getLocalizedPaths(productContext)

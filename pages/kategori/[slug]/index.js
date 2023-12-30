@@ -12,6 +12,8 @@ import ArticleBlock from "@/components/elements/article/articles-block"
 import ArticleSlider from "@/components/elements/article/article-slider"
 import Seo from "@/components/elements/seo"
 import SimpleSidebar from "@/components/elements/simple-sidebar"
+import Moment from "moment"
+import "moment/locale/tr"
 
 const fetcher = (url) => fetch(url).then((res) => res.json())
 const PAGE_SIZE = 12
@@ -89,10 +91,16 @@ const DynamicCategories = ({
     ...global.attributes.metadata,
     ...metadata,
   }
+  const articleSeoData = {
+    slug: "/kategori/" + categoryContext.slug,
+    datePublished: Moment(categoryContext.createdAt).toISOString(),
+    dateModified: Moment(categoryContext.updatedAt).toISOString(),
+    tags: [],
+  }
   return (
     <Layout global={global} pageContext={categoryContext}>
       {/* Add meta tags for SEO*/}
-      <Seo metadata={metadataWithDefaults} />
+      <Seo metadata={metadataWithDefaults} others={articleSeoData} />
       {/* Display content sections */}
       {/* <Sections sections={sections} preview={preview} /> */}
       <main className="container flex flex-col justify-between gap-4 pt-2 bg-white">
@@ -200,7 +208,8 @@ export async function getStaticProps(context) {
   }
 
   // We have the required page data, pass it to the page component
-  const { title, metadata, localizations, slug } = categoryData.attributes
+  const { title, metadata, localizations, slug, createdAt, updatedAt } =
+    categoryData.attributes
 
   const categoryContent = {
     id: categoryData.id,
@@ -213,6 +222,8 @@ export async function getStaticProps(context) {
     defaultLocale,
     slug,
     localizations,
+    createdAt,
+    updatedAt,
   }
 
   //const localizedPaths = getLocalizedPaths(productContext)

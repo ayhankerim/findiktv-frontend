@@ -16,6 +16,8 @@ import {
 import { useRouter } from "next/router"
 import Seo from "@/components/elements/seo"
 import Layout from "@/components/layout-price"
+import Moment from "moment"
+import "moment/locale/tr"
 
 const DynamicProducts = ({
   productContent,
@@ -84,6 +86,16 @@ const DynamicProducts = ({
       url: "tmo-fiyatlari",
     },
   ]
+  const articleSeoData = {
+    slug: "/urunler/" + productContext.slug + "/fiyatlari",
+    datePublished: Moment(
+      lastEntriesData?.[0].attributes.createdAt
+    ).toISOString(),
+    dateModified: Moment(
+      lastEntriesData?.[0].attributes.updatedAt
+    ).toISOString(),
+    tags: [],
+  }
   return (
     <Layout
       global={global}
@@ -101,7 +113,7 @@ const DynamicProducts = ({
       breadcrumbElement={breadcrumbElement}
       advertisement={advertisement}
     >
-      <Seo metadata={metadataWithDefaults} />
+      <Seo metadata={metadataWithDefaults} others={articleSeoData} />
     </Layout>
   )
 }

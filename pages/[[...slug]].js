@@ -7,6 +7,8 @@ import { useSelector, useDispatch } from "react-redux"
 import { updateAds } from "@/store/advertisements"
 import Layout from "@/components/layout"
 import { getLocalizedPaths } from "utils/localize"
+import Moment from "moment"
+import "moment/locale/tr"
 
 // The file is called [[...slug]].js because we're using Next's
 // optional catch all routes feature. See the related docs:
@@ -48,10 +50,17 @@ const DynamicPage = ({
     ...global.attributes.metadata,
     ...metadata,
   }
+  const articleSeoData = {
+    slug: pageContext.slug,
+    datePublished: pageContext.publishedAt,
+    dateModified: pageContext.updatedAt,
+    tags: [],
+  }
+  console.log(pageContext)
   return (
     <Layout global={global} pageContext={pageContext}>
       {/* Add meta tags for SEO*/}
-      <Seo metadata={metadataWithDefaults} />
+      <Seo metadata={metadataWithDefaults} others={articleSeoData} />
       {/* Display content sections */}
       <Sections sections={sections} preview={preview} />
     </Layout>
@@ -109,7 +118,14 @@ export async function getStaticProps(context) {
   }
 
   // We have the required page data, pass it to the page component
-  const { contentSections, metadata, localizations, slug } = pageData.attributes
+  const {
+    contentSections,
+    metadata,
+    localizations,
+    slug,
+    publishedAt,
+    updatedAt,
+  } = pageData.attributes
 
   const pageContext = {
     locale,
@@ -117,6 +133,8 @@ export async function getStaticProps(context) {
     defaultLocale,
     slug,
     localizations,
+    publishedAt,
+    updatedAt,
   }
 
   const localizedPaths = getLocalizedPaths(pageContext)

@@ -6,6 +6,8 @@ import Layout from "@/components/layout"
 import ArticleBlock from "@/components/elements/article/articles-block"
 import Seo from "@/components/elements/seo"
 import SimpleSidebar from "@/components/elements/simple-sidebar"
+import Moment from "moment"
+import "moment/locale/tr"
 
 const fetcher = (url) => fetch(url).then((res) => res.json())
 const PAGE_SIZE = 12
@@ -82,9 +84,15 @@ const DynamicCities = ({
     ...global.attributes.metadata,
     ...metadata,
   }
+  const articleSeoData = {
+    slug: "/kategori/" + cityContext.slug,
+    datePublished: Moment(cityContext.createdAt).toISOString(),
+    dateModified: Moment(cityContext.updatedAt).toISOString(),
+    tags: [],
+  }
   return (
     <Layout global={global} pageContext={cityContext}>
-      <Seo metadata={metadataWithDefaults} />
+      <Seo metadata={metadataWithDefaults} others={articleSeoData} />
       <main className="container flex flex-col justify-between gap-4 pt-2 bg-white">
         <div className="flex flex-col lg:flex-row items-start justify-between gap-4 pt-2">
           <div className="flex flex-col flex-1 w-full gap-3">
@@ -187,7 +195,15 @@ export async function getStaticProps(context) {
   }
 
   // We have the required page data, pass it to the page component
-  const { title, content, metadata, localizations, slug } = cityData.attributes
+  const {
+    title,
+    content,
+    metadata,
+    localizations,
+    slug,
+    createdAt,
+    updatedAt,
+  } = cityData.attributes
 
   const cityContent = {
     id: cityData.id,
@@ -201,6 +217,8 @@ export async function getStaticProps(context) {
     defaultLocale,
     slug,
     localizations,
+    createdAt,
+    updatedAt,
   }
 
   //const localizedPaths = getLocalizedPaths(productContext)

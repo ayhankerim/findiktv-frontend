@@ -22,6 +22,8 @@ import {
   FaYoutube,
 } from "react-icons/fa"
 import Avatar from "@/components/elements/profile/avatar"
+import Moment from "moment"
+import "moment/locale/tr"
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ")
@@ -211,10 +213,16 @@ const DynamicUsers = ({ userContent, advertisement, global, userContext }) => {
     ...global.attributes.metadata,
     ...metadata,
   }
+  const articleSeoData = {
+    slug: "/hesap/profil/" + userContent.username,
+    datePublished: Moment(userContent.createdAt).toISOString(),
+    dateModified: Moment(userContent.updatedAt).toISOString(),
+    tags: [],
+  }
   return (
     <Layout global={global} pageContext={userContext}>
       {/* Add meta tags for SEO*/}
-      <Seo metadata={metadataWithDefaults} />
+      <Seo metadata={metadataWithDefaults} others={articleSeoData} />
       {/* Display content sections */}
       {/* <Sections sections={sections} preview={preview} /> */}
       <main className="container flex flex-col justify-between gap-4 pt-2 bg-white">
@@ -521,6 +529,8 @@ export async function getStaticProps(context) {
     profile_cover,
     reactions,
     comments,
+    createdAt,
+    updatedAt,
   } = userData.attributes
 
   const userContent = {
@@ -537,6 +547,8 @@ export async function getStaticProps(context) {
     profile_cover,
     reactions,
     comments,
+    createdAt,
+    updatedAt,
   }
 
   const userContext = {

@@ -97,6 +97,8 @@ export async function getPageData({ slug, locale, preview }) {
                   }
                 }
                 slug
+                publishedAt
+                updatedAt
                 metadata {
                   metaTitle
                   metaDescription

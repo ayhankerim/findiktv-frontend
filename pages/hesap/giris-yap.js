@@ -56,17 +56,22 @@ export default function SignIn({ global }) {
     ...global.attributes.metadata,
     ...metadata,
   }
-
+  const articleSeoData = {
+    slug: "/hesap/giris-yap",
+    datePublished: "2023-02-21T21:16:43.786Z",
+    dateModified: "2023-02-21T21:16:43.786Z",
+    tags: [],
+  }
   return (
     <Layout>
       <Toaster position="top-right" reverseOrder={false} />
-      <Seo metadata={metadataWithDefaults} />
+      <Seo metadata={metadataWithDefaults} others={articleSeoData} />
       <div className="px-5 py-5 lg:p-0 bg-white">
         <div className="flex justify-center w-full">
           <div className="lg:w-5/12 xl:w-4/12 p-12 xl:p-20 fixed left-0 top-0 h-screen overflow-y-hidden hidden lg:flex flex-col">
             <Image
               src={`${process.env.NEXT_PUBLIC_CLOUD_IMAGE_CORE_URL}9db77d3a-1cdb-4bc5-c236-20f990316500/format=auto,height=1000`}
-              alt="Üretici heesabı"
+              alt="Üretici hesabı"
               className="absolute inset-0 h-full w-full object-cover"
               priority={true}
               fill

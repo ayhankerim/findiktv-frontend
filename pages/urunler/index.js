@@ -21,10 +21,16 @@ function Urunler({ advertisement, global, productContext }) {
     },
   }
   const breadcrumbElement = [{ title: "ÜRÜNLER", slug: "/urunler" }]
+  const articleSeoData = {
+    slug: "/urunler",
+    datePublished: "2023-02-21T21:16:43.786Z",
+    dateModified: "2023-02-21T21:16:43.786Z",
+    tags: [],
+  }
   return (
     <Layout global={global} pageContext={productContext}>
       {/* Add meta tags for SEO*/}
-      <Seo metadata={metadataWithDefaults} />
+      <Seo metadata={metadataWithDefaults} others={articleSeoData} />
       <main className="container gap-4 pt-2 bg-white">
         <div className="w-full">
           <Breadcrumb items={breadcrumbElement} />

@@ -53,10 +53,16 @@ const DynamicUsers = ({ userContent, global, userContext }) => {
     ...global.attributes.metadata,
     ...metadata,
   }
+  const articleSeoData = {
+    slug: "/hesap/profil/" + userContent.username + "/cache",
+    datePublished: "2023-02-21T21:16:43.786Z",
+    dateModified: "2023-02-21T21:16:43.786Z",
+    tags: [],
+  }
   return (
     <Layout global={global} pageContext={userContext}>
       {/* Add meta tags for SEO*/}
-      <Seo metadata={metadataWithDefaults} />
+      <Seo metadata={metadataWithDefaults} others={articleSeoData} />
       {/* Display content sections */}
       {/* <Sections sections={sections} preview={preview} /> */}
       <main className="container flex flex-col justify-between gap-4 pt-2 bg-white">

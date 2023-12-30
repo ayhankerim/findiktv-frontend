@@ -47,10 +47,16 @@ const RandimanHesaplama = ({ global }) => {
     autoplaySpeed: 700,
   }
   const d = new Date()
+  const articleSeoData = {
+    slug: "/arac/zirai-don-uyari-sistemi",
+    datePublished: "2023-02-21T21:16:43.786Z",
+    dateModified: Moment(d).toISOString(),
+    tags: [],
+  }
   return (
     <Layout global={global} pageContext={null}>
       {/* Add meta tags for SEO*/}
-      <Seo metadata={metadataWithDefaults} />
+      <Seo metadata={metadataWithDefaults} others={articleSeoData} />
       {/* Display content sections */}
       {/* <Sections sections={sections} preview={preview} /> */}
       <main className="container flex flex-col justify-between gap-4 pt-2 bg-white md:flex-row md:flex-nowrap gap-2 align-top pb-6">

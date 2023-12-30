@@ -14,6 +14,8 @@ import ArticleComments from "@/components/elements/comments/comments"
 import Layout from "@/components/layout"
 import { getLocalizedPaths } from "@/utils/localize"
 import ArticleSidebar from "@/components/elements/article/article-sidebar"
+import Moment from "moment"
+import "moment/locale/tr"
 
 // The file is called [[...slug]].js because we're using Next's
 // optional catch all routes feature. See the related docs:
@@ -68,9 +70,15 @@ const DynamicArticleComments = ({
         "/haber/" + articleContent.id + "/" + articleContext.slug + "/yorumlar",
     },
   ]
+  const articleSeoData = {
+    slug: "/haber/" + articleContent.id + "/" + articleContext.slug,
+    datePublished: Moment(articleContent.publishedAt).toISOString(),
+    dateModified: Moment(articleContent.updatedAt).toISOString(),
+    tags: articleContent.tags,
+  }
   return (
     <Layout global={global} pageContext={articleContext}>
-      <Seo metadata={metadataWithDefaults} />
+      <Seo metadata={metadataWithDefaults} others={articleSeoData} />
       <main className="container flex flex-row items-start justify-between gap-2 pt-2 bg-white">
         <div className="flex-1 mt-2">
           <Breadcrumb items={breadcrumbElement} />

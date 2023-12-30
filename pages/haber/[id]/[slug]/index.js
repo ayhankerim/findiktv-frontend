@@ -135,10 +135,16 @@ const DynamicArticle = ({
       slug: "/haber/" + articleContent.id + "/" + articleContext.slug,
     },
   ]
+  const articleSeoData = {
+    slug: "/haber/" + articleContent.id + "/" + articleContext.slug,
+    datePublished: Moment(articleContent.publishedAt).toISOString(),
+    dateModified: Moment(articleContent.updatedAt).toISOString(),
+    tags: articleContent.tags,
+  }
   return (
     <Layout global={global} pageContext={articleContext}>
       {/* Add meta tags for SEO*/}
-      <Seo metadata={metadataWithDefaults} />
+      <Seo metadata={metadataWithDefaults} others={articleSeoData} />
       {/* Display content sections */}
       {/* <Sections sections={sections} preview={preview} /> */}
       <main className="container gap-4 pt-2 bg-white">
