@@ -66,7 +66,7 @@ const MyApp = ({
             ? `${metaTitleSuffix} | %s`
             : `%s | ${metaTitleSuffix}`
         }
-        title="Page"
+        title="FINDIK TV"
         description={metadata.metaDescription}
         openGraph={{
           images: Object.values(

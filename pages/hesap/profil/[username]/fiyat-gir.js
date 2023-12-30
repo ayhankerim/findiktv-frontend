@@ -46,7 +46,7 @@ const PriceEntries = ({ global, userContext }) => {
         fields: ["title", "slug"],
         populate: {
           prices: {
-            populate: ["average"],
+            populate: ["min", "max", "average"],
             filters: {
               type: {
                 $eq: pricetype,
@@ -102,7 +102,33 @@ const PriceEntries = ({ global, userContext }) => {
   }
 
   const loggedInSchema = yup.object().shape({
-    price: yup
+    minimum_price: yup
+      .string()
+      .required("Fiyat girmeniz gereklidir!")
+      .test("Invalid", "Geçersiz bir rakam girdiniz!", function (value) {
+        var number = Number(
+          parseInt(value ? value.replaceAll(".", "").slice(1) : 0)
+        )
+        if (number > 200 || number < 1) {
+          return false
+        } else {
+          return true
+        }
+      }),
+    maximum_price: yup
+      .string()
+      .required("Fiyat girmeniz gereklidir!")
+      .test("Invalid", "Geçersiz bir rakam girdiniz!", function (value) {
+        var number = Number(
+          parseInt(value ? value.replaceAll(".", "").slice(1) : 0)
+        )
+        if (number > 200 || number < 1) {
+          return false
+        } else {
+          return true
+        }
+      }),
+    average_price: yup
       .string()
       .required("Fiyat girmeniz gereklidir!")
       .test("Invalid", "Geçersiz bir rakam girdiniz!", function (value) {
@@ -229,13 +255,29 @@ const PriceEntries = ({ global, userContext }) => {
                 <Toaster position="top-right" reverseOrder={false} />
 
                 <div className="px-4 py-5 sm:p-6 lg:px-4 lg:py-5">
-                  <div className="grid grid-cols-6 p-2 gap-3">
+                  <div className="grid grid-cols-7 p-2 gap-3">
                     <div className="col-span">
                       <label
-                        htmlFor="AddPriceprice"
+                        htmlFor="AddMinimumPriceprice"
                         className="block text-sm font-medium text-gray-900"
                       >
-                        Ürün Fiyatı
+                        Min Fiyat
+                      </label>
+                    </div>
+                    <div className="col-span">
+                      <label
+                        htmlFor="AddMaximumPriceprice"
+                        className="block text-sm font-medium text-gray-900"
+                      >
+                        Max Fiyat
+                      </label>
+                    </div>
+                    <div className="col-span">
+                      <label
+                        htmlFor="AddAveragePriceprice"
+                        className="block text-sm font-medium text-gray-900"
+                      >
+                        Ort Fiyat
                       </label>
                     </div>
                     <div className="col-span">
@@ -244,14 +286,6 @@ const PriceEntries = ({ global, userContext }) => {
                         className="block text-sm font-medium text-gray-900"
                       >
                         Şehir
-                      </label>
-                    </div>
-                    <div className="col-span">
-                      <label
-                        htmlFor="AddPriceproductType"
-                        className="block text-sm font-medium text-gray-900"
-                      >
-                        Ürün Tipi
                       </label>
                     </div>
                     <div className="col-span">
@@ -280,7 +314,17 @@ const PriceEntries = ({ global, userContext }) => {
                           key={index}
                           enableReinitialize={true}
                           initialValues={{
-                            price: item.attributes.prices.data[0]
+                            minimum_price: item.attributes.prices.data[0]
+                              ? formatter.format(
+                                  item.attributes.prices.data[0]?.attributes.min
+                                )
+                              : formatter.format(100),
+                            maximum_price: item.attributes.prices.data[0]
+                              ? formatter.format(
+                                  item.attributes.prices.data[0]?.attributes.max
+                                )
+                              : formatter.format(100),
+                            average_price: item.attributes.prices.data[0]
                               ? formatter.format(
                                   item.attributes.prices.data[0]?.attributes
                                     .average
@@ -293,7 +337,7 @@ const PriceEntries = ({ global, userContext }) => {
                           validationSchema={loggedInSchema}
                           onSubmit={async (
                             values,
-                            { setSubmitting, setErrors, setStatus, resetForm }
+                            { setSubmitting, setErrors, setStatus }
                           ) => {
                             setLoading(true)
                             try {
@@ -313,17 +357,17 @@ const PriceEntries = ({ global, userContext }) => {
                                         .format("YYYY-MM-DD HH:mm:ss"),
                                       article: null,
                                       min: Number(
-                                        values.price
+                                        values.minimum_price
                                           .substring(1)
                                           .replace(",", ".")
                                       ),
                                       max: Number(
-                                        values.price
+                                        values.maximum_price
                                           .substring(1)
                                           .replace(",", ".")
                                       ),
                                       average: Number(
-                                        values.price
+                                        values.average_price
                                           .substring(1)
                                           .replace(",", ".")
                                       ),
@@ -354,95 +398,185 @@ const PriceEntries = ({ global, userContext }) => {
                             setSubmitting(false)
                           }}
                         >
-                          {({ errors, touched, status }) => (
-                            <Form
-                              className={`p-2 mb-2 border ${
-                                errors.api
-                                  ? "border-danger"
-                                  : "border-lightgray"
-                              }`}
-                            >
-                              <div className="grid grid-cols-6 gap-3 items-center">
-                                <div className="col-span">
-                                  <Field
-                                    as={NumericFormat}
-                                    thousandSeparator="."
-                                    decimalSeparator=","
-                                    autoComplete="off"
-                                    prefix={"₺"}
-                                    allowNegative={false}
-                                    decimalScale={2}
-                                    name="price"
-                                    id="AddPriceprice"
-                                    className={classNames(
-                                      errors.price && touched.price
-                                        ? "border-danger"
-                                        : "border-midgray",
-                                      "mt-1 block w-full px-3 py-2 text-right rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                          {({
+                            setFieldValue,
+                            errors,
+                            touched,
+                            values,
+                            status,
+                          }) => {
+                            const handleInputChange = (e, setFieldValue) => {
+                              const { name, value } = e.target
+                              setFieldValue(name, value)
+                              const minPrice = Number(
+                                values.minimum_price
+                                  .substring(1)
+                                  .replace(",", ".")
+                              )
+                              const maxPrice = Number(
+                                values.maximum_price
+                                  .substring(1)
+                                  .replace(",", ".")
+                              )
+                              const average = (minPrice + maxPrice) / 2
+                              setFieldValue(
+                                "average_price",
+                                formatter.format(average)
+                              )
+                            }
+                            return (
+                              <Form
+                                className={`p-2 mb-2 border ${
+                                  errors.api
+                                    ? "border-danger"
+                                    : "border-lightgray"
+                                }`}
+                              >
+                                <div className="grid grid-cols-7 gap-3 items-center">
+                                  <div className="col-span">
+                                    <Field
+                                      as={NumericFormat}
+                                      thousandSeparator="."
+                                      decimalSeparator=","
+                                      autoComplete="off"
+                                      prefix={"₺"}
+                                      allowNegative={false}
+                                      decimalScale={2}
+                                      name="minimum_price"
+                                      id="AddMinimumPriceprice"
+                                      className={classNames(
+                                        errors.minimum_price &&
+                                          touched.minimum_price
+                                          ? "border-danger"
+                                          : "border-midgray",
+                                        "mt-1 block w-full px-3 py-2 text-right rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                      )}
+                                      onBlur={(e) =>
+                                        handleInputChange(e, setFieldValue)
+                                      }
+                                    />
+                                    {errors.minimum_price &&
+                                      touched.minimum_price && (
+                                        <>
+                                          <p className="text-danger">
+                                            {errors.minimum_price}
+                                          </p>
+                                        </>
+                                      )}
+                                  </div>
+                                  <div className="col-span">
+                                    <Field
+                                      as={NumericFormat}
+                                      thousandSeparator="."
+                                      decimalSeparator=","
+                                      autoComplete="off"
+                                      prefix={"₺"}
+                                      allowNegative={false}
+                                      decimalScale={2}
+                                      name="maximum_price"
+                                      id="AddMaximumPriceprice"
+                                      className={classNames(
+                                        errors.maximum_price &&
+                                          touched.maximum_price
+                                          ? "border-danger"
+                                          : "border-midgray",
+                                        "mt-1 block w-full px-3 py-2 text-right rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                      )}
+                                      onBlur={(e) =>
+                                        handleInputChange(e, setFieldValue)
+                                      }
+                                    />
+                                    {errors.maximum_price &&
+                                      touched.maximum_price && (
+                                        <>
+                                          <p className="text-danger">
+                                            {errors.maximum_price}
+                                          </p>
+                                        </>
+                                      )}
+                                  </div>
+                                  <div className="col-span">
+                                    <Field
+                                      as={NumericFormat}
+                                      thousandSeparator="."
+                                      decimalSeparator=","
+                                      autoComplete="off"
+                                      prefix={"₺"}
+                                      allowNegative={false}
+                                      decimalScale={2}
+                                      name="average_price"
+                                      id="AddAveragePriceprice"
+                                      className={classNames(
+                                        errors.average_price &&
+                                          touched.average_price
+                                          ? "border-danger"
+                                          : "border-midgray",
+                                        "mt-1 block w-full px-3 py-2 text-right rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                      )}
+                                    />
+                                    {errors.average_price &&
+                                      touched.average_price && (
+                                        <>
+                                          <p className="text-danger">
+                                            {errors.average_price}
+                                          </p>
+                                        </>
+                                      )}
+                                  </div>
+                                  <div className="col-span">
+                                    {item.attributes.title}
+                                  </div>
+                                  <div className="col-span">
+                                    <Field
+                                      name="date"
+                                      id="AddPricedate"
+                                      type="date"
+                                      className={classNames(
+                                        errors.date && touched.date
+                                          ? "border-danger"
+                                          : "border-midgray",
+                                        "mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                                      )}
+                                    />
+                                    {errors.date && touched.date && (
+                                      <>
+                                        <p className="text-danger">
+                                          {errors.date}
+                                        </p>
+                                      </>
                                     )}
-                                  />
-                                  {errors.price && touched.price && (
-                                    <>
-                                      <p className="text-danger">
-                                        {errors.price}
-                                      </p>
-                                    </>
-                                  )}
-                                </div>
-                                <div className="col-span">
-                                  {item.attributes.title}
-                                </div>
-                                <div className="col-span">{productQuality}</div>
-                                <div className="col-span">
-                                  <Field
-                                    name="date"
-                                    id="AddPricedate"
-                                    type="date"
-                                    className={classNames(
-                                      errors.date && touched.date
-                                        ? "border-danger"
-                                        : "border-midgray",
-                                      "mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                                  </div>
+                                  <div className="col-span">
+                                    {status ? status : "-"}
+                                  </div>
+                                  <div className="col-span">
+                                    {errors.api && (
+                                      <div className="text-red-500 text-sm mt-1 ml-2 text-left">
+                                        {errors.api}
+                                      </div>
                                     )}
-                                  />
-                                  {errors.date && touched.date && (
-                                    <>
-                                      <p className="text-danger">
-                                        {errors.date}
-                                      </p>
-                                    </>
-                                  )}
-                                </div>
-                                <div className="col-span">
-                                  {status ? status : "-"}
-                                </div>
-                                <div className="col-span">
-                                  {errors.api && (
-                                    <div className="text-red-500 text-sm mt-1 ml-2 text-left">
-                                      {errors.api}
-                                    </div>
-                                  )}
-                                  <button
-                                    className="disabled:opacity-75 w-full bg-secondary hover:bg-secondary/90 text-sm text-white rounded p-2 text-base transition duration-150 ease-out md:ease-in"
-                                    type="submit"
-                                    disabled={loading}
-                                  >
-                                    {loading ? (
-                                      <span role="status">
-                                        <BiLoaderCircle className="inline-block align-middle w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" />
-                                        <span className="sr-only">
-                                          Gönderiliyor...
+                                    <button
+                                      className="disabled:opacity-75 w-full bg-secondary hover:bg-secondary/90 text-sm text-white rounded p-2 text-base transition duration-150 ease-out md:ease-in"
+                                      type="submit"
+                                      disabled={loading}
+                                    >
+                                      {loading ? (
+                                        <span role="status">
+                                          <BiLoaderCircle className="inline-block align-middle w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" />
+                                          <span className="sr-only">
+                                            Gönderiliyor...
+                                          </span>
+                                          <span>Gönderiliyor...</span>
                                         </span>
-                                        <span>Gönderiliyor...</span>
-                                      </span>
-                                    ) : (
-                                      <span>Gönder</span>
-                                    )}
-                                  </button>
+                                      ) : (
+                                        <span>Gönder</span>
+                                      )}
+                                    </button>
+                                  </div>
                                 </div>
-                              </div>
-                            </Form>
-                          )}
+                              </Form>
+                            )
+                          }}
                         </Formik>
                       )
                     })}
