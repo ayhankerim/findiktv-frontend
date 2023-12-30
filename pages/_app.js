@@ -86,12 +86,14 @@ const MyApp = ({
       />
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
-          <SessionProvider session={session}>
-            {/* Display the content */}
-            <div className={`${dosis.variable} font-sans`}>
-              <Component {...pageProps} />
-            </div>
-          </SessionProvider>
+          {() => (
+            <SessionProvider session={session}>
+              {/* Display the content */}
+              <div className={`${dosis.variable} font-sans`}>
+                <Component {...pageProps} />
+              </div>
+            </SessionProvider>
+          )}
         </PersistGate>
       </Provider>
     </>
