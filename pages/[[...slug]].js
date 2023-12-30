@@ -56,7 +56,6 @@ const DynamicPage = ({
     dateModified: pageContext.updatedAt,
     tags: [],
   }
-  console.log(pageContext)
   return (
     <Layout global={global} pageContext={pageContext}>
       {/* Add meta tags for SEO*/}
