@@ -21,7 +21,7 @@ function classNames(...classes) {
 const Comments = ({ article, product, slug, city }) => {
   const dispatch = useDispatch()
   const reply = useSelector((state) => state.comment.reply)
-  const [commentLimit, setCommentLimit] = useState(15)
+  const [commentLimit, setCommentLimit] = useState(5)
   const userData = useSelector((state) => state.user.userData)
   const { data: session } = useSession()
   const { mutate } = useSWRConfig()
@@ -356,11 +356,11 @@ const Comments = ({ article, product, slug, city }) => {
             <div className="flex flex-col md:flex-row justify-between items-center border-b border-midgray">
               <h4 className="font-semibold text-base text-midgray">Yorumlar</h4>
               <div className="flex flex-col md:flex-row text-center">
-                {commentArray.meta.pagination.total > 15 && (
+                {commentArray.meta.pagination.total > 5 && (
                   <div className="flex flex-row gap-2 mr-4 font-light text-sm text-midgray">
                     Son
                     <ul className="flex items-center gap-1 text-secondary">
-                      {[15, 25, 50, 100]
+                      {[5, 15, 25, 50, 100]
                         .filter(
                           (limits) =>
                             commentArray.meta.pagination.total >= limits
@@ -369,8 +369,10 @@ const Comments = ({ article, product, slug, city }) => {
                           <li className="flex items-center gap-2" key={limit}>
                             <button
                               className={classNames(
-                                commentLimit === limit ? "font-semibold" : "",
-                                "hover:underline"
+                                commentLimit === limit
+                                  ? "bg-secondary text-white px-2"
+                                  : "hover:underline",
+                                ""
                               )}
                               onClick={() => setCommentLimit(limit)}
                             >
@@ -381,7 +383,7 @@ const Comments = ({ article, product, slug, city }) => {
                             )}
                           </li>
                         ))}
-                      {commentArray.meta.pagination.total > 100 && (
+                      {/* {commentArray.meta.pagination.total > 100 && (
                         <li className="flex items-center gap-2">
                           <TbPoint className="text-midgray" />
                           <Link
@@ -391,7 +393,7 @@ const Comments = ({ article, product, slug, city }) => {
                             Tümü
                           </Link>
                         </li>
-                      )}
+                      )} */}
                     </ul>
                     yorum göster
                   </div>
@@ -403,6 +405,41 @@ const Comments = ({ article, product, slug, city }) => {
             </div>
             <div className="flex flex-col gap-4">
               {CommentItems(commentsAsTree)}
+            </div>
+            <div className="flex flex-col md:justify-end md:flex-row text-center">
+              {commentArray.meta.pagination.total > 5 && (
+                <div className="flex flex-row justify-center gap-2 mr-4 font-light text-sm text-midgray">
+                  Son
+                  <ul className="flex items-center gap-1 text-secondary">
+                    {[5, 15, 25, 50, 100]
+                      .filter(
+                        (limits) => commentArray.meta.pagination.total >= limits
+                      )
+                      .map((limit, i, limits) => (
+                        <li className="flex items-center gap-2" key={limit}>
+                          <button
+                            className={classNames(
+                              commentLimit === limit
+                                ? "bg-secondary text-white px-2"
+                                : "hover:underline",
+                              ""
+                            )}
+                            onClick={() => setCommentLimit(limit)}
+                          >
+                            {limit}
+                          </button>
+                          {i + 1 != limits.length && (
+                            <TbPoint className="text-midgray" />
+                          )}
+                        </li>
+                      ))}
+                  </ul>
+                  yorum göster
+                </div>
+              )}
+              <div className="font-semibold text-sm text-midgray">
+                {commentArray.meta.pagination.total} yorum
+              </div>
             </div>
             {/* {commentArray &&
               commentArray.meta.pagination.total > commentLimit && (
