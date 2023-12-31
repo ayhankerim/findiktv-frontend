@@ -17,6 +17,61 @@ function currencyFormatter(value) {
   return amount
 }
 const CityPriceList = ({ product, priceData, defaultPriceData }) => {
+  const fiskobirlik = {
+    title: "Fiskobirlik",
+    slug: null,
+    data: [
+      {
+        name: "Sivri",
+        date1: "2023-12-31T19:20:57.000Z",
+        date2: "2023-12-31T16:24:05.000Z",
+        value1: 90,
+        value2: 88,
+      },
+      {
+        name: "Levant",
+        date1: "2023-12-31T19:20:57.000Z",
+        date2: "2023-12-31T16:24:05.000Z",
+        value1: 92.5,
+        value2: 90.5,
+      },
+      {
+        name: "Giresun",
+        date1: "2023-12-31T19:20:57.000Z",
+        date2: "2023-12-31T16:24:05.000Z",
+        value1: 95,
+        value2: 92.5,
+      },
+    ],
+  }
+  const ferrero = {
+    title: "Ferrero",
+    slug: null,
+    data: [
+      {
+        name: "Sivri",
+        date1: null,
+        date2: null,
+        value1: null,
+        value2: null,
+      },
+      {
+        name: "Levant",
+        date1: "2023-12-31T19:20:57.000Z",
+        date2: "2023-12-31T16:24:05.000Z",
+        value1: 97,
+        value2: 95,
+      },
+      {
+        name: "Giresun",
+        date1: null,
+        date2: null,
+        value1: null,
+        value2: null,
+      },
+    ],
+  }
+  const newPriceData = [...priceData, fiskobirlik, ferrero]
   return (
     <div className="flex flex-col">
       <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -46,8 +101,8 @@ const CityPriceList = ({ product, priceData, defaultPriceData }) => {
                 </tr>
               </thead>
               <tbody>
-                {priceData ? (
-                  priceData.map((item, i) => (
+                {newPriceData ? (
+                  newPriceData.map((item, i) => (
                     <tr
                       key={i}
                       className={classNames(
@@ -56,14 +111,23 @@ const CityPriceList = ({ product, priceData, defaultPriceData }) => {
                       )}
                     >
                       <td className="text-sm font-medium text-gray-900 px-2 sm:px-4 py-1 sm:py-2 text-left">
-                        <Link
-                          className="underline hover:no-underline"
-                          href={
-                            "/urunler/" + product + "/" + item.slug + "/fiyati"
-                          }
-                        >
-                          {item.title}
-                        </Link>
+                        {item.slug ? (
+                          <Link
+                            className="underline hover:no-underline"
+                            href={
+                              "/urunler/" +
+                              product +
+                              "/" +
+                              item.slug +
+                              "/fiyati"
+                            }
+                            title="Detaylar için tıkla"
+                          >
+                            {item.title}
+                          </Link>
+                        ) : (
+                          <span>{item.title}</span>
+                        )}
                       </td>
                       {item.data.map((priceType, i) => (
                         <td
@@ -71,7 +135,7 @@ const CityPriceList = ({ product, priceData, defaultPriceData }) => {
                           className="text-sm text-gray-900 px-2 sm:px-4 py-1 sm:py-2 text-right align-middle"
                         >
                           <Tooltip
-                            orientation={i === 2 ? "left" : "bottom"}
+                            orientation={i === 2 ? "left" : "top"}
                             version="clean"
                             tooltipText={`${(Moment(priceType.date1) >
                             Moment().subtract(15, "days")
@@ -116,10 +180,6 @@ const CityPriceList = ({ product, priceData, defaultPriceData }) => {
                 )}
               </tbody>
             </table>
-            <p className="text-sm text-midgray py-4 pl-4">
-              İlgili şehirdeki son ortalama fiyat verisidir. Detay için şehir
-              adına tıklayınız.
-            </p>
           </div>
         </div>
       </div>
