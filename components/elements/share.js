@@ -6,9 +6,9 @@ import {
   FaTelegramPlane,
   FaWhatsapp,
   FaFacebookF,
-  FaTwitter,
   FaComment,
 } from "react-icons/fa"
+import { FaXTwitter } from "react-icons/fa6"
 import { SiGooglenews } from "react-icons/si"
 
 const ArticleDates = ({ position, title, slug }) => {
@@ -73,10 +73,10 @@ const ArticleDates = ({ position, title, slug }) => {
               onClick={() => {
                 ;("gtag('event', 'detay', {'event_category': 'share','event_label': 'twitter'});")
               }}
-              className="flex flex-row items-center text-xs hover:bg-[#1DA1F2] text-[#1DA1F2] hover:text-white border border-[#1DA1F2] transition duration-150 ease-out hover:ease-in px-2 py-1 rounded"
+              className="flex flex-row items-center text-xs hover:bg-[#000000] text-[#000000] hover:text-white border border-[#000000] transition duration-150 ease-out hover:ease-in px-2 py-1 rounded"
               passHref
             >
-              <FaTwitter className="inline-flex text-base" />
+              <FaXTwitter className="inline-flex text-base" />
             </Link>
             <button
               type="button"
@@ -162,10 +162,10 @@ const ArticleDates = ({ position, title, slug }) => {
               onClick={() => {
                 ;("gtag('event', 'detay', {'event_category': 'share','event_label': 'twitter'});")
               }}
-              className="flex flex-row items-center text-xs hover:bg-[#1DA1F2] text-[#1DA1F2] hover:text-white border border-[#1DA1F2] transition duration-150 ease-out hover:ease-in px-2 py-1 rounded"
+              className="flex flex-row items-center text-xs hover:bg-[#000000] text-[#000000] hover:text-white border border-[#000000] transition duration-150 ease-out hover:ease-in px-2 py-1 rounded"
               passHref
             >
-              <FaTwitter className="inline-flex text-base" />
+              <FaXTwitter className="inline-flex text-base" />
             </Link>
             <button
               type="button"

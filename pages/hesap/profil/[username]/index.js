@@ -17,10 +17,10 @@ import { MdOutlineLocationOn, MdAddChart } from "react-icons/md"
 import {
   FaTelegramPlane,
   FaFacebookF,
-  FaTwitter,
   FaLinkedinIn,
   FaYoutube,
 } from "react-icons/fa"
+import { FaXTwitter } from "react-icons/fa6"
 import Avatar from "@/components/elements/profile/avatar"
 import Moment from "moment"
 import "moment/locale/tr"
@@ -386,9 +386,9 @@ const DynamicUsers = ({ userContent, advertisement, global, userContext }) => {
                               href={item.Link}
                               title={item.Account}
                               rel="nofollow"
-                              className="text-midgray border rounded px-3 py-1 text-base hover:text-white hover:border-[#1DA1F2] hover:bg-[#1DA1F2]"
+                              className="text-midgray border rounded px-3 py-1 text-base hover:text-white hover:border-[#000000] hover:bg-[#000000]"
                             >
-                              <FaTwitter />
+                              <FaXTwitter />
                             </Link>
                           )}
                           {item.Account === "LinkedIn" && (
