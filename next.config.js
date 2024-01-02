@@ -135,6 +135,17 @@ const nextConfig = {
 module.exports = nextConfig
 module.exports = withSentryConfig(
   module.exports,
-  { silent: true },
-  { hideSourcemaps: true }
+  {
+    silent: true,
+    org: "sentry-silhouetted-81493",
+    project: "findiktv-frontend",
+  },
+  {
+    widenClientFileUpload: true,
+    transpileClientSDK: true,
+    tunnelRoute: "/monitoring",
+    hideSourceMaps: true,
+    disableLogger: true,
+    automaticVercelMonitors: true,
+  }
 )
