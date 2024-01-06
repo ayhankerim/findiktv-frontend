@@ -1,6 +1,7 @@
 import { fetchAPI } from "@/utils/api"
 import Moment from "moment"
 import "moment/locale/tr"
+import { cloudflareLoader } from "@/utils/cloudflareLoader"
 
 function generateSiteMap({ productArray }) {
   return `<?xml version="1.0" encoding="UTF-8"?>
@@ -14,7 +15,7 @@ function generateSiteMap({ productArray }) {
           <changefreq>hourly</changefreq>
           <priority>0.9</priority>
           <image:image>
-            <image:loc>${post.productImg}</image:loc>
+            <image:loc>${cloudflareLoader(post.productImg, 900, 75)}</image:loc>
             <image:title>${post.productTitle}</image:title>
           </image:image>
          </url>
@@ -22,9 +23,9 @@ function generateSiteMap({ productArray }) {
           <loc>${`${process.env.NEXT_PUBLIC_SITE_URL}/urunler/${post.product}/serbest-piyasa-fiyatlari`}</loc>
           <lastmod>${Moment(post.date).toISOString()}</lastmod>
           <changefreq>hourly</changefreq>
-          <priority>0.9</priority>
+          <priority>0.8</priority>
           <image:image>
-            <image:loc>${post.productImg}</image:loc>
+            <image:loc>${cloudflareLoader(post.productImg, 900, 75)}</image:loc>
             <image:title>${post.productTitle}</image:title>
           </image:image>
          </url>
@@ -32,9 +33,9 @@ function generateSiteMap({ productArray }) {
           <loc>${`${process.env.NEXT_PUBLIC_SITE_URL}/urunler/${post.product}/tmo-fiyatlari`}</loc>
           <lastmod>${Moment(post.date).toISOString()}</lastmod>
           <changefreq>hourly</changefreq>
-          <priority>0.9</priority>
+          <priority>0.7</priority>
           <image:image>
-            <image:loc>${post.productImg}</image:loc>
+            <image:loc>${cloudflareLoader(post.productImg, 900, 75)}</image:loc>
             <image:title>${post.productTitle}</image:title>
           </image:image>
          </url>

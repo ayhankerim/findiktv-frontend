@@ -1,6 +1,7 @@
 import { fetchAPI } from "@/utils/api"
 import Moment from "moment"
 import "moment/locale/tr"
+import { cloudflareLoader } from "@/utils/cloudflareLoader"
 
 function generateSiteMap({ productArray }) {
   return `<?xml version="1.0" encoding="UTF-8"?>
@@ -14,7 +15,7 @@ function generateSiteMap({ productArray }) {
           <changefreq>hourly</changefreq>
           <priority>0.9</priority>
           <image:image>
-            <image:loc>${post.cityImg}</image:loc>
+            <image:loc>${cloudflareLoader(post.cityImg, 900, 75)}</image:loc>
             <image:title>${post.cityTitle}</image:title>
           </image:image>
          </url>

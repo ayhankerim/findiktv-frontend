@@ -197,7 +197,7 @@ const Navbar = ({ navbar, pageContext }) => {
           <div className="flex flex-row items-center relative bottom-[-2px]">
             <ul className="hidden list-none md:flex flex-row gap-2 lg:gap-4 items-baseline">
               <li className="border-b-2 border-transparent">
-                <Link title="Ara" href="#" passHref>
+                <Link title="Ara" href="/arac/arama">
                   <div className="text-xl font-bold hover:text-secondary px-2 py-1">
                     <MdOutlineSearch />
                   </div>
