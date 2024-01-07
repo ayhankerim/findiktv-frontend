@@ -23,24 +23,24 @@ const CityPriceList = ({ product, priceData, defaultPriceData }) => {
     data: [
       {
         name: "Sivri",
-        date1: "2023-12-31T19:20:57.000Z",
+        date1: "2024-01-05T16:20:57.000Z",
         date2: "2023-12-31T16:24:05.000Z",
-        value1: 90,
-        value2: 88,
+        value1: 97,
+        value2: 90,
       },
       {
         name: "Levant",
-        date1: "2023-12-31T19:20:57.000Z",
+        date1: "2024-01-05T16:20:57.000Z",
         date2: "2023-12-31T16:24:05.000Z",
-        value1: 92.5,
-        value2: 90.5,
+        value1: 98.5,
+        value2: 92.5,
       },
       {
         name: "Giresun",
-        date1: "2023-12-31T19:20:57.000Z",
+        date1: "2024-01-05T16:20:57.000Z",
         date2: "2023-12-31T16:24:05.000Z",
-        value1: 95,
-        value2: 92.5,
+        value1: 100,
+        value2: 95,
       },
     ],
   }
