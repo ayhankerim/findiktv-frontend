@@ -8,6 +8,7 @@ import {
   FaFacebookF,
   FaComment,
 } from "react-icons/fa"
+import { sendGTMEvent } from "@next/third-parties/google"
 import { FaXTwitter } from "react-icons/fa6"
 import { SiGooglenews } from "react-icons/si"
 
@@ -28,9 +29,9 @@ const ArticleDates = ({ position, title, slug }) => {
               href={`https://t.me/share/url?text=${title}${slug}&url=${slug}`}
               target="_blank"
               title="telegram ile paylaş"
-              onClick={() => {
-                ;("gtag('event', 'detay', {'event_category': 'share','event_label': 'telegram'});")
-              }}
+              onClick={() =>
+                sendGTMEvent({ event: "share", value: "telegram" })
+              }
               className="flex flex-row items-center text-xs hover:bg-[#0088cc] text-[#0088cc] hover:text-white border border-[#0088cc] transition duration-150 ease-out hover:ease-in px-2 py-1 rounded"
               passHref
             >
@@ -43,9 +44,9 @@ const ArticleDates = ({ position, title, slug }) => {
               href={`https://api.whatsapp.com/send?text=${title}${slug}&url=${slug}`}
               target="_blank"
               title="Whatsapp ile paylaş"
-              onClick={() => {
-                ;("gtag('event', 'detay', {'event_category': 'share','event_label': 'whatsapp'});")
-              }}
+              onClick={() =>
+                sendGTMEvent({ event: "share", value: "whatsapp" })
+              }
               className="flex flex-row items-center text-xs hover:bg-[#075e54] text-[#075e54] hover:text-white border border-[#075e54] transition duration-150 ease-out hover:ease-in px-2 py-1 rounded"
               passHref
             >
@@ -58,9 +59,9 @@ const ArticleDates = ({ position, title, slug }) => {
               href={`https://www.facebook.com/sharer/sharer.php?u=${slug}&quote=${title}`}
               target="_blank"
               title="Facebook ile paylaş"
-              onClick={() => {
-                ;("gtag('event', 'detay', {'event_category': 'share','event_label': 'facebook'});")
-              }}
+              onClick={() =>
+                sendGTMEvent({ event: "share", value: "facebook" })
+              }
               className="flex flex-row items-center text-xs hover:bg-[#4267B2] text-[#4267B2] hover:text-white border border-[#4267B2] transition duration-150 ease-out hover:ease-in px-2 py-1 rounded"
               passHref
             >
@@ -70,9 +71,7 @@ const ArticleDates = ({ position, title, slug }) => {
               href={`https://twitter.com/intent/tweet?text=${title}&url=${slug}`}
               target="_blank"
               title="Twitter ile paylaş"
-              onClick={() => {
-                ;("gtag('event', 'detay', {'event_category': 'share','event_label': 'twitter'});")
-              }}
+              onClick={() => sendGTMEvent({ event: "share", value: "twitter" })}
               className="flex flex-row items-center text-xs hover:bg-[#000000] text-[#000000] hover:text-white border border-[#000000] transition duration-150 ease-out hover:ease-in px-2 py-1 rounded"
               passHref
             >
@@ -81,10 +80,9 @@ const ArticleDates = ({ position, title, slug }) => {
             <button
               type="button"
               title="Yorumlar"
-              onClick={() => {
-                scrolltoComments()
-                ;("gtag('event', 'detay', {'event_category': 'share','event_label': 'comments'});")
-              }}
+              onClick={() =>
+                sendGTMEvent({ event: "share", value: "comments" })
+              }
               className="flex flex-row items-center text-xs bg-[#ff9d00] hover:bg-white hover:text-[#ff9d00] text-white border border-[#ff9d00] transition duration-150 ease-out hover:ease-in px-2 py-1 rounded"
             >
               <FaComment className="inline-flex text-base mr-2" />
@@ -97,9 +95,9 @@ const ArticleDates = ({ position, title, slug }) => {
               href="https://news.google.com/publications/CAAiEATMSmX53ZjtQ4kcyzxQ1_IqFAgKIhAEzEpl-d2Y7UOJHMs8UNfy"
               target="_blank"
               title="Google News'e Abone Ol"
-              onClick={() => {
-                ;("gtag('event', 'detay', {'event_category': 'share','event_label': 'googlenews'});")
-              }}
+              onClick={() =>
+                sendGTMEvent({ event: "share", value: "googlenews" })
+              }
               className="flex flex-row items-center text-xs bg-[#DB4437] hover:bg-white hover:text-[#DB4437] text-white border border-[#DB4437] transition duration-150 ease-out hover:ease-in px-2 py-1 rounded"
               passHref
             >
@@ -117,9 +115,9 @@ const ArticleDates = ({ position, title, slug }) => {
               href={`https://t.me/share/url?text=${title}${slug}&url=${slug}`}
               target="_blank"
               title="telegram ile paylaş"
-              onClick={() => {
-                ;("gtag('event', 'detay', {'event_category': 'share','event_label': 'telegram'});")
-              }}
+              onClick={() =>
+                sendGTMEvent({ event: "share", value: "telegram" })
+              }
               className="flex flex-row items-center text-xs hover:bg-[#0088cc] text-[#0088cc] hover:text-white border border-[#0088cc] transition duration-150 ease-out hover:ease-in px-2 py-1 rounded"
               passHref
             >
@@ -132,9 +130,9 @@ const ArticleDates = ({ position, title, slug }) => {
               href={`https://api.whatsapp.com/send?text=${title}${slug}&url=${slug}`}
               target="_blank"
               title="Whatsapp ile paylaş"
-              onClick={() => {
-                ;("gtag('event', 'detay', {'event_category': 'share','event_label': 'whatsapp'});")
-              }}
+              onClick={() =>
+                sendGTMEvent({ event: "share", value: "whatsapp" })
+              }
               className="flex flex-row items-center text-xs hover:bg-[#075e54] text-[#075e54] hover:text-white border border-[#075e54] transition duration-150 ease-out hover:ease-in px-2 py-1 rounded"
               passHref
             >
@@ -147,9 +145,9 @@ const ArticleDates = ({ position, title, slug }) => {
               href={`https://www.facebook.com/sharer/sharer.php?u=${slug}&quote=${title}`}
               target="_blank"
               title="Facebook ile paylaş"
-              onClick={() => {
-                ;("gtag('event', 'detay', {'event_category': 'share','event_label': 'facebook'});")
-              }}
+              onClick={() =>
+                sendGTMEvent({ event: "share", value: "facebook" })
+              }
               className="flex flex-row items-center text-xs hover:bg-[#4267B2] text-[#4267B2] hover:text-white border border-[#4267B2] transition duration-150 ease-out hover:ease-in px-2 py-1 rounded"
               passHref
             >
@@ -159,9 +157,7 @@ const ArticleDates = ({ position, title, slug }) => {
               href={`https://twitter.com/intent/tweet?text=${title}&url=${slug}`}
               target="_blank"
               title="Twitter ile paylaş"
-              onClick={() => {
-                ;("gtag('event', 'detay', {'event_category': 'share','event_label': 'twitter'});")
-              }}
+              onClick={() => sendGTMEvent({ event: "share", value: "twitter" })}
               className="flex flex-row items-center text-xs hover:bg-[#000000] text-[#000000] hover:text-white border border-[#000000] transition duration-150 ease-out hover:ease-in px-2 py-1 rounded"
               passHref
             >
@@ -170,10 +166,9 @@ const ArticleDates = ({ position, title, slug }) => {
             <button
               type="button"
               title="Yorumlar"
-              onClick={() => {
-                scrolltoComments()
-                ;("gtag('event', 'detay', {'event_category': 'share','event_label': 'comments'});")
-              }}
+              onClick={() =>
+                sendGTMEvent({ event: "share", value: "comments" })
+              }
               className="flex flex-row items-center text-xs bg-[#ff9d00] hover:bg-white hover:text-[#ff9d00] text-white border border-[#ff9d00] transition duration-150 ease-out hover:ease-in px-2 py-1 rounded"
             >
               <FaComment className="inline-flex text-base mr-2" />
