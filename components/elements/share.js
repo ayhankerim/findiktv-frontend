@@ -1,6 +1,5 @@
 import React from "react"
 import { useSelector } from "react-redux"
-import { useRouter } from "next/router"
 import Link from "next/link"
 import {
   FaTelegramPlane,
@@ -14,7 +13,6 @@ import { SiGooglenews } from "react-icons/si"
 
 const ArticleDates = ({ position, title, slug }) => {
   const countedComment = useSelector((state) => state.comment.countedComment)
-  const { locale } = useRouter()
   function scrolltoComments() {
     document.querySelector(".commentSection").scrollIntoView({
       behavior: "smooth",
@@ -24,7 +22,7 @@ const ArticleDates = ({ position, title, slug }) => {
     case "articleTop":
       return (
         <div className="flex flex-col md:flex-row justify-between text-sm gap-2 mt-4 mb-2">
-          <div className="flex flex-wrap justify-center sm:justifiy-start gap-1">
+          <div className="flex flex-wrap justify-center sm:justify-start gap-1">
             <Link
               href={`https://t.me/share/url?text=${title}${slug}&url=${slug}`}
               target="_blank"
@@ -80,16 +78,17 @@ const ArticleDates = ({ position, title, slug }) => {
             <button
               type="button"
               title="Yorumlar"
-              onClick={() =>
+              onClick={() => {
+                scrolltoComments()
                 sendGTMEvent({ event: "share", value: "comments" })
-              }
+              }}
               className="flex flex-row items-center text-xs bg-[#ff9d00] hover:bg-white hover:text-[#ff9d00] text-white border border-[#ff9d00] transition duration-150 ease-out hover:ease-in px-2 py-1 rounded"
             >
               <FaComment className="inline-flex text-base mr-2" />
               <span className="font-bold">{countedComment}</span>
             </button>
           </div>
-          <div className="flex flex-row justify-center sm:justifiy-start items-center gap-2 text-midgray">
+          <div className="flex flex-row justify-center sm:justify-start items-center gap-2 text-midgray">
             <span>Abone Ol</span>
             <Link
               href="https://news.google.com/publications/CAAiEATMSmX53ZjtQ4kcyzxQ1_IqFAgKIhAEzEpl-d2Y7UOJHMs8UNfy"
@@ -109,8 +108,8 @@ const ArticleDates = ({ position, title, slug }) => {
       )
     case "articleBottom":
       return (
-        <div className="flex flex-col sm:flex-row justify-between text-sm mt-4 mb-2">
-          <div className="flex flex-wrap justify-center sm:justifiy-start gap-1">
+        <div className="flex flex-col sm:flex-row justify-end text-sm mt-4 mb-2">
+          <div className="flex flex-wrap justify-center sm:justify-end gap-1">
             <Link
               href={`https://t.me/share/url?text=${title}${slug}&url=${slug}`}
               target="_blank"
@@ -166,9 +165,10 @@ const ArticleDates = ({ position, title, slug }) => {
             <button
               type="button"
               title="Yorumlar"
-              onClick={() =>
+              onClick={() => {
+                scrolltoComments()
                 sendGTMEvent({ event: "share", value: "comments" })
-              }
+              }}
               className="flex flex-row items-center text-xs bg-[#ff9d00] hover:bg-white hover:text-[#ff9d00] text-white border border-[#ff9d00] transition duration-150 ease-out hover:ease-in px-2 py-1 rounded"
             >
               <FaComment className="inline-flex text-base mr-2" />

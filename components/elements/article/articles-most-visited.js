@@ -59,16 +59,23 @@ const ArticleMostVisited = ({ size, slug }) => {
                 className="flex flex-col px-2 hover:bg-lightgray"
               >
                 <div className="flex items-center justify-start py-1 gap-2">
-                  <Image
-                    src={
-                      article.attributes.image.data.attributes.formats.thumbnail
-                        .url
-                    }
-                    alt={article.attributes.title}
-                    className="h-[auto] w-3/12"
-                    width={91}
-                    height={58}
-                  />
+                  <div className="relative w-[80px] h-[50px]">
+                    <Image
+                      src={
+                        article.attributes.image.data.attributes.formats
+                          .thumbnail.url
+                      }
+                      alt={article.attributes.title}
+                      fill
+                      style={{
+                        objectFit: "cover",
+                        objectPosition: "50% 50%",
+                      }}
+                      sizes="(max-width: 768px) 100vw,
+                        (max-width: 1200px) 50vw,
+                        33vw"
+                    />
+                  </div>
                   <h3 className="w-9/12 font-semibold">
                     {article.attributes.title}
                   </h3>

@@ -4,10 +4,20 @@ import { MdOutlineLocationOn, MdOutlineTag } from "react-icons/md"
 
 const ArticleRelations = ({ cities, tags, title, slug }) => {
   return (
-    <section className="flex flex-col">
-      <div className="flex flex-col sm:flex-row sm:items-center flex-col-reverse justify-between gap-4">
+    <section className={`flex flex-col`}>
+      <div
+        className={`flex ${
+          cities.data.length > 3
+            ? "flex-col"
+            : "flex-col sm:flex-row sm:items-center"
+        } flex-col-reverse justify-between gap-4`}
+      >
         {cities.data.length > 0 && (
-          <div className="flex items-center gap-4">
+          <div
+            className={`flex ${
+              cities.data.length > 3 ? "flex-col" : "items-center"
+            } gap-4`}
+          >
             <h3 className="flex items-center font-semibold text-base text-midgray">
               <MdOutlineLocationOn className="text-sm inline-block mr-2" />{" "}
               ŞEHİRLER
