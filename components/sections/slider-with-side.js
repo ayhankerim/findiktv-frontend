@@ -31,7 +31,7 @@ const SliderWithSide = ({ data, position = "sidebar" }) => {
           $eq: data.FeaturedOnly,
         },
       },
-      fields: ["slug", "title"],
+      fields: ["slug", "title", "priority", "publishedAt"],
       populate: ["homepage_image"],
       sort: ["id:desc"],
       pagination: {
@@ -39,7 +39,36 @@ const SliderWithSide = ({ data, position = "sidebar" }) => {
         limit: data.SlideLimit,
       },
     }).then((data) => {
-      setSliderPosts(data.data)
+      const updatedDataArray = data.data.map((item) => {
+        return {
+          ...item,
+          attributes: {
+            ...item.attributes,
+            publishedAt: Moment(item.attributes.publishedAt)
+              .hours(0)
+              .minutes(0)
+              .seconds(0)
+              .milliseconds(0)
+              .format(),
+          },
+        }
+      })
+      const sortedData = updatedDataArray.sort((a, b) => {
+        const priorityA = a.attributes.priority
+        const priorityB = b.attributes.priority
+        const publishedAtA = a.attributes.publishedAt
+        const publishedAtB = b.attributes.publishedAt
+        if (publishedAtA === publishedAtB) {
+          if (priorityA < priorityB) {
+            return -1
+          }
+          if (priorityA > priorityB) {
+            return 1
+          }
+        }
+        return 0
+      })
+      setSliderPosts(sortedData)
     })
     fetchAPI("/articles", {
       filters: {
@@ -162,7 +191,7 @@ const SliderWithSide = ({ data, position = "sidebar" }) => {
             <article className="" key={article.id}>
               <Link
                 href={`/haber/${article.id}/${article.attributes.slug}`}
-                title={article.attributes.title}
+                title={article.attributes.publishedAt}
                 target="_blank"
               >
                 <NextImage
