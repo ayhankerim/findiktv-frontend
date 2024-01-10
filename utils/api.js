@@ -365,6 +365,24 @@ export async function getArticleData({ slug, locale, id, preview }) {
                     }
                   }
                 }
+                contentSections {
+                  __typename
+                  ... on ComponentSectionsVideoEmbed {
+                    id
+                    url
+                  }
+                  ... on ComponentSectionsRichText {
+                    id
+                    content
+                  }
+                  ... on ComponentSectionsArticleSection {
+                    id
+                    ArticleLimit
+                    ArticleOffset
+                    FeaturedOnly
+                    SectionTitle
+                  }
+                }
                 locale
                 localizations {
                   data {

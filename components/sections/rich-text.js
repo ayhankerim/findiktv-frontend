@@ -3,7 +3,7 @@ import PropTypes from "prop-types"
 const RichText = ({ data }) => {
   return (
     <article
-      className="NewsContent container py-12"
+      className="NewsContent text-base"
       dangerouslySetInnerHTML={{ __html: data.content }}
     />
   )

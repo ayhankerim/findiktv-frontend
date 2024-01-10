@@ -16,6 +16,7 @@ import {
 } from "@/utils/api"
 import { getCitiesPrice, getDefaultPriceValues } from "@/utils/api-prices"
 import Layout from "@/components/layout"
+import Sections from "@/components/sections-articles"
 import Seo from "@/components/elements/seo"
 import ArticleSidebar from "@/components/elements/article/article-sidebar"
 import ModuleLoader from "@/components/elements/module-loader"
@@ -85,9 +86,11 @@ const CityPriceList = dynamic(
 )
 
 const DynamicArticle = ({
+  sections,
   articleContent,
   advertisement,
   metadata,
+  preview,
   global,
   articleContext,
   priceCitiesData,
@@ -99,11 +102,14 @@ const DynamicArticle = ({
     advertisement && dispatch(updateAds(advertisement))
   }, [advertisement, dispatch])
   // Check if the required data was provided
-  if (!router.isFallback && !articleContent.content?.length) {
-    return {
-      notFound: true,
-    }
-  }
+  // if (
+  //   !router.isFallback &&
+  //   (!articleContent.content?.length || !sections?.length)
+  // ) {
+  //   return {
+  //     notFound: true,
+  //   }
+  // }
 
   // Loading screen (only possible in preview mode)
   if (router.isFallback) {
@@ -213,6 +219,7 @@ const DynamicArticle = ({
                 }}
               />
             </div>
+            <Sections sections={sections} preview={preview} />
             <article
               className="NewsContent text-base"
               dangerouslySetInnerHTML={contentWithAds(
@@ -324,6 +331,7 @@ export async function getStaticProps(context) {
     title,
     summary,
     content,
+    contentSections,
     publishedAt,
     updatedAt,
     image,
@@ -393,6 +401,7 @@ export async function getStaticProps(context) {
     props: {
       preview,
       articleContent: articleContent,
+      sections: contentSections,
       advertisement: advertisement,
       metadata,
       global: globalLocale.data,

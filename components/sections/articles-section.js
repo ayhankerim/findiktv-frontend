@@ -4,7 +4,6 @@ import Link from "next/link"
 import Image from "next/image"
 import { fetchAPI } from "@/utils/api"
 import { categoryColor } from "@/utils/category-color"
-import { MdOutlineWatchLater } from "react-icons/md"
 import "slick-carousel/slick/slick.css"
 import styles from "@/styles/latest-articles.module.scss"
 
@@ -12,10 +11,8 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ")
 }
 
-const ArticleSection = ({ data, position = "bottom" }) => {
-  const [sliderposts, setSliderPosts] = useState([])
+const ArticleSection = ({ data, type = "page", position = "bottom" }) => {
   const [mostVisiteds, setMostVisiteds] = useState([])
-
   useEffect(() => {
     fetchAPI("/articles", {
       filters: {
@@ -54,7 +51,11 @@ const ArticleSection = ({ data, position = "bottom" }) => {
     })
   }, [data.ArticleLimit, data.ArticleOffset, data.FeaturedOnly])
   return (
-    <div className="container gap-2 align-top pb-2">
+    <div
+      className={`${
+        type === "articles" ? "" : "container gap-2"
+      } align-top pb-2`}
+    >
       {data.SectionTitle && (
         <div className="flex flex-row items-center justify-between border-b border-secondary/20 relative mb-2">
           <h4 className="font-semibold text-base text-midgray">
