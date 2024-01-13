@@ -1,13 +1,15 @@
 import { useRouter } from "next/router"
 import VideoEmbed from "@/components/sections/video-embed"
-import RichText from "./sections/rich-text"
-import ArticleSection from "./sections/articles-section"
+import RichText from "@/components/sections/rich-text"
+import ArticleSection from "@/components/sections/articles-section"
+import CityPriceList from "@/components/sections/city-price-list"
 
 // Map Strapi sections to section components
 const sectionComponents = {
   ComponentSectionsVideoEmbed: VideoEmbed,
   ComponentSectionsRichText: RichText,
   ComponentSectionsArticleSection: ArticleSection,
+  ComponentSectionsCityPriceList: CityPriceList,
 }
 
 // Display a section individually

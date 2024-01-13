@@ -382,6 +382,23 @@ export async function getArticleData({ slug, locale, id, preview }) {
                     FeaturedOnly
                     SectionTitle
                   }
+                  ... on ComponentSectionsCityPriceList {
+                    id
+                    title
+                    description
+                    product{
+                      data {
+                        id
+                        attributes {
+                          slug
+                        }
+                      }
+                    }
+                    date
+                    version
+                    priceType
+                    approvalStatus
+                  }
                 }
                 locale
                 localizations {
