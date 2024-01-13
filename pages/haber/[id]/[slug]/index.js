@@ -14,7 +14,6 @@ import {
   fetchAPI,
   getGlobalData,
 } from "@/utils/api"
-import { getCitiesPrice, getDefaultPriceValues } from "@/utils/api-prices"
 import Layout from "@/components/layout"
 import Sections from "@/components/sections-articles"
 import Seo from "@/components/elements/seo"
@@ -78,12 +77,6 @@ const LatestArticles = dynamic(
     ssr: false,
   }
 )
-const CityPriceList = dynamic(
-  () => import("@/components/elements/price/city-price-list-new"),
-  {
-    loading: () => <Loader cssClass="h-[60px]" />,
-  }
-)
 
 const DynamicArticle = ({
   sections,
@@ -93,30 +86,15 @@ const DynamicArticle = ({
   preview,
   global,
   articleContext,
-  priceCitiesData,
-  priceDefaultsData,
 }) => {
   const router = useRouter()
   const dispatch = useDispatch()
   useEffect(() => {
     advertisement && dispatch(updateAds(advertisement))
   }, [advertisement, dispatch])
-  // Check if the required data was provided
-  // if (
-  //   !router.isFallback &&
-  //   (!articleContent.content?.length || !sections?.length)
-  // ) {
-  //   return {
-  //     notFound: true,
-  //   }
-  // }
-
-  // Loading screen (only possible in preview mode)
   if (router.isFallback) {
     return <div className="container">Yükleniyor...</div>
   }
-
-  // Merge default site SEO settings with page specific SEO settings
   if (metadata.shareImage?.data == null) {
     delete metadata.shareImage
   }
@@ -149,10 +127,7 @@ const DynamicArticle = ({
   }
   return (
     <Layout global={global} pageContext={articleContext}>
-      {/* Add meta tags for SEO*/}
       <Seo metadata={metadataWithDefaults} others={articleSeoData} />
-      {/* Display content sections */}
-      {/* <Sections sections={sections} preview={preview} /> */}
       <main className="container gap-4 pt-2 bg-white">
         <div className="w-full">
           <Breadcrumb items={breadcrumbElement} />
@@ -201,7 +176,6 @@ const DynamicArticle = ({
         </div>
         <div className="flex flex-col md:flex-row items-start justify-between gap-4 pt-2">
           <div className="flex-1">
-            {/* Featured Image or Video Section*/}
             <div className="relative sm:w-full h-[300px] lg:h-[500px] -mx-4 sm:mx-0 md:mx-0 mb-2">
               <Image
                 src={articleContent.image.data.attributes.url}
@@ -228,14 +202,6 @@ const DynamicArticle = ({
               )}
               // preview={preview}
             />
-            {articleContent.AddPricesComponent &&
-              articleContent.products.data[0] && (
-                <CityPriceList
-                  product={articleContent.products.data[0].attributes.slug}
-                  priceData={priceCitiesData}
-                  defaultPriceData={priceDefaultsData}
-                />
-              )}
             <div className="w-full h-[300px] lg:h-[120px] -mx-2 sm:mx-0">
               <Advertisement position="article-bottom-desktop" />
             </div>
@@ -272,9 +238,7 @@ const DynamicArticle = ({
     </Layout>
   )
 }
-
 export async function getStaticPaths(context) {
-  // Get all pages from Strapi
   const articles = await context.locales.reduce(
     async (currentArticlesPromise, locale) => {
       const currentArticles = await currentArticlesPromise
@@ -290,13 +254,11 @@ export async function getStaticPaths(context) {
   const paths = articles.map((article) => {
     const { id } = article
     const { slug, locale } = article.attributes
-    // Decompose the slug that was saved in Strapi
     const slugArray = !slug ? false : slug
     const idArray = !id ? "" : id
 
     return {
       params: { id: JSON.stringify(idArray), slug: slugArray },
-      // Specify the locale to render
       locale,
     }
   })
@@ -309,9 +271,6 @@ export async function getStaticProps(context) {
 
   const globalLocale = await getGlobalData(locale)
   const advertisement = await getAdsData()
-  //const comments = params ? await getCommentsData(params.id) : null
-  //console.log(JSON.stringify(comments))
-  // Fetch pages. Include drafts if preview mode is on
   const articleData = await getArticleData({
     slug: params.slug,
     id: params.id,
@@ -320,13 +279,11 @@ export async function getStaticProps(context) {
   })
 
   if (articleData == null) {
-    // Giving the page no props will trigger a 404 page
     return {
       notFound: true,
     }
   }
 
-  // We have the required page data, pass it to the page component
   const {
     title,
     summary,
@@ -339,10 +296,8 @@ export async function getStaticProps(context) {
     category,
     cities,
     tags,
-    //metadata,
     localizations,
     slug,
-    AddPricesComponent,
     products,
   } = articleData.attributes
 
@@ -365,7 +320,6 @@ export async function getStaticProps(context) {
     category,
     cities,
     tags,
-    AddPricesComponent,
     products,
   }
 
@@ -376,25 +330,6 @@ export async function getStaticProps(context) {
     slug,
     localizations,
   }
-
-  const priceType = "stockmarket"
-  const priceQualities = ["Sivri", "Levant", "Giresun"]
-  const priceCities =
-    products.data.length > 0 &&
-    AddPricesComponent &&
-    (await getCitiesPrice({
-      product: products.data[0].attributes.slug,
-      priceType: priceType,
-      priceQualities: priceQualities,
-    }))
-  const priceDefaults =
-    products.data.length > 0 &&
-    AddPricesComponent &&
-    (await getDefaultPriceValues({
-      product: products.data[0].attributes.slug,
-      type: priceType,
-      priceQualities: priceQualities,
-    }))
 
   const localizedPaths = getLocalizedPaths(articleContext)
   return {
@@ -409,8 +344,6 @@ export async function getStaticProps(context) {
         ...articleContext,
         localizedPaths,
       },
-      priceCitiesData: priceCities,
-      priceDefaultsData: priceDefaults,
     },
     revalidate: 60 * 60 * 24 * 30,
   }

@@ -356,7 +356,6 @@ export async function getArticleData({ slug, locale, id, preview }) {
                   }
                 }
                 featured
-                AddPricesComponent
                 products {
                   data {
                     id
