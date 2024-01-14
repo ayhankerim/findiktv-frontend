@@ -12,47 +12,41 @@ function classNames(...classes) {
 const ArticleBlock = ({ article, category, index }) => {
   return (
     <>
-      {index > 2 && index % 4 === 0 && (
-        <div className="sm:w-2/2 md:w-2/2 xl:w-2/3 w-full p-2">REKLAM</div>
-      )}
-      <article className="sm:w-1/2 md:w-1/2 xl:w-1/3 w-full p-2">
+      {index > 2 && index % 4 === 0 && <div className="w-full">REKLAM</div>}
+      <article className="w-full">
         <Link
           href={`/haber/${article.id}/${article.attributes.slug}`}
-          className={`${styles.cCard} block bg-lightgray rounded border border-b-2 overflow-hidden`}
+          className={`${styles.cCard} block bg-lightgray rounded overflow-hidden`}
         >
-          <div
-            className="relative border-b-4 pb-36 overflow-hidden"
-            style={{
-              borderColor: categoryColor(category),
-            }}
-          >
+          <div className="relative h-[260px] md:h-[220px] lg:h-[264px] overflow-hidden">
             <Image
               src={
-                article.attributes.image.data.attributes.formats.thumbnail.url
+                article.attributes.image.data.attributes.formats?.small.url
+                  ? article.attributes.image.data.attributes.formats.small.url
+                  : article.attributes.image.data.attributes.url
               }
               alt={article.attributes.title}
               className="absolute inset-0 h-full w-full object-cover"
-              placeholder="blur"
-              blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8/OhZPQAIhwMsJ60FNgAAAABJRU5ErkJggg=="
+              priority={false}
               fill
               sizes="(max-width: 768px) 100vw,
                           (max-width: 800px) 50vw,
                           33vw"
             />
-          </div>
-          <div className="relative p-4">
-            <div
-              className="absolute top-[-1rem] text-white text-sm font-thin right-2 shadow-lg rounded px-1"
-              style={{
-                backgroundColor: categoryColor(category),
-              }}
-            >
-              {Moment(article.attributes.publishedAt)
-                .fromNow(true)
-                .toLocaleUpperCase("tr")}{" "}
-              ÖNCE
+            <div className="absolute bottom-0 bg-white/90 w-full flex items-center min-h-[55px] border-t-4 border-primary py-2 px-4">
+              <div
+                className="absolute top-[-1rem] text-white right-2 rounded px-1"
+                style={{
+                  backgroundColor: categoryColor(category),
+                }}
+              >
+                {Moment(article.attributes.publishedAt)
+                  .fromNow(true)
+                  .toLocaleUpperCase("tr")}{" "}
+                ÖNCE
+              </div>
+              <h3 className="font-semibold">{article.attributes.title}</h3>
             </div>
-            <h3 className="font-semibold">{article.attributes.title}</h3>
           </div>
         </Link>
       </article>

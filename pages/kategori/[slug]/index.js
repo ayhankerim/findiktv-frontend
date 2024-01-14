@@ -21,7 +21,6 @@ const SLIDER_SIZE = 5
 
 const DynamicCategories = ({
   categoryContent,
-  advertisement,
   metadata,
   preview,
   global,
@@ -47,7 +46,18 @@ const DynamicCategories = ({
             },
           },
           fields: ["slug", "title", "summary", "publishedAt"],
-          populate: ["image"],
+          populate: {
+            image: {
+              fields: [
+                "alternativeText",
+                "url",
+                "width",
+                "height",
+                "formats",
+                "mime",
+              ],
+            },
+          },
           sort: ["id:desc"],
           pagination: {
             start: SLIDER_SIZE * (index + 1),
@@ -55,7 +65,7 @@ const DynamicCategories = ({
           },
         },
         {
-          encodeValuesOnly: true, // prettify URL
+          encodeValuesOnly: true,
         }
       )}`,
     fetcher
@@ -71,19 +81,16 @@ const DynamicCategories = ({
   const isRefreshing = isValidating && data && data.length === size
 
   const router = useRouter()
-  // Check if the required data was provided
   if (!router.isFallback && !categoryContent) {
     return {
       notFound: true,
     }
   }
 
-  // Loading screen (only possible in preview mode)
   if (router.isFallback) {
     return <div className="container">Yükleniyor...</div>
   }
 
-  // Merge default site SEO settings with page specific SEO settings
   if (metadata && metadata.shareImage?.data == null) {
     delete metadata.shareImage
   }
@@ -99,10 +106,7 @@ const DynamicCategories = ({
   }
   return (
     <Layout global={global} pageContext={categoryContext}>
-      {/* Add meta tags for SEO*/}
       <Seo metadata={metadataWithDefaults} others={articleSeoData} />
-      {/* Display content sections */}
-      {/* <Sections sections={sections} preview={preview} /> */}
       <main className="container flex flex-col justify-between gap-4 pt-2 bg-white">
         <div className="Slider -mx-8">
           <ArticleSlider slug={categoryContext.slug} size={SLIDER_SIZE} />
@@ -115,7 +119,7 @@ const DynamicCategories = ({
                 <span className="text-midgray">HABERLERİ</span>
               </h1>
             </div>
-            <div className="flex flex-wrap -mx-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 xl:grid-cols-3 w-full gap-2">
               {issues.map((issue) =>
                 issue.data.map((post, i) => (
                   <ArticleBlock
@@ -161,7 +165,6 @@ const DynamicCategories = ({
 }
 
 export async function getStaticPaths(context) {
-  // Get all pages from Strapi
   const categories = await context.locales.reduce(
     async (currentCategoriesPromise, locale) => {
       const currentCategories = await currentCategoriesPromise
@@ -176,12 +179,10 @@ export async function getStaticPaths(context) {
 
   const paths = categories.map((category) => {
     const { slug, locale } = category.attributes
-    // Decompose the slug that was saved in Strapi
     const slugArray = !slug ? false : slug
 
     return {
       params: { slug: slugArray },
-      // Specify the locale to render
       locale,
     }
   })
@@ -193,21 +194,17 @@ export async function getStaticProps(context) {
   const { params, locale, locales, defaultLocale } = context
 
   const globalLocale = await getGlobalData(locale)
-  const advertisement = await getAdsData()
-  // Fetch pages. Include drafts if preview mode is on
   const categoryData = await getCategoryData({
     slug: params.slug,
     locale,
   })
 
   if (categoryData == null) {
-    // Giving the page no props will trigger a 404 page
     return {
       notFound: true,
     }
   }
 
-  // We have the required page data, pass it to the page component
   const { title, metadata, localizations, slug, createdAt, updatedAt } =
     categoryData.attributes
 
@@ -226,17 +223,13 @@ export async function getStaticProps(context) {
     updatedAt,
   }
 
-  //const localizedPaths = getLocalizedPaths(productContext)
-
   return {
     props: {
       categoryContent: categoryContent,
-      advertisement: advertisement,
       metadata,
       global: globalLocale.data,
       categoryContext: {
         ...categoryContext,
-        //localizedPaths,
       },
     },
     revalidate: 60 * 60 * 4,
