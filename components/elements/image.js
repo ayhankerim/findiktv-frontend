@@ -10,11 +10,7 @@ const NextImage = ({ media, alt, ...props }) => {
     const key = src.includes("imagedelivery.net")
     switch (key) {
       case true:
-        const cloudflareSrc = src
-          .substring(26)
-          .replace("/Development", "")
-          .replace("/public", "")
-          .replace("/Test", "")
+        const cloudflareSrc = src.substring(26).replace("/public", "")
         return `https://www.findiktv.com/cdn-cgi/imagedelivery/${cloudflareSrc}/format=auto${
           quality ? `,quality=${quality}` : ""
         }${width ? `,width=${width}` : ""}`
@@ -32,6 +28,7 @@ const NextImage = ({ media, alt, ...props }) => {
         loader={cloudflareLoader}
         src={url}
         alt={alt ? alt : alternativeText ? alternativeText : ""}
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 50vw"
         style={{
           objectFit: "cover",
         }}
@@ -57,7 +54,7 @@ const NextImage = ({ media, alt, ...props }) => {
   )
 }
 
-Image.propTypes = {
+NextImage.propTypes = {
   media: mediaPropTypes,
   className: PropTypes.string,
 }

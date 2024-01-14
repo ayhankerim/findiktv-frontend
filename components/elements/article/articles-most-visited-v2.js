@@ -1,38 +1,31 @@
-import React, { useState, useEffect } from "react"
-import PropTypes from "prop-types"
 import useSWR, { SWRConfig } from "swr"
-import Link from "next/link"
 import Image from "next/image"
+import Link from "next/link"
 import { BiLoaderCircle } from "react-icons/bi"
-import { categoryColor } from "@/utils/category-color"
 import styles from "@/styles/latest-articles.module.scss"
+import { categoryColor } from "@/utils/category-color"
+import Moment from "moment"
+import "moment/locale/tr"
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ")
 }
 const fetcher = (...args) => fetch(...args).then((res) => res.json())
-
-const ArticleSection = ({ data, type = "page", position = "bottom" }) => {
+const ArticleMostVisited = ({ size, offset, position, slug }) => {
   const qs = require("qs")
   const refreshInterval = 1000 * 60 * 60
   const query = () => {
     const value = qs.stringify(
       {
         filters: {
-          $or: [
-            {
-              ignoreHome: {
-                $eq: false,
-              },
-            },
-            {
-              ignoreHome: {
-                $null: true,
-              },
-            },
-          ],
-          featured: {
-            $eq: data.FeaturedOnly,
+          slug: {
+            $ne: slug,
+          },
+          publishedAt: {
+            $gte: Moment(new Date())
+              .subtract(process.env.NEXT_PUBLIC_MOST_VISITED_LIMIT, "days")
+              .utcOffset(3)
+              .format("YYYY-MM-DD HH:mm:ss"),
           },
         },
         fields: ["title", "slug", "summary"],
@@ -50,11 +43,14 @@ const ArticleSection = ({ data, type = "page", position = "bottom" }) => {
           category: {
             fields: ["title", "slug"],
           },
+          view: {
+            populate: ["view"],
+          },
         },
-        sort: ["id:desc"],
+        sort: ["view.view:desc", "id:desc"],
         pagination: {
-          start: data.ArticleOffset,
-          limit: data.ArticleLimit,
+          start: offset,
+          limit: size,
         },
       },
       {
@@ -81,20 +77,8 @@ const ArticleSection = ({ data, type = "page", position = "bottom" }) => {
       </div>
     )
   return (
-    <div
-      className={`${
-        type === "articles" ? "" : "container gap-2"
-      } align-top pb-2`}
-    >
-      {data.SectionTitle && (
-        <div className="flex flex-row items-center justify-between border-b border-secondary/20 relative mb-2">
-          <h4 className="font-semibold text-base text-midgray">
-            {data.SectionTitle}
-          </h4>
-          <span className="absolute h-[5px] w-2/5 max-w-[180px] left-0 bottom-[-5px] bg-secondary/60"></span>
-        </div>
-      )}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 xl:grid-cols-3 w-full gap-2">
+    <div className="flex flex-col sm:flex-row lg:flex-col h-full justify-between content-between gap-2">
+      <SWRConfig value={{ provider: () => new Map() }}>
         {mostVisiteds &&
           mostVisiteds.data.map((article, i) => (
             <div
@@ -146,18 +130,9 @@ const ArticleSection = ({ data, type = "page", position = "bottom" }) => {
               </Link>
             </div>
           ))}
-      </div>
+      </SWRConfig>
     </div>
   )
 }
 
-ArticleSection.propTypes = {
-  data: PropTypes.shape({
-    ArticleLimit: PropTypes.number,
-    ArticleOffset: PropTypes.number,
-    FeaturedOnly: PropTypes.bool,
-    SectionTitle: PropTypes.string,
-  }),
-}
-
-export default ArticleSection
+export default ArticleMostVisited
