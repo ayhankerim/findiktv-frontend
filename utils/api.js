@@ -337,7 +337,7 @@ export async function getArticleData({ slug, locale, id, preview }) {
                     }
                   }
                 }
-                cities {
+                cities(pagination: {pageSize: 20}) {
                   data {
                     id
                     attributes {
