@@ -394,7 +394,6 @@ export async function getArticleData({ slug, locale, id, preview }) {
                       }
                     }
                     date
-                    version
                     priceType
                     approvalStatus
                   }

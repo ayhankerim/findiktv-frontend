@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import Link from "next/link"
 import useSWR, { SWRConfig } from "swr"
 import Tooltip from "@/components/elements/tooltip"
@@ -6,6 +6,8 @@ import Moment from "moment"
 import "moment/locale/tr"
 import { fiskobirlik, ferrero } from "@/utils/price-data"
 import { BiLoaderCircle } from "react-icons/bi"
+import { BsChevronDown, BsChevronUp } from "react-icons/bs"
+import { MdTrendingFlat, MdTrendingUp, MdTrendingDown } from "react-icons/md"
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ")
@@ -33,12 +35,212 @@ const approvalStatus = (status) => {
       return ["adjustment"]
   }
 }
+const PriceColor = (current, old) => {
+  if (!Number(current) || !Number(old)) return "text-nochange"
+  if (current > old) {
+    return "text-up"
+  } else if (current < old) {
+    return "text-down"
+  } else {
+    return "text-nochange"
+  }
+}
+const PriceIcon = (current, old) => {
+  if (!Number(current) || !Number(old)) return ""
+  if (current > old) {
+    return <MdTrendingUp className="text-lg inline-block" />
+  } else if (current < old) {
+    return <MdTrendingDown className="text-lg inline-block" />
+  } else {
+    return <MdTrendingFlat className="text-lg inline-block" />
+  }
+}
+const ChangeCalculator = (current, old) => {
+  if (!Number(current) || !Number(old)) return ""
+  const result = ((current - old) / old) * 100
+  if (result > 0) {
+    return "%" + result.toFixed(1)
+  } else if (result < 0) {
+    return "-%" + result.toFixed(1) * -1
+  } else {
+    return "%0"
+  }
+}
+const PriceTableRow = ({ index, item, productSlug }) => {
+  const [status, setStatus] = useState(false)
+  const handleToggle = () => {
+    setStatus(!status)
+  }
+  return (
+    <>
+      <div
+        className={classNames(
+          status ? "bg-lightgray/50" : "",
+          "flex justify-between items-center group border-b"
+        )}
+      >
+        <div className="flex-none text-base sm:text-lg font-medium text-gray-900 px-2 sm:px-4 py-1 sm:py-2 text-left">
+          {item.slug ? (
+            <Link
+              className="underline hover:no-underline"
+              href={"/urunler/" + productSlug + "/" + item.slug + "/fiyati"}
+              title="Detaylar için tıkla"
+            >
+              {item.title}
+            </Link>
+          ) : (
+            <span>{item.title}</span>
+          )}
+        </div>
+        <div
+          className="flex grow text-base sm:text-lg font-medium text-gray-900 text-right cursor-pointer"
+          onClick={handleToggle}
+        >
+          <Tooltip
+            orientation="top"
+            tooltipText={`${Moment(item.data[0].date1)
+              .format("DD.MM.YYYY")
+              .toLocaleUpperCase("tr")}
+                                Tarihli fiyat`}
+          >
+            {item.slug ? (
+              <div
+                className={`flex justify-end items-center ${PriceColor(
+                  item.data[0].value1 +
+                    item.data[1].value1 +
+                    item.data[2].value1,
+                  item.data[0].value2 +
+                    item.data[1].value2 +
+                    item.data[2].value2
+                )} px-4 gap-2`}
+              >
+                <span>{currencyFormatter(item.data[0].lowest1)}</span>
+                <span>-</span>
+                <span>{currencyFormatter(item.data[2].highest1)}</span>
+                {PriceIcon(
+                  item.data[0].value1 +
+                    item.data[1].value1 +
+                    item.data[2].value1,
+                  item.data[0].value2 +
+                    item.data[1].value2 +
+                    item.data[2].value2
+                )}
+              </div>
+            ) : (
+              <div className={`flex justify-end items-center px-4 gap-2`}>
+                <span>{currencyFormatter(item.data[0].value1)}</span>
+                <span>-</span>
+                <span>{currencyFormatter(item.data[2].value1)}</span>
+              </div>
+            )}
+          </Tooltip>
+          <div className="flex-none border-l">
+            <button className="p-3">
+              {status ? <BsChevronUp /> : <BsChevronDown />}
+            </button>
+          </div>
+        </div>
+      </div>
+      {status && (
+        <div className="flex flex-col xl:flex-row bg-lightgray/50 border-b p-2 gap-2">
+          {item.slug && (
+            <div className="hidden xl:flex flex-col p-2">
+              <h3 className="text-base font-bold opacity-0">Fiyatlar</h3>
+              <div className="flex flex-col">
+                <div
+                  className={`flex justify-end leading-[40px] gap-2 whitespace-nowrap`}
+                >
+                  En yüksek
+                </div>
+              </div>
+              <hr />
+              <div className="flex flex-col">
+                <div
+                  className={`flex justify-end leading-[40px] gap-2 whitespace-nowrap`}
+                >
+                  Ortalama
+                </div>
+              </div>
+              <hr />
+              <div className="flex flex-col">
+                <div
+                  className={`flex justify-end leading-[40px] gap-2 whitespace-nowrap`}
+                >
+                  En düşük
+                </div>
+              </div>
+            </div>
+          )}
+          {item.data.map((price, i) => {
+            return (
+              <div
+                className="flex flex-col w-full bg-white border border-lightgray rounded p-2"
+                key={i}
+              >
+                <h3 className="text-base font-bold text-center">
+                  {price.name} kalite
+                </h3>
+                <div className="flex flex-col">
+                  <div
+                    className={`flex justify-center items-center ${PriceColor(
+                      price.highest1,
+                      price.highest2
+                    )} px-2 gap-2`}
+                  >
+                    {item.slug && <span className="xl:hidden">En yüksek</span>}
+                    <span>
+                      {ChangeCalculator(price.highest1, price.highest2)}
+                    </span>
+                    <span className="text-lg">
+                      {currencyFormatter(price.highest1)}
+                    </span>
+                    {PriceIcon(price.highest1, price.highest2)}
+                  </div>
+                </div>
+                <hr />
+                <div className="flex flex-col">
+                  <div
+                    className={`flex justify-center items-center ${PriceColor(
+                      price.value1,
+                      price.value2
+                    )} px-2 gap-2`}
+                  >
+                    {item.slug && <span className="xl:hidden">Ortalama</span>}
+                    <span>{ChangeCalculator(price.value1, price.value2)}</span>
+                    <span className="text-lg">
+                      {currencyFormatter(price.value1)}
+                    </span>
+                    {PriceIcon(price.value1, price.value2)}
+                  </div>
+                </div>
+                <hr />
+                <div className="flex flex-col">
+                  <div
+                    className={`flex justify-center items-center ${PriceColor(
+                      price.lowest1,
+                      price.lowest2
+                    )} px-2 gap-2`}
+                  >
+                    {item.slug && <span className="xl:hidden">En düşük</span>}
+                    <span>
+                      {ChangeCalculator(price.lowest1, price.lowest2)}
+                    </span>
+                    <span className="text-lg">
+                      {currencyFormatter(price.lowest1)}
+                    </span>
+                    {PriceIcon(price.lowest1, price.lowest2)}
+                  </div>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      )}
+    </>
+  )
+}
 const fetcher = (...args) => fetch(...args).then((res) => res.json())
 const CityPriceList = ({ data }) => {
-  const [viewVersion, setViewVersion] = useState([data.version])
-  useEffect(() => {
-    setViewVersion("average")
-  }, [])
   const refreshInterval = 1000 * 60 * 60 * 24
   const priceQualities = ["Sivri", "Levant", "Giresun"]
   let priceData = []
@@ -245,163 +447,33 @@ const CityPriceList = ({ data }) => {
   return (
     <SWRConfig value={{ provider: () => new Map() }}>
       <div className="flex flex-col">
-        <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
-          <div className="py-2 inline-block min-w-full sm:px-6 lg:px-8">
-            <div className="overflow-hidden border rounded">
-              <table className="table-auto min-w-full">
-                <thead>
-                  {data.title && (
-                    <tr className="bg-dark text-white text-left">
-                      <th className="py-2 px-4" colSpan={4}>
-                        <span className="flex justify-between gap-2">
-                          <span>{data.title}</span>
-                          <span className="flex gap-2">
-                            <button
-                              type="button"
-                              className={`${
-                                viewVersion === "min-max" && "bg-secondary"
-                              } rounded px-1`}
-                              onClick={() => setViewVersion("min-max")}
-                            >
-                              Fiyat Aralıkları
-                            </button>
-                            <button
-                              type="button"
-                              className={`${
-                                viewVersion === "average" && "bg-secondary"
-                              } rounded px-1`}
-                              onClick={() => setViewVersion("average")}
-                            >
-                              Ortalama
-                            </button>
-                          </span>
-                        </span>
-                      </th>
-                    </tr>
-                  )}
-                  <tr className="bg-white border-b">
-                    <th
-                      scope="col"
-                      className="text-sm font-medium text-gray-900 px-2 sm:px-4 py-1 sm:py-2 text-left"
-                    ></th>
-                    {priceData[0]?.data.map((item, i) => (
-                      <th
-                        key={i}
-                        scope="col"
-                        className="text-sm font-medium text-gray-900 px-2 sm:px-4 py-1 sm:py-2 text-right"
-                      >
-                        {item.name}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {newPriceData ? (
-                    newPriceData.map((item, i) => (
-                      <tr
-                        key={i}
-                        className={classNames(
-                          i % 2 ? "" : "bg-lightgray/50",
-                          "border-b hover:bg-lightgray"
-                        )}
-                      >
-                        <td className="text-sm font-medium text-gray-900 px-2 sm:px-4 py-1 sm:py-2 text-left">
-                          {item.slug ? (
-                            <Link
-                              className="underline hover:no-underline"
-                              href={
-                                "/urunler/" +
-                                data.product.data.attributes.slug +
-                                "/" +
-                                item.slug +
-                                "/fiyati"
-                              }
-                              title="Detaylar için tıkla"
-                            >
-                              {item.title}
-                            </Link>
-                          ) : (
-                            <span>{item.title}</span>
-                          )}
-                        </td>
-                        {item.data.map((priceType, i) => (
-                          <td
-                            key={i}
-                            className="text-sm text-gray-900 px-2 sm:px-4 py-1 sm:py-2 text-right align-middle"
-                          >
-                            <Tooltip
-                              orientation={i === 2 ? "left" : "top"}
-                              version="clean"
-                              tooltipText={`${Moment(priceType.date1)
-                                .format("DD.MM.YYYY")
-                                .toLocaleUpperCase("tr")}
-                              Tarihli fiyat`}
-                            >
-                              {viewVersion === "average" && (
-                                <span
-                                  className={classNames(
-                                    priceType.value1 > priceType.value2 &&
-                                      "text-up",
-                                    priceType.value1 < priceType.value2 &&
-                                      "text-down",
-                                    priceType.value1 === priceType.value2 &&
-                                      "text-nochange",
-                                    ""
-                                  )}
-                                >
-                                  {currencyFormatter(priceType.value1)}
-                                </span>
-                              )}
-                              {viewVersion === "min-max" && (
-                                <>
-                                  <span
-                                    className={classNames(
-                                      priceType.lowest1 > priceType.lowest2 &&
-                                        "text-up",
-                                      priceType.lowest1 < priceType.lowest2 &&
-                                        "text-down",
-                                      priceType.lowest1 === priceType.lowest2 &&
-                                        "text-nochange",
-                                      ""
-                                    )}
-                                  >
-                                    {currencyFormatter(priceType.lowest1)}
-                                  </span>
-                                  -
-                                  <span
-                                    className={classNames(
-                                      priceType.highest1 > priceType.highest2 &&
-                                        "text-up",
-                                      priceType.highest1 < priceType.highest2 &&
-                                        "text-down",
-                                      priceType.highest1 ===
-                                        priceType.highest2 && "text-nochange",
-                                      ""
-                                    )}
-                                  >
-                                    {currencyFormatter(priceType.highest1)}
-                                  </span>
-                                </>
-                              )}
-                            </Tooltip>
-                          </td>
-                        ))}
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan={4} className="text-center p-4">
-                        Fiyatlar getiriliyor, lütfen bekleyiniz!
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-            <div className="my-2">
-              {data.description && <p>{data.description}</p>}
+        <div className="overflow-hidden border rounded">
+          <div className="flex flex-col">
+            {data.title && (
+              <div className="bg-dark text-white text-left py-2 px-4">
+                {data.title}
+              </div>
+            )}
+            <div className="flex flex-col">
+              {newPriceData ? (
+                newPriceData.map((item, i) => (
+                  <PriceTableRow
+                    key={i}
+                    index={i}
+                    item={item}
+                    productSlug={data.product.data.attributes.slug}
+                  />
+                ))
+              ) : (
+                <div className="text-center p-4">
+                  Fiyatlar getiriliyor, lütfen bekleyiniz!
+                </div>
+              )}
             </div>
           </div>
+        </div>
+        <div className="my-2">
+          {data.description && <p>{data.description}</p>}
         </div>
       </div>
     </SWRConfig>

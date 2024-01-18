@@ -128,7 +128,7 @@ const DynamicArticle = ({
   return (
     <Layout global={global} pageContext={articleContext}>
       <Seo metadata={metadataWithDefaults} others={articleSeoData} />
-      <main className="container gap-4 pt-2 bg-white">
+      <main className="container flex flex-col min-h-screen gap-4 pt-2 bg-white">
         <div className="w-full">
           <Breadcrumb items={breadcrumbElement} />
           <h1 className="font-extrabold text-xl lg:text-xxl">
@@ -175,7 +175,7 @@ const DynamicArticle = ({
           )}
         </div>
         <div className="flex flex-col md:flex-row items-start justify-between gap-4 pt-2">
-          <div className="flex-1">
+          <div className="flex-auto">
             <div className="relative sm:w-full h-[300px] lg:h-[500px] -mx-4 sm:mx-0 md:mx-0 mb-2">
               <Image
                 src={articleContent.image.data.attributes.url}
