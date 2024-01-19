@@ -135,14 +135,22 @@ const PriceTableRow = ({ index, item, productSlug }) => {
             )}
           </Tooltip>
           <div className="flex-none border-l">
-            <button className="p-3">
+            <button
+              className="p-3"
+              aria-label="Detaylar"
+              aria-labelledby="priceDetails"
+              role="button"
+            >
               {status ? <BsChevronUp /> : <BsChevronDown />}
             </button>
           </div>
         </div>
       </div>
       {status && (
-        <div className="flex flex-col xl:flex-row bg-lightgray/50 border-b p-2 gap-2">
+        <div
+          id="priceDetails"
+          className="flex flex-col xl:flex-row bg-lightgray/50 border-b p-2 gap-2"
+        >
           {item.slug && (
             <div className="hidden xl:flex flex-col p-2">
               <h3 className="text-base font-bold opacity-0">Fiyatlar</h3>

@@ -184,7 +184,7 @@ const Reactions = ({ article }) => {
                     height="44"
                     className="w-full"
                     src={emoji.attributes.image.data.attributes.url}
-                    alt={emoji.attributes.title}
+                    alt={`${emoji.attributes.title} ifade eden emoji`}
                     style={{
                       objectFit: "cover",
                     }}
