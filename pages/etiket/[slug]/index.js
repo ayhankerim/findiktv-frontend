@@ -104,7 +104,7 @@ const DynamicTags = ({ tagContent, preview, global, tagContext }) => {
                 <span className="text-midgray">HABERLERİ</span>
               </h1>
             </div>
-            <div className="flex flex-wrap -mx-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 xl:grid-cols-3 w-full gap-2">
               {issues.map((issue) =>
                 issue.data.map((post, i) => (
                   <ArticleBlock
