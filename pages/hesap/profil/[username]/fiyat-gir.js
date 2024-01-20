@@ -27,7 +27,7 @@ const notify = (type, message) => {
 const PriceEntries = ({ userContent, global, userContext }) => {
   const [cities, setCityList] = useState([])
   const [productQuality, setProductQuality] = useState("Levant")
-  const [priceType, setPriceType] = useState("stockmarket")
+  const [priceType, setPriceType] = useState("openmarket")
   const userData = useSelector((state) => state.user.userData)
   const [loading, setLoading] = useState(false)
   const router = useRouter()

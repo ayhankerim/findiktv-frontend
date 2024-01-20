@@ -56,11 +56,12 @@ const ArticleMostVisited = ({ size, slug }) => {
               )}
               <Link
                 href={`/haber/${article.id}/${article.attributes.slug}`}
-                className="flex flex-col px-2 hover:bg-lightgray"
+                className="flex flex-col px-2 group"
               >
                 <div className="flex items-center justify-start py-1 gap-2">
                   <div className="relative w-[80px] h-[50px]">
                     <Image
+                      className="rounded"
                       src={
                         article.attributes.image.data.attributes.formats
                           .thumbnail.url
@@ -76,7 +77,7 @@ const ArticleMostVisited = ({ size, slug }) => {
                         33vw"
                     />
                   </div>
-                  <h3 className="w-9/12 font-semibold">
+                  <h3 className="w-9/12 font-semibold group-hover:underline">
                     {article.attributes.title}
                   </h3>
                 </div>
