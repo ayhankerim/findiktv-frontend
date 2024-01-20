@@ -1,16 +1,17 @@
 import React from "react"
 import {
   getProductData,
-  getProductCityData,
   getAdsData,
   fetchAPI,
   getGlobalData,
 } from "@/utils/api"
 import {
   getPriceCard,
+  getCitiesPrice,
   getTermlyPriceList,
   getPriceEntries,
   getGraphData,
+  getDefaultPriceValues,
 } from "@/utils/api-prices"
 import { useRouter } from "next/router"
 import Seo from "@/components/elements/seo"
@@ -24,6 +25,8 @@ const DynamicProducts = ({
   metadata,
   global,
   priceCardData,
+  priceCitiesData,
+  priceDefaultsData,
   termlyPricesData,
   lastEntriesData,
   graphData,
@@ -36,6 +39,7 @@ const DynamicProducts = ({
       notFound: true,
     }
   }
+
   // Loading screen (only possible in preview mode)
   if (router.isFallback) {
     return <div className="container">Yükleniyor...</div>
@@ -46,7 +50,9 @@ const DynamicProducts = ({
     delete metadata.shareImage
   }
   const metadataUpdated = {
-    metaTitle: `${metadata.metaTitle} ${productContent.productTitle} Fiyatı`,
+    metaTitle: "Borsa Fındık Fiyatları",
+    metaDescription:
+      "Her gün güncellenen Fındık fiyatları bu sayfada karşınızda. Ordu, Giresun, Trabzon, Samsun, Çarşamba, Sakarya, Zonguldak, Ünye, Fatsa, Terme, Düzce ve Akçakoca borsa fiyatları burada...",
   }
   const metadataWithDefaults = {
     ...global.attributes.metadata,
@@ -56,37 +62,38 @@ const DynamicProducts = ({
   const breadcrumbElement = [
     { title: "ÜRÜNLER", slug: "/urunler" },
     {
-      title: `${productContent.productTitle.toLocaleUpperCase("tr")} FİYATLARI`,
-      slug: `/urunler/${productContent.productSlug}/fiyatlari`,
-    },
-    {
-      title: `${metadata.metaTitle.toLocaleUpperCase(
-        "tr"
-      )} ${productContent.productTitle.toLocaleUpperCase("tr")} FİYATI`,
-      slug: `/urunler/${productContent.productSlug}/${productContext.slug}/fiyati`,
+      title: `BORSA ${productContent.title.toLocaleUpperCase("tr")} FİYATLARI`,
+      slug: "/urunler/" + productContext.slug + "/borsa-fiyatlari",
     },
   ]
   const pricetypes = [
     {
-      name: `${metadata.metaTitle} ${productContent.productTitle} Borsa Fiyatı`,
-      title: `${metadata.metaTitle} ${productContent.productTitle} Fiyatı`,
-      id: "stockmarket",
+      name: "Fındık Fiyatları",
+      title: `${productContent.title} Fiyatları`,
+      id: "all",
       url: "fiyatlari",
     },
     {
-      name: `${productContent.productTitle} Serbest Piyasa Fiyatı`,
-      title: `Serbest Piyasa ${productContent.productTitle} ${productContent.productTitle} Fiyatı`,
+      name: "Borsa Fiyatları",
+      title: `${productContent.title} Fiyatları`,
+      id: "stockmarket",
+      url: "borsa-fiyatlari",
+    },
+    {
+      name: "Serbest Piyasa Fiyatları",
+      title: `Serbest Piyasa ${productContent.title} Fiyatları`,
       id: "openmarket",
-      url: "serbest-piyasa-fiyati",
+      url: "serbest-piyasa-fiyatlari",
+    },
+    {
+      name: "TMO Fiyatları",
+      title: "TMO Fındık Fiyatları",
+      id: "tmo",
+      url: "tmo-fiyatlari",
     },
   ]
   const articleSeoData = {
-    slug:
-      "/urunler/" +
-      productContent.productSlug +
-      "/" +
-      productContext.slug +
-      "/fiyati",
+    slug: "/urunler/" + productContext.slug + "/borsa-fiyatlari",
     datePublished: Moment(
       lastEntriesData?.[0].attributes.createdAt
     ).toISOString(),
@@ -100,11 +107,11 @@ const DynamicProducts = ({
       global={global}
       pageContext={productContext}
       pricetypes={pricetypes}
-      priceTypeSelection={0}
+      priceTypeSelection={1}
       productContent={productContent}
       priceCardData={priceCardData}
-      priceCitiesData={null}
-      priceDefaultsData={null}
+      priceCitiesData={priceCitiesData}
+      priceDefaultsData={priceDefaultsData}
       termlyPricesData={termlyPricesData}
       lastEntriesData={lastEntriesData}
       graphData={graphData}
@@ -116,52 +123,32 @@ const DynamicProducts = ({
     </Layout>
   )
 }
+
 export async function getStaticPaths(context) {
   // Get all pages from Strapi
-  const cities = await context.locales.reduce(
-    async (currentCitiesPromise, locale) => {
-      const currentCities = await currentCitiesPromise
-      const localeCities = await fetchAPI("/cities", {
+  const products = await context.locales.reduce(
+    async (currentProductsPromise, locale) => {
+      const currentProducts = await currentProductsPromise
+      const localeProducts = await fetchAPI("/products", {
         locale,
         fields: ["slug", "locale"],
-        populate: {
-          prices: {
-            populate: {
-              product: {
-                populate: ["slug"],
-                fields: ["slug"],
-              },
-            },
-          },
-        },
-        sort: ["id:desc"],
-        pagination: {
-          start: 0,
-          limit: 1,
-        },
       })
-      return [...currentCities, ...localeCities.data]
+      return [...currentProducts, ...localeProducts.data]
     },
     Promise.resolve([])
   )
-  const paths = cities
-    .filter((city) => city.attributes.prices.data.length > 0)
-    .map((city) => {
-      const { slug, locale } = city.attributes
-      const { slug: product } =
-        city.attributes.prices.data[0].attributes.product.data.attributes
-      // Decompose the slug that was saved in Strapi
-      const slugArray = !slug ? false : slug
-      const productArray = !product ? false : product
-      return {
-        params: {
-          city: slugArray,
-          product: productArray,
-        },
-        // Specify the locale to render
-        locale,
-      }
-    })
+
+  const paths = products.map((product) => {
+    const { slug, locale } = product.attributes
+    // Decompose the slug that was saved in Strapi
+    const slugArray = !slug ? false : slug
+
+    return {
+      params: { product: slugArray },
+      // Specify the locale to render
+      locale,
+    }
+  })
 
   return { paths, fallback: true }
 }
@@ -178,13 +165,8 @@ export async function getStaticProps(context) {
     locale,
   })
 
-  const cityData = await getProductCityData({
-    city: params.city,
-    product: params.product,
-    locale,
-  })
-
-  if (productData == null || !cityData || cityData == null) {
+  if (productData == null) {
+    // Giving the page no props will trigger a 404 page
     return {
       notFound: true,
     }
@@ -194,39 +176,45 @@ export async function getStaticProps(context) {
     product: params.product,
     priceType: priceType,
     priceQualities: priceQualities,
-    city: cityData.id,
+  })
+  const priceCities = await getCitiesPrice({
+    product: params.product,
+    priceType: priceType,
+    priceQualities: priceQualities,
+  })
+
+  const priceDefaults = await getDefaultPriceValues({
+    product: params.product,
+    type: priceType,
+    priceQualities: priceQualities,
   })
 
   const termlyPrices = await getTermlyPriceList({
     product: params.product,
     priceType: priceType,
     priceQualities: priceQualities,
-    city: cityData.id,
   })
 
   const lastEntries = await getPriceEntries({
     product: params.product,
     priceType: priceType,
-    city: cityData.id,
   })
 
   const graphData = await getGraphData({
     product: params.product,
     priceType: priceType,
-    city: cityData.id,
   })
 
   // We have the required page data, pass it to the page component
-  const { title, content, featured, metadata, localizations, slug } =
-    params.city ? cityData.attributes : productData.attributes
+  const { title, summary, content, featured, metadata, localizations, slug } =
+    productData.attributes
 
   const productContent = {
     id: productData.id,
     title,
+    summary,
     content,
     featured,
-    productTitle: productData.attributes.title,
-    productSlug: productData.attributes.slug,
   }
 
   const productContext = {
@@ -236,6 +224,7 @@ export async function getStaticProps(context) {
     slug,
     localizations,
   }
+
   return {
     props: {
       productContent: productContent,
@@ -243,6 +232,8 @@ export async function getStaticProps(context) {
       metadata,
       global: globalLocale.data,
       priceCardData: priceCard,
+      priceCitiesData: priceCities,
+      priceDefaultsData: priceDefaults,
       termlyPricesData: termlyPrices,
       lastEntriesData: lastEntries,
       graphData: graphData,
@@ -251,7 +242,7 @@ export async function getStaticProps(context) {
         //localizedPaths,
       },
     },
-    revalidate: 60 * 60 * 4,
+    revalidate: 60 * 60 * 24,
   }
 }
 

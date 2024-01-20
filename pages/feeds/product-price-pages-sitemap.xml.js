@@ -20,6 +20,16 @@ function generateSiteMap({ productArray }) {
           </image:image>
          </url>
          <url>
+          <loc>${`${process.env.NEXT_PUBLIC_SITE_URL}/urunler/${post.product}/borsa-fiyatlari`}</loc>
+          <lastmod>${Moment(post.date).toISOString()}</lastmod>
+          <changefreq>hourly</changefreq>
+          <priority>0.9</priority>
+          <image:image>
+            <image:loc>${cloudflareLoader(post.productImg, 900, 75)}</image:loc>
+            <image:title>${post.productTitle}</image:title>
+          </image:image>
+         </url>
+         <url>
           <loc>${`${process.env.NEXT_PUBLIC_SITE_URL}/urunler/${post.product}/serbest-piyasa-fiyatlari`}</loc>
           <lastmod>${Moment(post.date).toISOString()}</lastmod>
           <changefreq>hourly</changefreq>

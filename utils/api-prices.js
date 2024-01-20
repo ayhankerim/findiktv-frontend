@@ -38,14 +38,14 @@ export async function getLastPriceDate({ product, city, type, quality }) {
         query getLastPriceDate(
           $product: String!
           $city: ID
-          $type: String!
+          $type: [String]!
           $quality: String!
         ) {
           prices(
             filters: {
               product: { slug: { eq: $product } }
               city: { id: { eq: $city } }
-              type: { eq: $type }
+              type: { in: $type }
               quality: { eq: $quality }
               or: [
                 { approvalStatus: { eq: "approved" }},
@@ -107,7 +107,7 @@ export async function getPreviousPriceDate({
         query getPreviousPriceDate(
           $product: String!
           $city: ID
-          $type: String!
+          $type: [String]!
           $date: DateTime!
           $quality: String!
         ) {
@@ -115,7 +115,7 @@ export async function getPreviousPriceDate({
             filters: {
               product: { slug: { eq: $product } }
               city: { id: { eq: $city } }
-              type: { eq: $type }
+              type: { in: $type }
               date: {lt: $date }
               quality: { eq: $quality }
               or: [
@@ -179,7 +179,7 @@ export async function getPriceValues({
         query getPriceValues(
           $product: String!
           $city: ID
-          $type: String!
+          $type: [String]!
           $minDate: DateTime
           $maxDate: DateTime
           $quality: String!
@@ -188,7 +188,7 @@ export async function getPriceValues({
             filters: {
               product: { slug: { eq: $product } }
               city: { id: { eq: $city } }
-              type: { eq: $type }
+              type: { in: $type }
               and: [
                 {
                   date: {
@@ -333,10 +333,10 @@ export async function getProductCities({ product, type }) {
     },
     body: JSON.stringify({
       query: `
-        query GetCities($product: String!, $type: String!) {
+        query GetCities($product: String!, $type: [String]!) {
           cities(
             filters: {
-              prices: { product: { slug: { eq: $product } }, type: { eq: $type } }
+              prices: { product: { slug: { eq: $product } }, type: { in: $type } }
             }
             sort: ["title:asc"]
             pagination: { limit: 100 }
@@ -476,14 +476,14 @@ export async function getDefaultPriceValue({ product, type, quality }) {
       query: `
         query getPriceValues(
           $product: String!
-          $type: String!
+          $type: [String]!
           $quality: String!
           $date_limit: DateTime!
         ) {
           prices(
             filters: {
               product: { slug: { eq: $product } }
-              type: { eq: $type }
+              type: { in: $type }
               date: { lte: $date_limit }
               quality: { eq: $quality }
               or: [
@@ -558,7 +558,7 @@ export async function getMaxPrice({ product, type, quality, date }) {
         query getMaxPrice(
           $product: String!
           $city: ID
-          $type: String!
+          $type: [String]!
           $date: DateTime!
           $quality: String!
         ) {
@@ -566,7 +566,7 @@ export async function getMaxPrice({ product, type, quality, date }) {
             filters: {
               product: { slug: { eq: $product } }
               city: { id: { eq: $city } }
-              type: { eq: $type }
+              type: { in: $type }
               date: { gte: $date }
               quality: { eq: $quality }
               or: [
@@ -620,7 +620,7 @@ export async function getMinPrice({ product, type, quality, date }) {
         query getMaxPrice(
           $product: String!
           $city: ID
-          $type: String!
+          $type: [String]!
           $date: DateTime!
           $quality: String!
         ) {
@@ -628,7 +628,7 @@ export async function getMinPrice({ product, type, quality, date }) {
             filters: {
               product: { slug: { eq: $product } }
               city: { id: { eq: $city } }
-              type: { eq: $type }
+              type: { in: $type }
               date: { gte: $date }
               quality: { eq: $quality }
               or: [
@@ -682,7 +682,7 @@ export async function getOldestDate({ product, type, quality, date }) {
         query getMaxPrice(
           $product: String!
           $city: ID
-          $type: String!
+          $type: [String]!
           $date: DateTime!
           $quality: String!
         ) {
@@ -690,7 +690,7 @@ export async function getOldestDate({ product, type, quality, date }) {
             filters: {
               product: { slug: { eq: $product } }
               city: { id: { eq: $city } }
-              type: { eq: $type }
+              type: { in: $type }
               date: { gte: $date }
               quality: { eq: $quality }
               or: [
@@ -928,13 +928,13 @@ export async function getPriceEntries({ product, city, priceType }) {
         query getPriceEntries(
           $product: String!
           $city: ID
-          $priceType: String!
+          $priceType: [String]!
         ) {
           prices(
             filters: {
               product: { slug: { eq: $product } }
               city: { id: { eq: $city } }
-              type: { eq: $priceType }
+              type: { in: $priceType }
               or: [
                 { approvalStatus: { eq: "approved" }},
                 { approvalStatus: { eq: "adjustment" }},
@@ -990,13 +990,13 @@ export async function getGraphData({ product, city, priceType }) {
         query getGraphData(
           $product: String!
           $city: ID
-          $priceType: String!
+          $priceType: [String]!
         ) {
           prices(
             filters: {
               product: { slug: { eq: $product } }
               city: { id: { eq: $city } }
-              type: { eq: $priceType }
+              type: { in: $priceType }
               or: [
                 { approvalStatus: { eq: "approved" }},
                 { approvalStatus: { eq: "adjustment" }},

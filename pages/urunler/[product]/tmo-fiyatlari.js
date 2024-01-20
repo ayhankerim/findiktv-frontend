@@ -61,10 +61,16 @@ const DynamicProducts = ({
   ]
   const pricetypes = [
     {
+      name: "Fındık Fiyatları",
+      title: `${productContent.title} Fiyatları`,
+      id: "all",
+      url: "fiyatlari",
+    },
+    {
       name: "Borsa Fiyatları",
       title: `${productContent.title} Fiyatları`,
       id: "stockmarket",
-      url: "fiyatlari",
+      url: "borsa-fiyatlari",
     },
     {
       name: "Serbest Piyasa Fiyatları",
@@ -94,7 +100,7 @@ const DynamicProducts = ({
       global={global}
       pageContext={productContext}
       pricetypes={pricetypes}
-      priceTypeSelection={2}
+      priceTypeSelection={3}
       productContent={productContent}
       priceCardData={priceCardData}
       lastEntriesData={lastEntriesData}
@@ -138,7 +144,7 @@ export async function getStaticPaths(context) {
 }
 
 export async function getStaticProps(context) {
-  const priceType = "tmo"
+  const priceType = ["tmo"]
   const { params, locale, locales, defaultLocale } = context
 
   const globalLocale = await getGlobalData(locale)

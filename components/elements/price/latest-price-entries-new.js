@@ -93,7 +93,9 @@ const LatestPriceEntries = ({ lastEntries }) => {
                         {currencyFormatter(item.attributes.average)}
                       </td>
                       <td className="hidden md:table-cell text-sm text-gray-900 px-2 sm:px-4 py-1 sm:py-2 text-right align-middle">
-                        {volumeFormatter(item.attributes.volume)} kg
+                        {item.attributes.volume > 100
+                          ? volumeFormatter(item.attributes.volume) + " kg"
+                          : "-"}
                       </td>
                       <td className="text-sm text-gray-900 px-2 sm:px-4 py-1 sm:py-2 text-right align-middle">
                         {Moment(item.attributes.date).fromNow(true)} önce
