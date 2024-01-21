@@ -57,7 +57,7 @@ const PriceEntries = ({ userContent, global, userContext }) => {
           city: city,
         }}
       >
-        {({}) => (
+        {({ setFieldValue }) => (
           <Form className="border border-lightgray">
             <main className="container flex flex-col justify-between gap-4 pt-2 bg-white">
               <div className="flex flex-col lg:flex-row items-start justify-between gap-4 pt-2">
@@ -93,26 +93,22 @@ const PriceEntries = ({ userContent, global, userContext }) => {
                           id="city"
                           className="border-midgray mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm max-w-[500px]"
                           onChange={(e) => {
+                            setFieldValue("city", e.target.value)
                             setCity(e.target.value)
                           }}
                         >
                           {cityList.map((item, i) => (
-                            <option
-                              key={i}
-                              value={item.attributes.slug}
-                              defaultValue={
-                                item.attributes.slug === city ? true : false
-                              }
-                            >
+                            <option key={i} value={item.attributes.slug}>
                               {item.attributes.title}
                             </option>
                           ))}
                         </Field>
-                        <textarea
+                        <Field
+                          as="textarea"
                           className="border rounded p-2 max-w-[500px]"
                           readOnly
                           value={cityPriceHtmlCode}
-                        ></textarea>
+                        ></Field>
                       </div>
                     </div>
                   </div>
