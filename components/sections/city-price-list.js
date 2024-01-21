@@ -79,7 +79,7 @@ const PriceTableRow = ({ index, item, productSlug }) => {
           "flex justify-between items-center group border-b"
         )}
       >
-        <div className="flex-none text-base sm:text-lg font-medium text-gray-900 px-2 sm:px-4 py-1 sm:py-2 text-left">
+        <div className="flex-none text-sm sm:text-lg font-medium text-gray-900 px-2 sm:px-4 py-1 sm:py-2 text-left">
           {item.slug ? (
             <Link
               className="underline hover:no-underline"
@@ -93,7 +93,7 @@ const PriceTableRow = ({ index, item, productSlug }) => {
           )}
         </div>
         <div
-          className="flex grow text-base sm:text-lg font-medium text-gray-900 text-right cursor-pointer"
+          className="flex grow text-sm sm:text-lg font-medium text-gray-900 text-right cursor-pointer"
           onClick={handleToggle}
         >
           <Tooltip
