@@ -136,7 +136,7 @@ const Reactions = ({ article }) => {
         </h3>
         <MdOutlineEmojiEmotions className="text-lg text-midgray" />
       </div>
-      <div className="grid grid-cols-7 sm:grid-cols-8 md:grid-cols-9 lg:grid-cols-10 xl:grid-cols-11 xxl:grid-cols-12 gap-1 text-xs mt-1 mb-4">
+      <div className="grid grid-cols-8 md:grid-cols-9 lg:grid-cols-10 xl:grid-cols-11 xxl:grid-cols-12 gap-1 text-xs mt-1 mb-4">
         {reactionTypes.map((emoji) => {
           var sum = 0
           reactionsData?.data &&
