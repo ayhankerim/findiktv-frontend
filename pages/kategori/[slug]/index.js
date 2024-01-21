@@ -108,7 +108,7 @@ const DynamicCategories = ({
     <Layout global={global} pageContext={categoryContext}>
       <Seo metadata={metadataWithDefaults} others={articleSeoData} />
       <main className="container flex flex-col justify-between gap-4 pt-2 bg-white">
-        <div className="Slider -mx-8">
+        <div className="Slider md:-mx-8">
           <ArticleSlider slug={categoryContext.slug} size={SLIDER_SIZE} />
         </div>
         <div className="flex flex-col lg:flex-row items-start justify-between gap-4 pt-2">
