@@ -5,7 +5,6 @@ import { replyComment, countComment } from "@/store/comment"
 import axios from "axios"
 import useSWR, { useSWRConfig } from "swr"
 import Image from "next/image"
-import Link from "next/link"
 import CommentsHeader from "./comments-header"
 import CommentHeader from "./comment-header"
 import CommentFooter from "./comment-footer"
@@ -383,17 +382,6 @@ const Comments = ({ article, product, slug, city }) => {
                             )}
                           </li>
                         ))}
-                      {/* {commentArray.meta.pagination.total > 100 && (
-                        <li className="flex items-center gap-2">
-                          <TbPoint className="text-midgray" />
-                          <Link
-                            className="hover:underline"
-                            href={`${slug}/yorumlar`}
-                          >
-                            Tümü
-                          </Link>
-                        </li>
-                      )} */}
                     </ul>
                     yorum göster
                   </div>
@@ -441,17 +429,6 @@ const Comments = ({ article, product, slug, city }) => {
                 {commentArray.meta.pagination.total} yorum
               </div>
             </div>
-            {/* {commentArray &&
-              commentArray.meta.pagination.total > commentLimit && (
-                <div className="flex flex-col items-end gap-2 text-center">
-                  <Link
-                    className="text-secondary hover:underline"
-                    href={`${slug}/yorumlar`}
-                  >
-                    Tüm yorumları gör
-                  </Link>
-                </div>
-              )} */}
           </div>
         ) : (
           <div className="flex flex-col items-center gap-2 mt-4 text-center">
@@ -469,7 +446,7 @@ const Comments = ({ article, product, slug, city }) => {
       ) : error ? (
         <div className="flex flex-col items-center gap-2 mt-4 text-center">
           <MdOutlineReportProblem className="text-xxl text-danger" />
-          <h4>Yorumlar gertirilirken bir sorunla karşılaşıldı!</h4>
+          <h4>Yorumlar getirilirken bir sorunla karşılaşıldı!</h4>
         </div>
       ) : (
         <div className="flex flex-col items-center gap-2 mt-4 text-center">

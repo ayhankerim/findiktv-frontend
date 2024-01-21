@@ -107,8 +107,8 @@ const CommentHeader = ({ comment, slug, address, position = "bottom" }) => {
           title={Moment(comment.attributes.createdAt).format("LLLL")}
         >
           <Tooltip
-            orientation="bottom"
-            tooltipText={Moment(comment.attributes.createdAt).format("LLLL")}
+            orientation="left"
+            tooltipText={Moment(comment.attributes.createdAt).format("LLL")}
           >
             <time
               className="flex items-center"
