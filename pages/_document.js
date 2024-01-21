@@ -1,6 +1,5 @@
 import Document, { Html, Head, Main, NextScript } from "next/document"
 import Script from "next/script"
-import { GoogleTagManager } from "@next/third-parties/google"
 
 export default class MyDocument extends Document {
   render() {
@@ -18,7 +17,20 @@ export default class MyDocument extends Document {
               src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7598098755679343"
             />
           )}
-          <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
+          <Script
+            strategy="lazyOnload"
+            src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}`}
+          />
+
+          <Script id="GoogleAnalytics" strategy="lazyOnload">
+            {`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              
+              gtag('config', '${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}');
+            `}
+          </Script>
         </body>
       </Html>
     )
