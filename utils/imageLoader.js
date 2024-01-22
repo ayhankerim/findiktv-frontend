@@ -12,9 +12,7 @@ export default function myImageLoader({ src, width, quality }) {
       return `https://www.findiktv.com/cdn-cgi/imagedelivery/${cloudflareSrc}/format=auto${
         quality ? `,quality=${quality}` : ""
       }${width ? `,width=${width}` : ""}`
-      break
     default:
       return getStrapiMedia(src)
-      break
   }
 }
