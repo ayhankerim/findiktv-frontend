@@ -21,7 +21,6 @@ export default class MyDocument extends Document {
             strategy="lazyOnload"
             src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}`}
           />
-
           <Script id="GoogleAnalytics" strategy="lazyOnload">
             {`
               window.dataLayer = window.dataLayer || [];
@@ -29,6 +28,22 @@ export default class MyDocument extends Document {
               gtag('js', new Date());
               
               gtag('config', '${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}');
+            `}
+          </Script>
+          <Script
+            strategy="lazyOnload"
+            src={`https://news.google.com/swg/js/v1/swg-basic.js`}
+          />
+          <Script id="NewsArticle" strategy="lazyOnload">
+            {`
+              (self.SWG_BASIC = self.SWG_BASIC || []).push( basicSubscriptions => {
+                basicSubscriptions.init({
+                  type: "NewsArticle",
+                  isPartOfType: ["Product"],
+                  isPartOfProductId: "CAoiEATMSmX53ZjtQ4kcyzxQ1_I:openaccess",
+                  clientOptions: { theme: "light", lang: "tr" },
+                });
+              });
             `}
           </Script>
         </body>
