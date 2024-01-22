@@ -17,16 +17,14 @@ import {
 } from "react-icons/md"
 
 const MobileNavMenu = ({ navbar, closeSelf }) => {
-  // Prevent window scroll while mobile nav menu is open
   const { data: session } = useSession()
   const userData = useSelector((state) => state.user.userData)
   useLockBodyScroll()
 
   return (
-    <div className="w-screen h-screen fixed top-0 left-0 overflow-y-scroll bg-white z-[21] py-6">
-      <div className="container h-full flex flex-col justify-start gap-10">
-        {/* Top section */}
-        <div className="flex flex-row justify-between my-2 items-center">
+    <div className="w-screen h-screen fixed top-0 left-0 bg-white z-[21] py-6">
+      <div className="container h-[calc(100%-4rem)] flex flex-col justify-start gap-4">
+        <div className="grow-0 flex flex-row justify-between my-2 items-center">
           {/* Company logo */}
           <NextImage width="180" height="50" media={navbar.logo} />
           {/* Close button */}
@@ -34,8 +32,7 @@ const MobileNavMenu = ({ navbar, closeSelf }) => {
             <MdClose className="h-8 w-auto" />
           </button>
         </div>
-
-        <ul className="grid grid-cols-3 gap-2">
+        <ul className="grow-0 grid grid-cols-3 gap-2">
           <li className="flex items-center transition duration-150 ease-out hover:ease-in hover:bg-dark shadow-sm hover:shadow-2xl hover:shadow-primary text-darkgray hover:text-white border border-darkgray rounded">
             <Link
               href="/forum"
@@ -87,32 +84,25 @@ const MobileNavMenu = ({ navbar, closeSelf }) => {
             )}
           </li>
         </ul>
-        {/* Bottom section */}
-        <div className="flex flex-col justify-end w-full mx-auto">
-          <ul className="flex flex-col list-none gap-2 items-baseline text-xl">
-            {navbar.links.map((navLink) => (
-              <li key={navLink.id} className="block w-full">
-                <CustomLink link={navLink}>
-                  <div
-                    className={classNames(
-                      navLink.marked === true
-                        ? "bg-lightgray border-t border-b border-t-secondary border-b-secondary"
-                        : "",
-                      "hover:text-gray-900 flex flex-row justify-between items-center"
-                    )}
-                  >
-                    <span>{navLink.text}</span>
-                    <MdChevronRight className="h-8 w-auto" />
-                  </div>
-                </CustomLink>
-              </li>
-            ))}
-          </ul>
-        </div>
-        {/* <ButtonLink
-          button={navbar.button}
-          appearance={getButtonAppearance(navbar.button.type, "light")}
-        /> */}
+        <ul className="grow flex flex-col list-none gap-2 items-baseline text-xl overflow-y-scroll">
+          {navbar.links.map((navLink) => (
+            <li key={navLink.id} className="block w-full">
+              <CustomLink link={navLink}>
+                <div
+                  className={classNames(
+                    navLink.marked === true
+                      ? "bg-lightgray border-t border-b border-t-secondary border-b-secondary"
+                      : "",
+                    "hover:text-gray-900 flex flex-row justify-between items-center"
+                  )}
+                >
+                  <span>{navLink.text}</span>
+                  <MdChevronRight className="h-8 w-auto" />
+                </div>
+              </CustomLink>
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   )
