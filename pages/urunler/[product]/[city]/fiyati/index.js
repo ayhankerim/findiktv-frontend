@@ -167,7 +167,8 @@ export async function getStaticPaths(context) {
 }
 
 export async function getStaticProps(context) {
-  const priceType = ["stockmarket"]
+  const priceType = ["stockmarket", "openmarket"]
+  const approvalStatus = ["approved", "adjustment"]
   const { params, locale, locales, defaultLocale } = context
 
   const globalLocale = await getGlobalData(locale)
@@ -195,6 +196,7 @@ export async function getStaticProps(context) {
     priceType: priceType,
     priceQualities: priceQualities,
     city: cityData.id,
+    approvalStatus: approvalStatus,
   })
 
   const termlyPrices = await getTermlyPriceList({
@@ -202,18 +204,21 @@ export async function getStaticProps(context) {
     priceType: priceType,
     priceQualities: priceQualities,
     city: cityData.id,
+    approvalStatus: approvalStatus,
   })
 
   const lastEntries = await getPriceEntries({
     product: params.product,
     priceType: priceType,
     city: cityData.id,
+    approvalStatus: approvalStatus,
   })
 
   const graphData = await getGraphData({
     product: params.product,
     priceType: priceType,
     city: cityData.id,
+    approvalStatus: approvalStatus,
   })
 
   // We have the required page data, pass it to the page component
