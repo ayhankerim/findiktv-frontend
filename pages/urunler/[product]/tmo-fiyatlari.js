@@ -145,6 +145,7 @@ export async function getStaticPaths(context) {
 
 export async function getStaticProps(context) {
   const priceType = ["tmo"]
+  const approvalStatus = ["approved"]
   const { params, locale, locales, defaultLocale } = context
 
   const globalLocale = await getGlobalData(locale)
@@ -173,16 +174,19 @@ export async function getStaticProps(context) {
     product: params.product,
     priceType: priceType,
     priceQualities: priceQualities,
+    approvalStatus: approvalStatus,
   })
 
   const lastEntries = await getPriceEntries({
     product: params.product,
     priceType: priceType,
+    approvalStatus: approvalStatus,
   })
 
   const graphData = await getGraphData({
     product: params.product,
     priceType: priceType,
+    approvalStatus: approvalStatus,
   })
   // We have the required page data, pass it to the page component
   const { title, summary, content, featured, metadata, localizations, slug } =

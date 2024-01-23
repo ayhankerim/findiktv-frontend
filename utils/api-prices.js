@@ -24,8 +24,13 @@ export function getStrapiURL(path) {
  * @param {boolean} options.preview router isPreview value
  */
 
-export async function getLastPriceDate({ product, city, type, quality }) {
-  // Find the pages that match this slug
+export async function getLastPriceDate({
+  product,
+  city,
+  type,
+  quality,
+  approvalStatus,
+}) {
   const gqlEndpoint = getStrapiURL("/graphql")
   const pricesRes = await fetch(gqlEndpoint, {
     method: "POST",
@@ -40,6 +45,7 @@ export async function getLastPriceDate({ product, city, type, quality }) {
           $city: ID
           $type: [String]!
           $quality: String!
+          $approvalStatus: [String]!
         ) {
           prices(
             filters: {
@@ -47,11 +53,7 @@ export async function getLastPriceDate({ product, city, type, quality }) {
               city: { id: { eq: $city } }
               type: { in: $type }
               quality: { eq: $quality }
-              or: [
-                { approvalStatus: { eq: "approved" }},
-                { approvalStatus: { eq: "adjustment" }},
-                { approvalStatus: { eq: "calculation" }}
-              ]
+              approvalStatus: { in: $approvalStatus }
             }
             sort: "date:desc"
             pagination: { limit: 1 }
@@ -70,6 +72,7 @@ export async function getLastPriceDate({ product, city, type, quality }) {
         city,
         type,
         quality,
+        approvalStatus,
       },
     }),
   })
@@ -93,6 +96,7 @@ export async function getPreviousPriceDate({
   date,
   type,
   quality,
+  approvalStatus,
 }) {
   // Find the pages that match this slug
   const gqlEndpoint = getStrapiURL("/graphql")
@@ -110,6 +114,7 @@ export async function getPreviousPriceDate({
           $type: [String]!
           $date: DateTime!
           $quality: String!
+          $approvalStatus: [String]!
         ) {
           prices(
             filters: {
@@ -118,11 +123,7 @@ export async function getPreviousPriceDate({
               type: { in: $type }
               date: {lt: $date }
               quality: { eq: $quality }
-              or: [
-                { approvalStatus: { eq: "approved" }},
-                { approvalStatus: { eq: "adjustment" }},
-                { approvalStatus: { eq: "calculation" }}
-              ]
+              approvalStatus: { in: $approvalStatus }
             }
             sort: "date:desc"
             pagination: { limit: 1 }
@@ -142,6 +143,7 @@ export async function getPreviousPriceDate({
         date,
         type,
         quality,
+        approvalStatus,
       },
     }),
   })
@@ -166,6 +168,7 @@ export async function getPriceValues({
   maxDate,
   type,
   quality,
+  approvalStatus,
 }) {
   const gqlEndpoint = getStrapiURL("/graphql")
   const pricesRes = await fetch(gqlEndpoint, {
@@ -183,6 +186,7 @@ export async function getPriceValues({
           $minDate: DateTime
           $maxDate: DateTime
           $quality: String!
+          $approvalStatus: [String]!
         ) {
           prices(
             filters: {
@@ -202,11 +206,7 @@ export async function getPriceValues({
                 },
               ],
               quality: { eq: $quality }
-              or: [
-                { approvalStatus: { eq: "approved" }},
-                { approvalStatus: { eq: "adjustment" }},
-                { approvalStatus: { eq: "calculation" }}
-              ]
+              approvalStatus: { in: $approvalStatus }
             }
             sort: "date:desc"
             pagination: { limit: 100 }
@@ -228,6 +228,7 @@ export async function getPriceValues({
         maxDate,
         type,
         quality,
+        approvalStatus,
       },
     }),
   })
@@ -244,6 +245,7 @@ export async function getPriceCard({
   priceType,
   priceQualities,
   city,
+  approvalStatus,
 }) {
   let priceCardArray = []
   for (let i = 0; i < priceQualities.length; i++) {
@@ -252,6 +254,7 @@ export async function getPriceCard({
       type: priceType,
       quality: priceQualities[i],
       city: city,
+      approvalStatus: approvalStatus,
     })
     const PreviousPricedate = await getPreviousPriceDate({
       product: product,
@@ -263,6 +266,7 @@ export async function getPriceCard({
         .toISOString(),
       quality: priceQualities[i],
       city: city,
+      approvalStatus: approvalStatus,
     })
     const getPriceValue = await getPriceValues({
       product: product,
@@ -279,6 +283,7 @@ export async function getPriceCard({
         .toISOString(),
       quality: priceQualities[i],
       city: city,
+      approvalStatus: approvalStatus,
     })
     let priceSum = 0
     let totalvolume = 0
@@ -302,6 +307,7 @@ export async function getPriceCard({
         .toISOString(),
       quality: priceQualities[i],
       city: city,
+      approvalStatus: approvalStatus,
     })
     let pricePrevSum = 0
     let totalPrevvolume = 0
@@ -368,11 +374,17 @@ export async function getProductCities({ product, type }) {
   return itemsData.data.cities.data
 }
 
-export async function getCitiesPrice({ product, priceType, priceQualities }) {
+export async function getCitiesPrice({
+  product,
+  priceType,
+  priceQualities,
+  approvalStatus,
+}) {
   let priceCitiesArray = []
   const priceCities = await getProductCities({
     product: product,
     type: priceType,
+    approvalStatus: approvalStatus,
   })
   for (let y = 0; y < priceCities.length; y++) {
     let priceCitiesQualityArray = []
@@ -382,6 +394,7 @@ export async function getCitiesPrice({ product, priceType, priceQualities }) {
         city: priceCities[y].id,
         type: priceType,
         quality: priceQualities[i],
+        approvalStatus: approvalStatus,
       })
       const PreviousPricedate = await getPreviousPriceDate({
         product: product,
@@ -393,6 +406,7 @@ export async function getCitiesPrice({ product, priceType, priceQualities }) {
           .set("second", 0)
           .toISOString(),
         quality: priceQualities[i],
+        approvalStatus: approvalStatus,
       })
       const getPriceValue = await getPriceValues({
         product: product,
@@ -409,6 +423,7 @@ export async function getCitiesPrice({ product, priceType, priceQualities }) {
           .set("second", 59)
           .toISOString(),
         quality: priceQualities[i],
+        approvalStatus: approvalStatus,
       })
       let priceSum = 0
       let totalvolume = 0
@@ -432,6 +447,7 @@ export async function getCitiesPrice({ product, priceType, priceQualities }) {
           .set("second", 59)
           .toISOString(),
         quality: priceQualities[i],
+        approvalStatus: approvalStatus,
       })
       let pricePrevSum = 0
       let totalPrevvolume = 0
@@ -458,7 +474,12 @@ export async function getCitiesPrice({ product, priceType, priceQualities }) {
   return priceCitiesArray
 }
 
-export async function getDefaultPriceValue({ product, type, quality }) {
+export async function getDefaultPriceValue({
+  product,
+  type,
+  quality,
+  approvalStatus,
+}) {
   const gqlEndpoint = getStrapiURL("/graphql")
   const date_limit = Moment()
     .subtract(15, "days")
@@ -479,6 +500,7 @@ export async function getDefaultPriceValue({ product, type, quality }) {
           $type: [String]!
           $quality: String!
           $date_limit: DateTime!
+          $approvalStatus: [String]!
         ) {
           prices(
             filters: {
@@ -486,11 +508,7 @@ export async function getDefaultPriceValue({ product, type, quality }) {
               type: { in: $type }
               date: { lte: $date_limit }
               quality: { eq: $quality }
-              or: [
-                { approvalStatus: { eq: "approved" }},
-                { approvalStatus: { eq: "adjustment" }},
-                { approvalStatus: { eq: "calculation" }}
-              ]
+              approvalStatus: { in: $approvalStatus }
             }
             sort: "date:desc"
             pagination: { limit: 1 }
@@ -512,6 +530,7 @@ export async function getDefaultPriceValue({ product, type, quality }) {
         type,
         quality,
         date_limit,
+        approvalStatus,
       },
     }),
   })
@@ -526,13 +545,19 @@ export async function getDefaultPriceValue({ product, type, quality }) {
   return pricesData.data.prices.data
 }
 
-export async function getDefaultPriceValues({ product, type, priceQualities }) {
+export async function getDefaultPriceValues({
+  product,
+  type,
+  priceQualities,
+  approvalStatus,
+}) {
   let defaultPriceValuesArray = []
   for (let y = 0; y < priceQualities.length; y++) {
     const defaultPriceValue = await getDefaultPriceValue({
       product: product,
       type: type,
       quality: priceQualities[y],
+      approvalStatus: approvalStatus,
     })
     defaultPriceValuesArray.push({
       average: defaultPriceValue[0].attributes.average,
@@ -544,7 +569,13 @@ export async function getDefaultPriceValues({ product, type, priceQualities }) {
   return defaultPriceValuesArray
 }
 
-export async function getMaxPrice({ product, type, quality, date }) {
+export async function getMaxPrice({
+  product,
+  type,
+  quality,
+  date,
+  approvalStatus,
+}) {
   // Find the pages that match this slug
   const gqlEndpoint = getStrapiURL("/graphql")
   const itemsRes = await fetch(gqlEndpoint, {
@@ -561,6 +592,7 @@ export async function getMaxPrice({ product, type, quality, date }) {
           $type: [String]!
           $date: DateTime!
           $quality: String!
+          $approvalStatus: [String]!
         ) {
           prices(
             filters: {
@@ -569,11 +601,7 @@ export async function getMaxPrice({ product, type, quality, date }) {
               type: { in: $type }
               date: { gte: $date }
               quality: { eq: $quality }
-              or: [
-                { approvalStatus: { eq: "approved" }},
-                { approvalStatus: { eq: "adjustment" }},
-                { approvalStatus: { eq: "calculation" }}
-              ]
+              approvalStatus: { in: $approvalStatus }
             }
             sort: "max:desc"
             pagination: { limit: 1 }
@@ -592,6 +620,7 @@ export async function getMaxPrice({ product, type, quality, date }) {
         type,
         quality,
         date,
+        approvalStatus,
       },
     }),
   })
@@ -606,7 +635,13 @@ export async function getMaxPrice({ product, type, quality, date }) {
   return itemsData.data.prices.data[0].attributes.max
 }
 
-export async function getMinPrice({ product, type, quality, date }) {
+export async function getMinPrice({
+  product,
+  type,
+  quality,
+  date,
+  approvalStatus,
+}) {
   // Find the pages that match this slug
   const gqlEndpoint = getStrapiURL("/graphql")
   const itemsRes = await fetch(gqlEndpoint, {
@@ -623,6 +658,7 @@ export async function getMinPrice({ product, type, quality, date }) {
           $type: [String]!
           $date: DateTime!
           $quality: String!
+          $approvalStatus: [String]!
         ) {
           prices(
             filters: {
@@ -631,11 +667,7 @@ export async function getMinPrice({ product, type, quality, date }) {
               type: { in: $type }
               date: { gte: $date }
               quality: { eq: $quality }
-              or: [
-                { approvalStatus: { eq: "approved" }},
-                { approvalStatus: { eq: "adjustment" }},
-                { approvalStatus: { eq: "calculation" }}
-              ]
+              approvalStatus: { in: $approvalStatus }
             }
             sort: "min:asc"
             pagination: { limit: 1 }
@@ -654,6 +686,7 @@ export async function getMinPrice({ product, type, quality, date }) {
         type,
         quality,
         date,
+        approvalStatus,
       },
     }),
   })
@@ -668,7 +701,13 @@ export async function getMinPrice({ product, type, quality, date }) {
   return itemsData.data.prices.data[0].attributes.min
 }
 
-export async function getOldestDate({ product, type, quality, date }) {
+export async function getOldestDate({
+  product,
+  type,
+  quality,
+  date,
+  approvalStatus,
+}) {
   // Find the pages that match this slug
   const gqlEndpoint = getStrapiURL("/graphql")
   const itemsRes = await fetch(gqlEndpoint, {
@@ -685,6 +724,7 @@ export async function getOldestDate({ product, type, quality, date }) {
           $type: [String]!
           $date: DateTime!
           $quality: String!
+          $approvalStatus: [String]!
         ) {
           prices(
             filters: {
@@ -693,11 +733,7 @@ export async function getOldestDate({ product, type, quality, date }) {
               type: { in: $type }
               date: { gte: $date }
               quality: { eq: $quality }
-              or: [
-                { approvalStatus: { eq: "approved" }},
-                { approvalStatus: { eq: "adjustment" }},
-                { approvalStatus: { eq: "calculation" }}
-              ]
+              approvalStatus: { in: $approvalStatus }
             }
             sort: "date:asc"
             pagination: { limit: 1 }
@@ -716,6 +752,7 @@ export async function getOldestDate({ product, type, quality, date }) {
         type,
         quality,
         date,
+        approvalStatus,
       },
     }),
   })
@@ -735,6 +772,7 @@ export async function getTermlyPriceList({
   priceType,
   priceQualities,
   city,
+  approvalStatus,
 }) {
   const priceTerms = [
     [
@@ -773,6 +811,7 @@ export async function getTermlyPriceList({
           type: priceType,
           quality: priceQualities[i],
           city: city,
+          approvalStatus: approvalStatus,
         })
         const PreviousPricedate = await getPreviousPriceDate({
           product: product,
@@ -785,6 +824,7 @@ export async function getTermlyPriceList({
             .toISOString(),
           quality: priceQualities[i],
           city: city,
+          approvalStatus: approvalStatus,
         })
         const getPriceValue = await getPriceValues({
           product: product,
@@ -801,6 +841,7 @@ export async function getTermlyPriceList({
             .toISOString(),
           quality: priceQualities[i],
           city: city,
+          approvalStatus: approvalStatus,
         })
         let priceSum = 0
         let totalvolume = 0
@@ -826,6 +867,7 @@ export async function getTermlyPriceList({
                 .toISOString(),
               quality: priceQualities[i],
               city: city,
+              approvalStatus: approvalStatus,
             })
           : getPriceValue
         let pricePrevSum = 0
@@ -874,6 +916,7 @@ export async function getTermlyPriceList({
                 .set("minute", 0)
                 .set("second", 0)
                 .toISOString(),
+              approvalStatus: approvalStatus,
             })
             priceData.push({
               name: priceQualities[i],
@@ -892,6 +935,7 @@ export async function getTermlyPriceList({
                 .set("minute", 0)
                 .set("second", 0)
                 .toISOString(),
+              approvalStatus: approvalStatus,
             })
             priceData.push({
               name: priceQualities[i],
@@ -915,7 +959,12 @@ export async function getTermlyPriceList({
   return priceArray
 }
 
-export async function getPriceEntries({ product, city, priceType }) {
+export async function getPriceEntries({
+  product,
+  city,
+  priceType,
+  approvalStatus,
+}) {
   const gqlEndpoint = getStrapiURL("/graphql")
   const itemsRes = await fetch(gqlEndpoint, {
     method: "POST",
@@ -929,17 +978,14 @@ export async function getPriceEntries({ product, city, priceType }) {
           $product: String!
           $city: ID
           $priceType: [String]!
+          $approvalStatus: [String]!
         ) {
           prices(
             filters: {
               product: { slug: { eq: $product } }
               city: { id: { eq: $city } }
               type: { in: $priceType }
-              or: [
-                { approvalStatus: { eq: "approved" }},
-                { approvalStatus: { eq: "adjustment" }},
-                { approvalStatus: { eq: "calculation" }}
-              ]
+              approvalStatus: { in: $approvalStatus }
             }
             sort: "date:desc"
             pagination: { limit: 10 }
@@ -963,6 +1009,7 @@ export async function getPriceEntries({ product, city, priceType }) {
       variables: {
         product,
         priceType,
+        approvalStatus,
         city,
       },
     }),
@@ -977,7 +1024,12 @@ export async function getPriceEntries({ product, city, priceType }) {
   return itemsData.data.prices.data
 }
 
-export async function getGraphData({ product, city, priceType }) {
+export async function getGraphData({
+  product,
+  city,
+  priceType,
+  approvalStatus,
+}) {
   const gqlEndpoint = getStrapiURL("/graphql")
   const itemsRes = await fetch(gqlEndpoint, {
     method: "POST",
@@ -991,17 +1043,14 @@ export async function getGraphData({ product, city, priceType }) {
           $product: String!
           $city: ID
           $priceType: [String]!
+          $approvalStatus: [String]!
         ) {
           prices(
             filters: {
               product: { slug: { eq: $product } }
               city: { id: { eq: $city } }
               type: { in: $priceType }
-              or: [
-                { approvalStatus: { eq: "approved" }},
-                { approvalStatus: { eq: "adjustment" }},
-                { approvalStatus: { eq: "calculation" }}
-              ]
+              approvalStatus: { in: $approvalStatus }
             }
             sort: "date:desc"
             pagination: { limit: 1000 }
@@ -1022,12 +1071,11 @@ export async function getGraphData({ product, city, priceType }) {
         product,
         priceType,
         city,
+        approvalStatus,
       },
     }),
   })
-
   const itemsData = await itemsRes.json()
-  // Make sure we found something, otherwise return null
   if (itemsData.data?.prices == null || itemsData.data?.prices.length === 0) {
     return null
   }
