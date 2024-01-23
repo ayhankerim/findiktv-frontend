@@ -46,7 +46,7 @@ const PriceEntries = ({ userContent, global, userContext }) => {
         fields: ["title", "slug"],
         populate: {
           prices: {
-            populate: ["min", "max", "average"],
+            populate: ["id", "min", "max", "average"],
             filters: {
               type: {
                 $eq: pricetype,
@@ -349,10 +349,10 @@ const PriceEntries = ({ userContent, global, userContext }) => {
                             try {
                               setErrors({ api: null })
                               fetchAPI(
-                                "/prices",
+                                `/prices/${item.attributes.prices.data[0]?.id}`,
                                 {},
                                 {
-                                  method: "POST",
+                                  method: "PUT",
                                   body: JSON.stringify({
                                     data: {
                                       date: Moment(values.date)
@@ -361,7 +361,6 @@ const PriceEntries = ({ userContent, global, userContext }) => {
                                         .set("minute", Moment().minutes())
                                         .set("second", Moment().seconds())
                                         .format("YYYY-MM-DD HH:mm:ss"),
-                                      article: null,
                                       min: Number(
                                         values.minimum_price
                                           .substring(1)
@@ -377,16 +376,6 @@ const PriceEntries = ({ userContent, global, userContext }) => {
                                           .substring(1)
                                           .replace(",", ".")
                                       ),
-                                      quality: productQuality,
-                                      volume: 1,
-                                      efficiency: 50,
-                                      product:
-                                        process.env.NEXT_PUBLIC_FINDIK_ID,
-                                      approvalStatus: "adjustment",
-                                      type: priceType,
-                                      city: item.id,
-                                      user: userData.id,
-                                      ip: "",
                                     },
                                   }),
                                 }
@@ -570,12 +559,12 @@ const PriceEntries = ({ userContent, global, userContext }) => {
                                         <span role="status">
                                           <BiLoaderCircle className="inline-block align-middle w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" />
                                           <span className="sr-only">
-                                            Gönderiliyor...
+                                            Güncelleniyor...
                                           </span>
-                                          <span>Gönderiliyor...</span>
+                                          <span>Güncelleniyor...</span>
                                         </span>
                                       ) : (
-                                        <span>Gönder</span>
+                                        <span>Güncelle</span>
                                       )}
                                     </button>
                                   </div>
