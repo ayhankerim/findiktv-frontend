@@ -9,6 +9,21 @@ export default class MyDocument extends Document {
         <body>
           <Main />
           <NextScript />
+          <Script
+            id="SiteName"
+            strategy="beforeInteractive"
+            type="application/ld+json"
+          >
+            {`
+          {
+            "@context" : "https://schema.org",
+            "@type" : "WebSite",
+            "name" : "FINDIK TV",
+            "alternateName" : "FTV",
+            "url" : "https://www.findiktv.com/"
+          }
+        `}
+          </Script>
           {process.env.NEXT_PUBLIC_DISABLE_EXTERNAL_SCRIPTS != "on" && (
             <Script
               async={true}

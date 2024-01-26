@@ -201,7 +201,7 @@ const PriceEntries = ({ userContent, global, userContext }) => {
                       <label className="col-span-2 text-center font-bold">
                         Tip
                       </label>
-                      <button
+                      {/* <button
                         className={` ${
                           priceType === "stockmarket" &&
                           "bg-warning text-white border-warning"
@@ -211,7 +211,7 @@ const PriceEntries = ({ userContent, global, userContext }) => {
                         }
                       >
                         Borsa Fiyatı
-                      </button>
+                      </button> */}
                       <button
                         className={` ${
                           priceType === "openmarket" &&
