@@ -144,15 +144,9 @@ export async function createAutoArticle() {
     .set("minute", Moment().minutes())
     .set("second", Moment().seconds())
     .format()
-  const slug =
-    slugify(title) +
-    "-" +
-    Moment(
-      contentSections.find(
-        (item) => item.__typename === "ComponentSectionsCityPriceList"
-      )?.date
-    ).format("MMMM-Do-YYYY") +
-    "-findik-fiyatlari"
+  const slug = slugify(
+    title + "-" + Moment().format("MMMM-do-YYYY") + "-findik-fiyatlari"
+  )
   const imageArt = image.data.id
   const homepage_imageArt = homepage_image.data.id
   const categoryArt = category.data.id
@@ -181,10 +175,7 @@ export async function createAutoArticle() {
             data: {
               publishedAt: "${publishedAt}",
               title: "${
-                title +
-                " " +
-                Moment(CityPrice.date).format("LL") +
-                " Fındık Fiyatları"
+                title + " " + Moment().format("LL") + " Fındık Fiyatları"
               }",
               slug: "${slug}",
               summary: "${summary}",
@@ -206,8 +197,10 @@ export async function createAutoArticle() {
                 },
                 {
                   __typename: "ComponentSectionsCityPriceList",
-                  title: "${CityPrice.title}",
-                  description: "${CityPrice.description}",
+                  title: "${CityPrice.title === null ? "" : CityPrice.title}",
+                  description: "${
+                    CityPrice.description === null ? "" : CityPrice.description
+                  }",
                   product: "${process.env.NEXT_PUBLIC_FINDIK_ID}",
                   date: "${Moment().format()}",
                   priceType: "${CityPrice.priceType}",
