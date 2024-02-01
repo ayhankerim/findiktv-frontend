@@ -144,9 +144,8 @@ export async function createAutoArticle() {
     .set("minute", Moment().minutes())
     .set("second", Moment().seconds())
     .format()
-  const slug = slugify(
-    title + "-" + Moment().format("MMMM-do-YYYY") + "-findik-fiyatlari"
-  )
+  const titleOf = title + " " + Moment().format("LL") + " Fındık Fiyatları"
+  const slug = slugify(titleOf)
   const imageArt = image.data.id
   const homepage_imageArt = homepage_image.data.id
   const categoryArt = category.data.id
@@ -155,6 +154,16 @@ export async function createAutoArticle() {
   const productsArt = product.data.id
   const CityPrice = contentSections.find(
     (item) => item.__typename === "ComponentSectionsCityPriceList"
+  )
+  const richContent = contentSections
+    .find((item) => item.__typename === "ComponentSectionsRichText")
+    .content.replace(/"/g, "'")
+  console.log(
+    JSON.stringify(
+      contentSections.find(
+        (item) => item.__typename === "ComponentSectionsRichText"
+      ).content
+    )
   )
 
   const createArticleRes = await fetch(gqlEndpoint, {
@@ -174,9 +183,7 @@ export async function createAutoArticle() {
           createArticle(
             data: {
               publishedAt: "${publishedAt}",
-              title: "${
-                title + " " + Moment().format("LL") + " Fındık Fiyatları"
-              }",
+              title: "${titleOf}",
               slug: "${slug}",
               summary: "${summary}",
               content: "",
@@ -189,11 +196,7 @@ export async function createAutoArticle() {
               contentSections: [
                 {
                   __typename: "ComponentSectionsRichText",
-                  content: "${
-                    contentSections.find(
-                      (item) => item.__typename === "ComponentSectionsRichText"
-                    ).content
-                  }"
+                  content: "${richContent}"
                 },
                 {
                   __typename: "ComponentSectionsCityPriceList",
