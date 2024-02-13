@@ -676,7 +676,289 @@ export async function getCityData({ slug, locale, preview }) {
   // Return the first item since there should only be one result per slug
   return citiesData.data.cities.data[0]
 }
+export async function getAllFirmListData() {
+  // Find the pages that match this slug
+  const gqlEndpoint = getStrapiURL("/graphql")
+  const allFirmsRes = await fetch(gqlEndpoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.NEXT_PUBLIC_SECRET_TOKEN}`,
+    },
+    body: JSON.stringify({
+      query: `
+        fragment FileParts on UploadFileEntityResponse {
+          data {
+            id
+            attributes {
+              alternativeText
+              url
+              formats
+            }
+          }
+        }
 
+        query firmsdata {
+          firms {
+            data {
+              id
+              attributes {
+                name
+                slug
+                servicePoints
+                logo {
+                  ...FileParts
+                }
+                address
+                website
+                createdAt
+                updatedAt
+                publishedAt
+              }
+            }
+          }
+        }
+      `,
+    }),
+  })
+
+  const allFirmsData = await allFirmsRes.json()
+  // Make sure we found something, otherwise return null
+  if (
+    allFirmsData.data?.firms.data == null ||
+    allFirmsData.data.firms.data.length === 0
+  ) {
+    return null
+  }
+
+  // Return the first item since there should only be one result per slug
+  return allFirmsData.data
+}
+export async function getSectorListData() {
+  // Find the pages that match this slug
+  const gqlEndpoint = getStrapiURL("/graphql")
+  const sectorsRes = await fetch(gqlEndpoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.NEXT_PUBLIC_SECRET_TOKEN}`,
+    },
+    body: JSON.stringify({
+      query: `
+        query sectors {
+          firmCategories {
+            data {
+              id
+              attributes {
+                name
+                slug
+                firms {
+                  data {
+                    id
+                  }
+                }
+              }
+            }
+          }
+        }
+      `,
+    }),
+  })
+
+  const sectorsData = await sectorsRes.json()
+  // Make sure we found something, otherwise return null
+  if (
+    sectorsData.data?.firmCategories.data == null ||
+    sectorsData.data.firmCategories.data.length === 0
+  ) {
+    return null
+  }
+  // Return the first item since there should only be one result per slug
+  return sectorsData.data.firmCategories.data
+}
+export async function getFirmData({ slug }) {
+  // Find the pages that match this slug
+  const gqlEndpoint = getStrapiURL("/graphql")
+  const firmsRes = await fetch(gqlEndpoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.NEXT_PUBLIC_SECRET_TOKEN}`,
+    },
+    body: JSON.stringify({
+      query: `
+        fragment FileParts on UploadFileEntityResponse {
+          data {
+            id
+            attributes {
+              alternativeText
+              url
+              formats
+            }
+          }
+        }
+        fragment galleryParts on UploadFileRelationResponseCollection {
+          data {
+            id
+            attributes {
+              alternativeText
+              url
+              formats
+            }
+          }
+        }
+        query firmdata($slug: String!) {
+          firms(filters: { slug: { eq: $slug } }) {
+            data {
+              id
+              attributes {
+                name
+                slug
+                description
+                about
+                firm_category {
+                  data {
+                    id
+                    attributes {
+                      name
+                      slug
+                    }
+                  }
+                }
+                logo {
+                  ...FileParts
+                }
+                gallery {
+                  ...galleryParts
+                }
+                video
+                address
+                email
+                website
+                phone
+                user {
+                  data {
+                    id
+                    attributes {
+                      name
+                      surname
+                    }
+                  }
+                }
+                articles {
+                  data {
+                    id
+                    attributes {
+                      title
+                      slug
+                      image {
+                        ...FileParts
+                      }
+                      createdAt
+                      updatedAt
+                      publishedAt
+                    }
+                  }
+                }
+                servicePoints
+                createdAt
+                updatedAt
+                publishedAt
+              }
+            }
+          }
+        }
+      `,
+      variables: {
+        slug,
+      },
+    }),
+  })
+
+  const firmsData = await firmsRes.json()
+  // Make sure we found something, otherwise return null
+  if (firmsData.data?.firms == null || firmsData.data.firms.length === 0) {
+    return null
+  }
+
+  // Return the first item since there should only be one result per slug
+  return firmsData.data.firms.data[0]
+}
+export async function getSectorData({ slug }) {
+  // Find the pages that match this slug
+  const gqlEndpoint = getStrapiURL("/graphql")
+  const sectorRes = await fetch(gqlEndpoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.NEXT_PUBLIC_SECRET_TOKEN}`,
+    },
+    body: JSON.stringify({
+      query: `
+        fragment FileParts on UploadFileEntityResponse {
+          data {
+            id
+            attributes {
+              alternativeText
+              url
+              formats
+            }
+          }
+        }
+        query firmSectors($slug: String!) {
+          firmCategories(filters: { slug: { eq: $slug } }) {
+            data {
+              id
+              attributes {
+                name
+                slug
+                firms(
+                  sort: "updatedAt:desc"
+                  pagination: { limit: 1000 }
+                  ) {
+                  data {
+                    id
+                    attributes {
+                      name
+                      slug
+                      address
+                      phone
+                      website
+                      logo {
+                        ...FileParts
+                      }
+                      servicePoints
+                      createdAt
+                      updatedAt
+                      publishedAt
+                    }
+                  }
+                }
+                createdAt
+                updatedAt
+              }
+            }
+          }
+        }
+      `,
+      variables: {
+        slug,
+      },
+    }),
+  })
+
+  const sectorsData = await sectorRes.json()
+  // Make sure we found something, otherwise return null
+  if (
+    sectorsData.data?.firmCategories == null ||
+    sectorsData.data.firmCategories.length === 0
+  ) {
+    return null
+  }
+
+  // Return the first item since there should only be one result per slug
+  return sectorsData.data.firmCategories.data[0]
+}
 export async function getTagData({ slug, locale, preview }) {
   // Find the pages that match this slug
   const gqlEndpoint = getStrapiURL("/graphql")

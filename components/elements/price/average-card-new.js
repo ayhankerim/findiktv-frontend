@@ -40,26 +40,34 @@ function currencyFormatter(value) {
   }).format(value)
   return amount
 }
+const getBgColor = (value1, value2) => {
+  if (value1 > value2) return "bg-up/80"
+  else if (value1 < value2) return "bg-down/80"
+  else return "bg-nochange/20"
+}
+
+const getIcon = (value1, value2) => {
+  if (!value1 || !value2) return <TbMinus className="text-lg text-nochange" />
+  if (value1 > value2) return <TbArrowUp className="text-lg text-lightgray" />
+  if (value1 < value2) return <TbArrowDown className="text-lg text-lightgray" />
+  return <TbMinus className="text-lg text-nochange" />
+}
 const CardItem = ({ quality, value1, value2 }) => {
   return (
     <>
       <div
         className={classNames(
-          value1 > value2 && "bg-up/80",
-          value1 < value2 && "bg-down/80",
-          value1 === value2 && "bg-nochange/20",
+          getBgColor(value1, value2),
           "flex justify-center items-center h-12 w-10 rounded p-2"
         )}
       >
-        {value1 > value2 && <TbArrowUp className="text-lg text-lightgray" />}
-        {value1 < value2 && <TbArrowDown className="text-lg text-lightgray" />}
-        {value1 === value2 && <TbMinus className="text-lg text-nochange" />}
+        {getIcon(value1, value2)}
       </div>
       <div className="flex flex-col flex-1">
-        <span className="font-bold text-xl">{currencyFormatter(value1)}</span>
+        <div className="font-bold text-xl">{currencyFormatter(value1)}</div>
         <div className="flex justify-between">
-          <span className="text-midgray">{quality} Kalite Ort.</span>
-          <span
+          <h2 className="text-midgray">{quality} Kalite Ort.</h2>
+          <div
             className={classNames(
               value1 > value2 && "text-up",
               value1 < value2 && "text-down",
@@ -69,7 +77,7 @@ const CardItem = ({ quality, value1, value2 }) => {
           >
             {value2 > 0 &&
               ((100 * (value1 - value2)) / value2).toFixed(1) + "%"}
-          </span>
+          </div>
         </div>
       </div>
     </>

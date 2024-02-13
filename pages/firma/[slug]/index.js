@@ -1,0 +1,639 @@
+import React from "react"
+import dynamic from "next/dynamic"
+import { useRouter } from "next/router"
+import { useSession } from "next-auth/react"
+import { getFirmData, getAdsData, fetchAPI, getGlobalData } from "@/utils/api"
+import { turkeyApi } from "@/utils/turkiye-api"
+import { getPriceCard, getGraphData } from "@/utils/api-prices"
+import Layout from "@/components/layout"
+import Seo from "@/components/elements/seo"
+import VideoEmbed from "@/components/elements/video-embed"
+import AverageCard from "@/components/elements/price/average-card-new"
+import LatestArticles from "@/components/elements/article/latest-firm-articles"
+import Link from "next/link"
+import Image from "next/image"
+import Slider from "react-slick"
+import { PatternFormat } from "react-number-format"
+import Tooltip from "@/components/elements/tooltip"
+import { LocalBusinessJsonLd } from "next-seo"
+import {
+  MdLocationPin,
+  MdPhone,
+  MdAlternateEmail,
+  MdLink,
+  MdOutlineLocationOn,
+  MdAddChart,
+} from "react-icons/md"
+import { RiEditBoxLine, RiAddFill } from "react-icons/ri"
+import { FcApproval } from "react-icons/fc"
+import Moment from "moment"
+import "moment/locale/tr"
+import { BsChevronLeft, BsChevronRight } from "react-icons/bs"
+import { BiLoaderCircle } from "react-icons/bi"
+import "slick-carousel/slick/slick.css"
+import { slugify } from "@/utils/slugify"
+
+const Loader = ({ cssClass }) => (
+  <div className={`lds-ellipsis ${cssClass}`}>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+)
+const PriceChart = dynamic(
+  () => import("@/components/elements/price/chart-new"),
+  {
+    loading: () => <Loader cssClass="h-[400px]" />,
+  }
+)
+function SampleNextArrow(props) {
+  const { className, style, onClick } = props
+  return (
+    <div
+      className={`${className} ${
+        className.indexOf("slick-disabled") !== -1
+          ? "cursor-not-allowed opacity-50"
+          : "cursor-pointer"
+      } absolute flex z-10 items-center inset-y-0 right-0`}
+      style={{ ...style, display: "flex" }}
+      onClick={onClick}
+    >
+      <BsChevronRight className="text-xxl text-white drop-shadow self-center" />
+    </div>
+  )
+}
+
+function SamplePrevArrow(props) {
+  const { className, style, onClick } = props
+  return (
+    <div
+      className={`${className} ${
+        className.indexOf("slick-disabled") !== -1
+          ? "cursor-not-allowed opacity-50"
+          : "cursor-pointer"
+      } absolute flex z-10 items-center inset-y-0 left-0`}
+      style={{ ...style, display: "flex" }}
+      onClick={onClick}
+    >
+      <BsChevronLeft className="text-xxl text-white drop-shadow self-center" />
+    </div>
+  )
+}
+const Gallery = ({ firmContent }) => {
+  const settings = {
+    dots: false,
+    speed: 500,
+    autoplay: true,
+    autoplaySpeed: 5000,
+    nextArrow: <SampleNextArrow />,
+    prevArrow: <SamplePrevArrow />,
+    slidesToShow: firmContent.gallery.data.length > 2 ? 2 : 1,
+    slidesToScroll: 1,
+    initialSlide: 0,
+    infinite: true,
+    responsive: [
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          arrows: false,
+        },
+      },
+    ],
+  }
+  return (
+    <div className="relative w-full left-0 top-0 h-[200px] sm:h-[300px] overflow-y-hidden lg:flex flex-col">
+      {firmContent.gallery.data.length > 0 ? (
+        <Slider {...settings}>
+          {firmContent.gallery.data.map((item, i) => (
+            <article key={item.id}>
+              <Link href={`${item.attributes.url}`} target="_blank">
+                <div className="relative mx-auto w-full h-[300px] overflow-hidden bg-white">
+                  <Image
+                    src={item.attributes.formats.small.url}
+                    alt={`${firmContent.name} Galeri Görseli ${i + 1}`}
+                    className="absolute inset-0 h-full w-full object-cover"
+                    priority={i < 2 ? true : false}
+                    fill
+                  />
+                </div>
+              </Link>
+            </article>
+          ))}
+        </Slider>
+      ) : (
+        <div className="relative mx-auto w-full h-[300px] overflow-hidden">
+          <Image
+            src="https://www.findiktv.com/cdn-cgi/imagedelivery/A_vnS-Tfmrf1TT32XC1EgA/b875adcf-38b8-4458-84fb-8de2245bbc00/format=auto,width=1200"
+            alt="Şirket"
+            className="absolute inset-0 h-full w-full object-cover"
+            priority={true}
+            fill
+          />
+        </div>
+      )}
+    </div>
+  )
+}
+
+const Address = ({ firmContent }) => {
+  const { data: session } = useSession()
+  return (
+    <address className="flex flex-col not-italic gap-2">
+      <div className="flex items-center gap-2">
+        <MdLocationPin />
+        {firmContent.address && firmContent.address[0]?.address ? (
+          <a
+            href={firmContent?.address[0]?.googleMaps}
+            target="_blank"
+            rel="nofollow"
+          >
+            {firmContent.address[0].address +
+              " " +
+              firmContent.address[0].districtName +
+              " " +
+              firmContent.address[0].provinceName}
+          </a>
+        ) : (
+          <span>Adres girilmemiş</span>
+        )}
+      </div>
+      <div className="flex flex-wrap justify-between items-center gap-x-8 gap-y-2">
+        <div className="flex items-center gap-2">
+          <MdPhone />
+          {firmContent.phone ? (
+            <a className="hover:underline" href={`tel:+90${firmContent.phone}`}>
+              <PatternFormat
+                format="+90 (###) ### ## ##"
+                value={firmContent.phone}
+                displayType="text"
+              />
+            </a>
+          ) : (
+            <span>Telefon girilmemiş</span>
+          )}
+        </div>
+        <div className="flex items-center gap-2">
+          <MdAlternateEmail />
+          {firmContent.email ? (
+            <a
+              className="hover:underline"
+              target="_blank"
+              href={`mailto:${firmContent.email}`}
+            >
+              <span>{firmContent.email}</span>
+            </a>
+          ) : (
+            <span>E-posta adresi girilmemiş</span>
+          )}
+        </div>
+        <div className="flex items-center gap-2">
+          <MdLink />
+          {firmContent.website ? (
+            <a
+              className="hover:underline"
+              target="_blank"
+              rel="nofollow"
+              href={firmContent.website}
+            >
+              <span>{firmContent.website}</span>
+            </a>
+          ) : (
+            <span>Web adresi girilmemiş</span>
+          )}
+        </div>
+      </div>
+    </address>
+  )
+}
+const LocalBusSeo = ({ firmContent }) => {
+  const areaServedArray = firmContent.servicePoints
+    ? firmContent.servicePoints[0].provinces.map((province) => ({
+        geoMidpoint: {
+          latitude: turkeyApi.provinces.find((item) => item.id === province.id)
+            .coordinates.latitude,
+          longitude: turkeyApi.provinces.find((item) => item.id === province.id)
+            .coordinates.longitude,
+        },
+        geoRadius: "40000",
+      }))
+    : null
+  return (
+    <LocalBusinessJsonLd
+      type="Store"
+      id={firmContent.slug}
+      name={firmContent.name}
+      description={firmContent.description}
+      url={`http://www.findiktv.com/firma/${firmContent.slug}`}
+      telephone={`+90${firmContent.phone}`}
+      address={{
+        streetAddress: firmContent.address
+          ? firmContent.address[0]?.address
+          : "",
+        addressLocality: firmContent.address
+          ? firmContent.address[0]?.districtName
+          : "",
+        addressRegion: firmContent.address
+          ? firmContent.address[0]?.provinceName
+          : "",
+        addressCountry: "TR",
+      }}
+      geo={{
+        latitude: firmContent.address ? firmContent.address[0]?.latitude : "",
+        longitude: firmContent.address ? firmContent.address[0]?.longitude : "",
+      }}
+      images={[firmContent.gallery.data.map((item, i) => item.attributes.url)]}
+      sameAs={[firmContent.website]}
+      areaServed={areaServedArray}
+    />
+  )
+}
+const DynamicFirms = ({
+  firmContent,
+  priceCardData,
+  graphData,
+  preview,
+  global,
+  advertisement,
+  firmContext,
+}) => {
+  const router = useRouter()
+  const { data: session } = useSession()
+  if (!router.isFallback && !firmContent) {
+    return {
+      notFound: true,
+    }
+  }
+
+  // Loading screen (only possible in preview mode)
+  if (router.isFallback) {
+    return <div className="container">Yükleniyor...</div>
+  }
+
+  const metadata = {
+    id: 1,
+    metaTitle: `${firmContent.name}`,
+    metaDescription: `${firmContent.description}`,
+    twitterCardType: "summary",
+    twitterUsername: "findiktvcom",
+    shareImage: null,
+  }
+
+  const metadataWithDefaults = {
+    ...global.attributes.metadata,
+    ...metadata,
+  }
+  const articleSeoData = {
+    slug: "/firma/" + firmContext.slug,
+    datePublished: Moment(firmContext.createdAt).toISOString(),
+    dateModified: Moment(firmContext.updatedAt).toISOString(),
+    tags: [],
+  }
+  return (
+    <Layout global={global} pageContext={firmContext}>
+      <Seo metadata={metadataWithDefaults} others={articleSeoData} />
+      <LocalBusSeo firmContent={firmContent} />
+      <main className="container flex flex-col justify-between gap-4 pt-2 bg-white">
+        <div className="flex flex-col lg:flex-row items-start justify-between gap-4 pt-2">
+          <div className="flex flex-col flex-1 w-full gap-3">
+            <div className="flex flex-col items-end justify-between border rounded-xl border-lightgray">
+              <Gallery firmContent={firmContent} />
+              <div className="flex flex-col sm:flex-row w-full gap-4 p-4">
+                <div className="w-full md:w-3/12 relative top-[-30px] lg:top-[-100px] mb-[-20px] lg:mb-[-80px]">
+                  <div className="relative mx-auto w-full h-[200px] overflow-hidden rounded bg-white shadow-lg">
+                    <Image
+                      src={
+                        firmContent.logo.data
+                          ? firmContent.logo.data.attributes.formats.small.url
+                          : "https://www.findiktv.com/cdn-cgi/imagedelivery/A_vnS-Tfmrf1TT32XC1EgA/7bbe9bd7-c876-4387-bd6f-a01dcaec5400/format=auto,width=250"
+                      }
+                      alt={firmContent.name}
+                      className="absolute inset-0 h-full w-full object-contain rounded p-2"
+                      priority={true}
+                      fill
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-col w-full md:w-9/12 gap-2">
+                  <div className="flex flex-row w-full items-center justify-between">
+                    <div className="flex flex-col w-full">
+                      <div className="flex flex-col lg:flex-row w-full justify-between gap-2 items-start">
+                        <div className="flex items-center gap-2">
+                          <h1 className="font-semibold text-xl text-dark">
+                            {firmContent.name}
+                            {firmContent.user.data?.id && (
+                              <div className="inline-block ml-2 text-lg">
+                                <Tooltip
+                                  orientation="bottom"
+                                  tooltipText="Sayfa firma yetkilisi tarafından yönetiliyor"
+                                >
+                                  <FcApproval />
+                                </Tooltip>
+                              </div>
+                            )}
+                          </h1>
+                        </div>
+                        {session && session.id == firmContent.user.data?.id && (
+                          <div className="flex flex-row relative text-right gap-2">
+                            <Link
+                              href={`/firma/${firmContent.slug}/duzenle`}
+                              className="flex w-full whitespace-nowrap border items-center rounded-md px-2 py-1 text-sm hover:shadow-lg"
+                            >
+                              <RiAddFill
+                                className="mr-2 text-sm text-secondary"
+                                aria-hidden="true"
+                              />
+                              Fiyat Gir
+                            </Link>
+                            <Link
+                              href={`/firma/${firmContent.slug}/duzenle`}
+                              className="flex w-full border items-center rounded-md px-2 py-1 text-sm hover:shadow-lg"
+                            >
+                              <RiEditBoxLine
+                                className="mr-2 text-sm text-secondary"
+                                aria-hidden="true"
+                              />
+                              Düzenle
+                            </Link>
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex flex-col">
+                        <p>
+                          {firmContent.description}
+                          {session &&
+                            session.id == firmContent.user.data?.id && (
+                              <>
+                                {!firmContent.description &&
+                                  "Kısa açıklama/slogan girilmemiş"}
+                              </>
+                            )}
+                        </p>
+                        <Link
+                          href={`/firma/sektor/${firmContent.firm_category.data.attributes.slug}`}
+                          className="mb-4 text-secondary font-bold hover:underline"
+                        >
+                          {firmContent.firm_category.data.attributes.name}
+                        </Link>
+                      </div>
+                      <Address firmContent={firmContent} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-col lg:flex-row gap-4 items-start w-full">
+              <div id="about" className="flex flex-col lg:w-2/3 mb-8">
+                <div className="flex flex-row items-center justify-between border-b border-secondary/20 relative">
+                  <h2 className="font-semibold text-base text-midgray">
+                    Firma Hakkında
+                  </h2>
+                  <span className="absolute h-[5px] w-2/5 max-w-[180px] left-0 bottom-[-5px] bg-secondary/60"></span>
+                </div>
+                <div
+                  className="min-h-[20vh] mt-5 md:mt-4 pb-4 border-b border-secondary/20"
+                  dangerouslySetInnerHTML={{
+                    __html: firmContent.about
+                      ? firmContent.about
+                      : "<p>İçerik girilmemiş</p>",
+                  }}
+                />
+              </div>
+              <div id="servicePoints" className="flex flex-col lg:w-1/3 mb-8">
+                <div className="flex flex-row items-center justify-between border-b border-secondary/20 relative">
+                  <h2 className="font-semibold text-base text-midgray">
+                    Hizmet Noktaları
+                  </h2>
+                  <span className="absolute h-[5px] w-2/5 max-w-[180px] left-0 bottom-[-5px] bg-secondary/60"></span>
+                </div>
+                <div className="min-h-[8vh] mt-5 md:mt-4 pb-4 border-b border-secondary/20">
+                  {firmContent.servicePoints ? (
+                    <ul className="flex flex-col gap-2">
+                      {firmContent.servicePoints[0].provinces.map(
+                        (province, i) => {
+                          const provinceData = turkeyApi.provinces.find(
+                            (item) => item.id === province.id
+                          )
+                          return (
+                            <li key={i} className="flex gap-2">
+                              <Link
+                                href={`/firma/konum/${slugify(
+                                  provinceData.name
+                                )}`}
+                                className="font-bold hover:underline"
+                              >
+                                {provinceData.name}
+                              </Link>
+                              {province.districts.length > 0 ? (
+                                <ul className="flex gap-2">
+                                  {province.districts.map((districtId, j) => (
+                                    <li key={j}>
+                                      {
+                                        turkeyApi.provinces
+                                          .find(
+                                            (item) => item.id === province.id
+                                          )
+                                          .districts.find(
+                                            (district) =>
+                                              district.id === districtId
+                                          )?.name
+                                      }
+                                    </li>
+                                  ))}
+                                </ul>
+                              ) : (
+                                <p>Tüm ilçeler</p>
+                              )}
+                            </li>
+                          )
+                        }
+                      )}
+                    </ul>
+                  ) : (
+                    <p>Belirtilmemiş</p>
+                  )}
+                </div>
+              </div>
+            </div>
+            {firmContent.firm_category.data.attributes.slug ===
+              "findik-alim-satim" && (
+              <>
+                {priceCardData && <AverageCard priceCardData={priceCardData} />}
+                <PriceChart grapghData={graphData} />
+              </>
+            )}
+            <div id="Video" className="flex flex-col mb-8">
+              <div className="flex flex-row items-center justify-between border-b border-secondary/20 relative">
+                <h2 className="font-semibold text-base text-midgray">Video</h2>
+                <span className="absolute h-[5px] w-2/5 max-w-[180px] left-0 bottom-[-5px] bg-secondary/60"></span>
+              </div>
+              {firmContent.video ? (
+                <VideoEmbed data={firmContent.video} />
+              ) : (
+                <div className="min-h-[20vh] mt-5 md:mt-4 border-b border-secondary/20">
+                  <p>Video girilmemiş</p>
+                </div>
+              )}
+            </div>
+            <div id="Video" className="flex flex-col mb-8">
+              <div className="flex flex-row items-center justify-between border-b border-secondary/20 relative">
+                <h2 className="font-semibold text-base text-midgray">
+                  Firma Haberleri
+                </h2>
+                {session && session.id == firmContent.user.data?.id && (
+                  <Link
+                    href={`/firma/${firmContent.slug}/duzenle`}
+                    className="underline text-secondary"
+                  >
+                    Haber Ekle
+                  </Link>
+                )}
+                <span className="absolute h-[5px] w-2/5 max-w-[180px] left-0 bottom-[-5px] bg-secondary/60"></span>
+              </div>
+              {firmContent.articles.data.length > 0 ? (
+                <LatestArticles latestArticles={firmContent.articles} />
+              ) : (
+                <div className="min-h-[20vh] mt-5 md:mt-4 border-b border-secondary/20">
+                  <p>Haber girilmemiş</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </main>
+    </Layout>
+  )
+}
+
+export async function getStaticPaths(context) {
+  // Get all pages from Strapi
+  const firms = await context.locales.reduce(
+    async (currentfirmsPromise, locale) => {
+      const currentfirms = await currentfirmsPromise
+      const localefirms = await fetchAPI("/firms", {
+        locale,
+        fields: ["slug"],
+      })
+      return [...currentfirms, ...localefirms.data]
+    },
+    Promise.resolve([])
+  )
+
+  const paths = firms.map((firm) => {
+    const { slug } = firm.attributes
+    // Decompose the slug that was saved in Strapi
+    const slugArray = !slug ? false : slug
+
+    return {
+      params: { slug: slugArray },
+    }
+  })
+
+  return { paths, fallback: "blocking" }
+}
+
+export async function getStaticProps(context) {
+  const { params, locale, locales, defaultLocale } = context
+  const priceType = ["stockmarket", "openmarket", "tmo"]
+  const approvalStatus = ["approved", "adjustment"]
+  const priceQualities = ["Sivri", "Levant", "Giresun"]
+
+  const globalLocale = await getGlobalData(locale)
+  const advertisement = await getAdsData()
+  // Fetch pages. Include drafts if preview mode is on
+  const firmData = await getFirmData({
+    slug: params.slug,
+  })
+
+  if (firmData == null) {
+    // Giving the page no props will trigger a 404 page
+    return {
+      notFound: true,
+    }
+  }
+
+  // We have the required page data, pass it to the page component
+  const {
+    name,
+    slug,
+    description,
+    about,
+    firm_category,
+    logo,
+    gallery,
+    video,
+    address,
+    email,
+    website,
+    phone,
+    user,
+    articles,
+    servicePoints,
+    createdAt,
+    updatedAt,
+    publishedAt,
+  } = firmData.attributes
+
+  const firmContent = {
+    id: firmData.id,
+    name,
+    slug,
+    description,
+    about,
+    firm_category,
+    logo,
+    gallery,
+    video,
+    address,
+    email,
+    website,
+    phone,
+    user,
+    articles,
+    servicePoints,
+    createdAt,
+    updatedAt,
+    publishedAt,
+  }
+
+  const firmContext = {
+    locale,
+    locales,
+    defaultLocale,
+    slug,
+    createdAt,
+    updatedAt,
+  }
+  const priceCard = await getPriceCard({
+    product: "findik",
+    priceType: priceType,
+    priceQualities: priceQualities,
+    approvalStatus: approvalStatus,
+    user: user.data?.id,
+  })
+
+  const graphData = await getGraphData({
+    product: "findik",
+    priceType: priceType,
+    approvalStatus: approvalStatus,
+    user: user.data?.id,
+  })
+
+  return {
+    props: {
+      firmContent: firmContent,
+      priceCardData: priceCard,
+      graphData: graphData,
+      advertisement: advertisement,
+      global: globalLocale.data,
+      firmContext: {
+        ...firmContext,
+      },
+    },
+    revalidate: 60 * 60 * 4,
+  }
+}
+
+export default DynamicFirms

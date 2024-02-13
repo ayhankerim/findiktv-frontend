@@ -8,7 +8,6 @@ import Image from "next/image"
 import Layout from "@/components/layout"
 import Tooltip from "@/components/elements/tooltip"
 import Seo from "@/components/elements/seo"
-import SimpleSidebar from "@/components/elements/simple-sidebar"
 import { FcApproval } from "react-icons/fc"
 import { Tab } from "@headlessui/react"
 import { RiEditBoxLine, RiSeparator } from "react-icons/ri"
@@ -466,7 +465,6 @@ const DynamicUsers = ({ userContent, advertisement, global, userContext }) => {
               </div>
             )}
           </div>
-          <SimpleSidebar />
         </div>
       </main>
     </Layout>

@@ -5,10 +5,6 @@ import { categoryColor } from "@/utils/category-color"
 import "moment/locale/tr"
 import styles from "@/styles/latest-articles.module.scss"
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ")
-}
-
 const ArticleBlock = ({ article, category, index }) => {
   return (
     <>
