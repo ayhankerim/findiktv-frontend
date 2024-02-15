@@ -1,6 +1,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { PatternFormat } from "react-number-format"
+import { turkeyApi } from "@/utils/turkiye-api"
 import {
   MdLocationPin,
   MdPhone,
@@ -38,12 +39,22 @@ const FirmView = ({ firms }) => {
                   <MdLocationPin />
                   <span>
                     {item.attributes?.address &&
-                    item.attributes?.address[3]?.address
-                      ? item.attributes.address[3].address +
+                    item.attributes?.address[0]?.address
+                      ? item.attributes.address[0].address +
                         " " +
-                        item.attributes.address[2].districtName +
+                        turkeyApi.provinces
+                          .find(
+                            (a) =>
+                              a.id === item.attributes.address[0].provinceId
+                          )
+                          .districts.find(
+                            (d) =>
+                              d.id === item.attributes.address[0].districtId
+                          ).name +
                         " " +
-                        item.attributes.address[1].provinceName
+                        turkeyApi.provinces.find(
+                          (a) => a.id === item.attributes.address[0].provinceId
+                        ).name
                       : "Adres girilmemiş"}
                   </span>
                 </div>

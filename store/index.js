@@ -15,10 +15,11 @@ import adsSlice from "./advertisements"
 import progressSlice from "./progress"
 import userSlice from "./user"
 import commentSlice from "./comment"
+import firmsSlice from "./firms"
 
 const persistConfig = {
   key: "root",
-  blacklist: ["comment"],
+  blacklist: ["comment", "firm"],
   version: 1,
   storage,
 }
@@ -28,6 +29,7 @@ const rootReducer = combineReducers({
   advertisement: adsSlice.reducer,
   user: userSlice.reducer,
   comment: commentSlice.reducer,
+  firm: firmsSlice.reducer,
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

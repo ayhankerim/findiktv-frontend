@@ -91,7 +91,7 @@ const Gallery = ({ firmContent }) => {
     slidesToShow: firmContent.gallery.data.length > 2 ? 2 : 1,
     slidesToScroll: 1,
     initialSlide: 0,
-    infinite: true,
+    infinite: false,
     responsive: [
       {
         breakpoint: 480,
@@ -150,11 +150,18 @@ const Address = ({ firmContent }) => {
             target="_blank"
             rel="nofollow"
           >
-            {firmContent.address[0].address +
-              " " +
-              firmContent.address[0].districtName +
-              " " +
-              firmContent.address[0].provinceName}
+            {firmContent.address[0].address}{" "}
+            {firmContent.address[0].provinceId &&
+              firmContent.address[0].provinceId &&
+              turkeyApi.provinces
+                .find((item) => item.id === firmContent.address[0].provinceId)
+                .districts.find(
+                  (d) => d.id === firmContent.address[0].districtId
+                ).name}{" "}
+            {firmContent.address[0].provinceId &&
+              turkeyApi.provinces.find(
+                (item) => item.id === firmContent.address[0].provinceId
+              ).name}
           </a>
         ) : (
           <span>Adres girilmemiş</span>
@@ -196,9 +203,9 @@ const Address = ({ firmContent }) => {
               className="hover:underline"
               target="_blank"
               rel="nofollow"
-              href={firmContent.website}
+              href={getValidUrl(firmContent.website)}
             >
-              <span>{firmContent.website}</span>
+              <span>{firmContent.website.replace(/^https?:\/\//, "")}</span>
             </a>
           ) : (
             <span>Web adresi girilmemiş</span>
@@ -232,12 +239,22 @@ const LocalBusSeo = ({ firmContent }) => {
         streetAddress: firmContent.address
           ? firmContent.address[0]?.address
           : "",
-        addressLocality: firmContent.address
-          ? firmContent.address[0]?.districtName
-          : "",
-        addressRegion: firmContent.address
-          ? firmContent.address[0]?.provinceName
-          : "",
+        addressLocality:
+          firmContent.address &&
+          firmContent.address[0].provinceId &&
+          firmContent.address[0]?.districtId
+            ? turkeyApi.provinces
+                .find((a) => a.id === firmContent.address[0].provinceId)
+                .districts.find(
+                  (d) => d.id === firmContent.address[0].districtId
+                ).name
+            : "",
+        addressRegion:
+          firmContent.address && firmContent.address[0].provinceId
+            ? turkeyApi.provinces.find(
+                (item) => item.id === firmContent.address[0].provinceId
+              ).name
+            : "",
         addressCountry: "TR",
       }}
       geo={{
@@ -249,6 +266,19 @@ const LocalBusSeo = ({ firmContent }) => {
       areaServed={areaServedArray}
     />
   )
+}
+const getValidUrl = (url = "") => {
+  let newUrl = decodeURI(url)
+  newUrl = newUrl.trim().replace(/\s/g, "")
+
+  if (/^(:\/\/)/.test(newUrl)) {
+    return `http${newUrl}`
+  }
+  if (!/^(f|ht)tps?:\/\//i.test(newUrl)) {
+    return `http://${newUrl}`
+  }
+
+  return newUrl
 }
 const DynamicFirms = ({
   firmContent,
@@ -406,6 +436,14 @@ const DynamicFirms = ({
                   <h2 className="font-semibold text-base text-midgray">
                     Hizmet Noktaları
                   </h2>
+                  {session && session.id == firmContent.user.data?.id && (
+                    <Link
+                      href={`/firma/${firmContent.slug}/hizmet-noktalarini-duzenle`}
+                      className="underline text-secondary"
+                    >
+                      Düzenle
+                    </Link>
+                  )}
                   <span className="absolute h-[5px] w-2/5 max-w-[180px] left-0 bottom-[-5px] bg-secondary/60"></span>
                 </div>
                 <div className="min-h-[8vh] mt-5 md:mt-4 pb-4 border-b border-secondary/20">
@@ -484,7 +522,7 @@ const DynamicFirms = ({
                 </h2>
                 {session && session.id == firmContent.user.data?.id && (
                   <Link
-                    href={`/firma/${firmContent.slug}/duzenle`}
+                    href={`/firma/${firmContent.slug}/haber-ekle`}
                     className="underline text-secondary"
                   >
                     Haber Ekle

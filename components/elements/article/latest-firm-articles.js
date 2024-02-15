@@ -50,7 +50,7 @@ const settings = {
   slidesToShow: 3,
   slidesToScroll: 1,
   initialSlide: 0,
-  infinite: true,
+  infinite: false,
   responsive: [
     {
       breakpoint: 1024,

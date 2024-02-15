@@ -67,7 +67,7 @@ const DynamicSectors = ({
               <h1 className="font-semibold text-xl text-darkgray">
                 {provinceData.name.toLocaleUpperCase("tr")}{" "}
                 <span className="text-midgray">
-                  BÖLGESİNE HİZMET VEREN FİRMALARI
+                  BÖLGESİNE HİZMET VEREN FİRMALAR
                 </span>
               </h1>
             </div>
