@@ -8,6 +8,19 @@ import {
   MdAlternateEmail,
   MdLink,
 } from "react-icons/md"
+const getValidUrl = (url = "") => {
+  let newUrl = decodeURI(url)
+  newUrl = newUrl.trim().replace(/\s/g, "")
+
+  if (/^(:\/\/)/.test(newUrl)) {
+    return `http${newUrl}`
+  }
+  if (!/^(f|ht)tps?:\/\//i.test(newUrl)) {
+    return `http://${newUrl}`
+  }
+
+  return newUrl
+}
 const FirmView = ({ firms }) => {
   return (
     <div className="flex flex-col gap-4">
@@ -83,7 +96,7 @@ const FirmView = ({ firms }) => {
                         className="hover:underline"
                         target="_blank"
                         rel="nofollow"
-                        href={item.attributes.website}
+                        href={getValidUrl(item.attributes.website)}
                       >
                         <span>{item.attributes.website}</span>
                       </a>

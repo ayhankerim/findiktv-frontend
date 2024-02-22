@@ -270,10 +270,13 @@ const Layout = ({
           </div>
           <div className="flex flex-col xl:flex-row items-start justify-between gap-4 pt-2">
             <div className="flex flex-col flex-1 w-full gap-3">
-              {/* Featured Image or Video Section*/}
               <div className="mb-2 relative h-[320px] lg:h-[500px] -mx-4 sm:mx-0 lg:mx-0">
                 <Image
-                  src={productContent.featured.data.attributes.url}
+                  src={
+                    productContent.featured.data
+                      ? productContent.featured.data.attributes.url
+                      : "https://www.findiktv.com/cdn-cgi/imagedelivery/A_vnS-Tfmrf1TT32XC1EgA/3060b1ec-f51b-4ae4-9d74-456bd9335500/format=auto,width=780"
+                  }
                   alt={`${productContent.title} Fiyatları`}
                   className="md:rounded-lg"
                   fill

@@ -813,6 +813,7 @@ export async function getFirmData({ slug }) {
               id
               attributes {
                 name
+                fullname
                 slug
                 description
                 about
@@ -842,10 +843,11 @@ export async function getFirmData({ slug }) {
                     attributes {
                       name
                       surname
+                      email
                     }
                   }
                 }
-                articles {
+                articles(sort: ["publishedAt:desc"], pagination: { limit: 10 }) {
                   data {
                     id
                     attributes {
@@ -883,6 +885,105 @@ export async function getFirmData({ slug }) {
 
   // Return the first item since there should only be one result per slug
   return firmsData.data.firms.data[0]
+}
+export async function getCityCode({ cityCode }) {
+  // Find the pages that match this slug
+  const gqlEndpoint = getStrapiURL("/graphql")
+  const cityRes = await fetch(gqlEndpoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.NEXT_PUBLIC_SECRET_TOKEN}`,
+    },
+    body: JSON.stringify({
+      query: `
+        query getCityByCode($cityCode: [Int!]) {
+          cities(filters: { cityCode: { in: $cityCode } }) {
+            data {
+              id
+              attributes {
+                cityCode
+                Sivri: prices (
+                  filters: {
+                    type: {
+                      eq: "openmarket",
+                    },
+                    approvalStatus: {
+                      eq: "adjustment",
+                    },
+                    quality: {
+                      eq: "Sivri",
+                    },
+                  },
+                  pagination: { limit: 1 }
+                ){
+                  data {
+                    attributes {
+                      min
+                      max
+                      average
+                    }
+                  }
+                }
+                Levant: prices (
+                  filters: {
+                    type: {
+                      eq: "openmarket",
+                    },
+                    approvalStatus: {
+                      eq: "adjustment",
+                    },
+                    quality: {
+                      eq: "Levant",
+                    },
+                  },
+                  pagination: { limit: 1 }
+                ){
+                  data {
+                    attributes {
+                      min
+                      max
+                      average
+                    }
+                  }
+                }
+                Giresun: prices (
+                  filters: {
+                    type: {
+                      eq: "openmarket",
+                    },
+                    approvalStatus: {
+                      eq: "adjustment",
+                    },
+                    quality: {
+                      eq: "Giresun",
+                    },
+                  },
+                  pagination: { limit: 1 }
+                ){
+                  data {
+                    attributes {
+                      min
+                      max
+                      average
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      `,
+      variables: {
+        cityCode,
+      },
+    }),
+  })
+  const city = await cityRes.json()
+  if (city.data?.cities == null || city.data.cities.length === 0) {
+    return null
+  }
+  return city.data.cities.data
 }
 export async function getSectorData({ slug }) {
   // Find the pages that match this slug
@@ -1245,6 +1346,58 @@ export async function createReaction(active) {
 
   const advertisement = await adsRes.json()
   return advertisement.data.advertisements.data
+}
+
+export async function createCity({ title, slug, cityCode, description }) {
+  const gqlEndpoint = getStrapiURL("/graphql")
+  const cityRes = await fetch(gqlEndpoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.NEXT_PUBLIC_SECRET_TOKEN}`,
+    },
+    body: JSON.stringify({
+      query: `
+        mutation createCity($title: String!, $slug: String!, $cityCode: Int!, $description: String!) {
+          createCity(
+            data: {
+              title: $title
+              slug: $slug
+              cityCode: $cityCode
+              content: $description
+              metadata: {
+                metaTitle: $title
+                metaDescription: $description
+              }
+            }
+          ) {
+            data {
+              id
+              attributes {
+                title
+                slug
+                cityCode
+                content
+                metadata {
+                  metaTitle
+                  metaDescription
+                }
+              }
+            }
+          }
+        }
+      `,
+      variables: {
+        title,
+        slug,
+        cityCode,
+        description,
+      },
+    }),
+  })
+
+  const city = await cityRes.json()
+  return city.data.createCity.data.id
 }
 
 export async function getProductData({ product, locale }) {

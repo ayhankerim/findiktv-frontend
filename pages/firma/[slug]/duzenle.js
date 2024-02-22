@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/router"
 import { getSession, useSession } from "next-auth/react"
-import { fetchAPI, getFirmData, getGlobalData } from "@/utils/api"
+import {
+  fetchAPI,
+  getFirmData,
+  getSectorListData,
+  getGlobalData,
+} from "@/utils/api"
 import * as yup from "yup"
 import { Formik, Form, Field } from "formik"
 import toast, { Toaster } from "react-hot-toast"
@@ -9,7 +14,7 @@ import { badwords } from "@/utils/badwords"
 import { BiLoaderCircle } from "react-icons/bi"
 import { PatternFormat } from "react-number-format"
 import { turkeyApi } from "@/utils/turkiye-api"
-import Image from "next/image"
+import { RiArrowGoBackFill } from "react-icons/ri"
 import Link from "next/link"
 import Layout from "@/components/layout"
 import Seo from "@/components/elements/seo"
@@ -73,7 +78,7 @@ const CustomEditor = dynamic(
   },
   { ssr: false }
 )
-const DynamicFirm = ({ firmContent, global, firmContext }) => {
+const DynamicFirm = ({ firmContent, sectorList, global, firmContext }) => {
   const [loading, setLoading] = useState(false)
   const router = useRouter()
   if (!router.isFallback && !firmContent) {
@@ -89,8 +94,8 @@ const DynamicFirm = ({ firmContent, global, firmContext }) => {
 
   const metadata = {
     id: 1,
-    metaTitle: ``,
-    metaDescription: ``,
+    metaTitle: `Firma Profilini Düzenle`,
+    metaDescription: `Firma Profilini Düzenle`,
     twitterCardType: "summary",
     twitterUsername: "findiktvcom",
     shareImage: null,
@@ -101,13 +106,14 @@ const DynamicFirm = ({ firmContent, global, firmContext }) => {
     ...metadata,
   }
   const articleSeoData = {
-    slug: "/firma/",
-    datePublished: Moment("2022").toISOString(),
-    dateModified: Moment("2022").toISOString(),
+    slug: `/firma/${firmContent.slug}/duzenle`,
+    datePublished: Moment(firmContent.publishedAt).toISOString(),
+    dateModified: Moment(firmContent.updatedAt).toISOString(),
     tags: [],
   }
 
   const firmDataSchema = yup.object().shape({
+    sector: yup.string().required("Sektör seçimi zorunludur!"),
     address: yup
       .string()
       .min(10, "Çok kısa, lütfen kontrol ediniz!")
@@ -240,6 +246,7 @@ const DynamicFirm = ({ firmContent, global, firmContext }) => {
           </h1>
           <Formik
             initialValues={{
+              sector: firmContent.firm_category.data.id,
               province: firmContent.address[0].provinceId,
               district: firmContent.address[0].districtId,
               address: firmContent.address[0].address,
@@ -268,6 +275,7 @@ const DynamicFirm = ({ firmContent, global, firmContext }) => {
                     method: "PUT",
                     body: JSON.stringify({
                       data: {
+                        firm_category: values.sector,
                         website: values.website,
                         phone: parseInt(
                           values.phone
@@ -317,6 +325,20 @@ const DynamicFirm = ({ firmContent, global, firmContext }) => {
               setFieldTouched,
             }) => (
               <Form className="w-full mb-8">
+                <FormField
+                  keyCode="sector"
+                  text="Sektör"
+                  placeholder="Sektör"
+                  errors={errors}
+                  touched={touched}
+                  as="select"
+                >
+                  {sectorList.map((item, i) => (
+                    <option value={item.id} key={item.id}>
+                      {item.attributes.name}
+                    </option>
+                  ))}
+                </FormField>
                 <div className="flex flex-col lg:flex-row gap-2 mb-6">
                   <label
                     htmlFor="province"
@@ -516,7 +538,6 @@ const DynamicFirm = ({ firmContent, global, firmContext }) => {
                     const data = editor.getData()
                     setFieldValue("about", data)
                     setFieldTouched("about", true)
-                    console.log(data)
                   }}
                 />
                 {errors.api && (
@@ -524,8 +545,18 @@ const DynamicFirm = ({ firmContent, global, firmContext }) => {
                     {errors.api}
                   </p>
                 )}
-                <div className="flex flex-col lg:flex-row justify-end gap-2 mb-6">
-                  <div className="flex flex-col lg:w-4/5">
+                <div className="flex justify-end gap-2 mb-6">
+                  <div className="flex flex-col lg:w-1/5 hidden lg:flex"></div>
+                  <div className="flex flex-col lg:w-1/5">
+                    <Link
+                      className="w-full bg-midgray hover:bg-midgray/90 text-white rounded p-4 text-base transition duration-150 ease-out md:ease-in"
+                      href={`/firma/${firmContent.slug}`}
+                    >
+                      <RiArrowGoBackFill className="mr-2 inline-block align-middle w-4 h-4 text-gray-200" />
+                      <span>Geri dön</span>
+                    </Link>
+                  </div>
+                  <div className="flex flex-col lg:w-3/5">
                     <button
                       className="disabled:opacity-75 w-full bg-secondary hover:bg-secondary/90 text-white rounded p-4 text-base transition duration-150 ease-out md:ease-in"
                       type="submit"
@@ -556,10 +587,17 @@ export const getServerSideProps = async (context) => {
   const { params, locale, locales, defaultLocale } = context
   const globalLocale = await getGlobalData(locale)
   const session = await getSession(context)
+  if (session == null) {
+    return {
+      redirect: {
+        destination: "/hesap/giris-yap?redirect=",
+        permanent: false,
+      },
+    }
+  }
   const firmData = await getFirmData({
     slug: params.slug,
   })
-
   if (firmData == null) {
     return {
       notFound: true,
@@ -578,6 +616,9 @@ export const getServerSideProps = async (context) => {
     website,
     phone,
     user,
+    createdAt,
+    updatedAt,
+    publishedAt,
   } = firmData.attributes
 
   const firmContent = {
@@ -593,6 +634,9 @@ export const getServerSideProps = async (context) => {
     website,
     phone,
     user,
+    createdAt,
+    updatedAt,
+    publishedAt,
   }
   const firmContext = {
     locale,
@@ -600,18 +644,12 @@ export const getServerSideProps = async (context) => {
     defaultLocale,
     slug: params.slug,
   }
-  if (session == null) {
-    return {
-      redirect: {
-        destination: "/hesap/giris-yap?redirect=",
-        permanent: false,
-      },
-    }
-  }
+  const sectorList = await getSectorListData()
   return {
     props: {
       global: globalLocale.data,
       firmContent: firmContent,
+      sectorList: sectorList,
       firmContext: {
         ...firmContext,
       },

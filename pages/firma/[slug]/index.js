@@ -21,15 +21,12 @@ import {
   MdPhone,
   MdAlternateEmail,
   MdLink,
-  MdOutlineLocationOn,
-  MdAddChart,
 } from "react-icons/md"
 import { RiEditBoxLine, RiAddFill } from "react-icons/ri"
 import { FcApproval } from "react-icons/fc"
 import Moment from "moment"
 import "moment/locale/tr"
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs"
-import { BiLoaderCircle } from "react-icons/bi"
 import "slick-carousel/slick/slick.css"
 import { slugify } from "@/utils/slugify"
 
@@ -142,6 +139,11 @@ const Address = ({ firmContent }) => {
   const { data: session } = useSession()
   return (
     <address className="flex flex-col not-italic gap-2">
+      {firmContent.fullname && (
+        <div className="flex items-center gap-2">
+          <h2 className="font-bold">{firmContent.fullname}</h2>
+        </div>
+      )}
       <div className="flex items-center gap-2">
         <MdLocationPin />
         {firmContent.address && firmContent.address[0]?.address ? (
@@ -332,7 +334,7 @@ const DynamicFirms = ({
               <Gallery firmContent={firmContent} />
               <div className="flex flex-col sm:flex-row w-full gap-4 p-4">
                 <div className="w-full md:w-3/12 relative top-[-30px] lg:top-[-100px] mb-[-20px] lg:mb-[-80px]">
-                  <div className="relative mx-auto w-full h-[200px] overflow-hidden rounded bg-white shadow-lg">
+                  <div className="group relative mx-auto w-full h-[200px] overflow-hidden rounded bg-white shadow-lg">
                     <Image
                       src={
                         firmContent.logo.data
@@ -340,10 +342,18 @@ const DynamicFirms = ({
                           : "https://www.findiktv.com/cdn-cgi/imagedelivery/A_vnS-Tfmrf1TT32XC1EgA/7bbe9bd7-c876-4387-bd6f-a01dcaec5400/format=auto,width=250"
                       }
                       alt={firmContent.name}
-                      className="absolute inset-0 h-full w-full object-contain rounded p-2"
+                      className="absolute inset-0 h-full w-full object-contain rounded p-2 z-10"
                       priority={true}
                       fill
                     />
+                    <div className="absolute flex justify-center items-center w-full h-full group-hover:bg-white/50 z-0 group-hover:z-20">
+                      <Link
+                        className="bg-secondary/80 py-2 px-4 text-white rounded hover:bg-secondary"
+                        href={`/firma/${firmContent.slug}/gorsel-duzenle`}
+                      >
+                        Düzenle
+                      </Link>
+                    </div>
                   </div>
                 </div>
                 <div className="flex flex-col w-full md:w-9/12 gap-2">
@@ -365,30 +375,6 @@ const DynamicFirms = ({
                             )}
                           </h1>
                         </div>
-                        {session && session.id == firmContent.user.data?.id && (
-                          <div className="flex flex-row relative text-right gap-2">
-                            <Link
-                              href={`/firma/${firmContent.slug}/duzenle`}
-                              className="flex w-full whitespace-nowrap border items-center rounded-md px-2 py-1 text-sm hover:shadow-lg"
-                            >
-                              <RiAddFill
-                                className="mr-2 text-sm text-secondary"
-                                aria-hidden="true"
-                              />
-                              Fiyat Gir
-                            </Link>
-                            <Link
-                              href={`/firma/${firmContent.slug}/duzenle`}
-                              className="flex w-full border items-center rounded-md px-2 py-1 text-sm hover:shadow-lg"
-                            >
-                              <RiEditBoxLine
-                                className="mr-2 text-sm text-secondary"
-                                aria-hidden="true"
-                              />
-                              Düzenle
-                            </Link>
-                          </div>
-                        )}
                       </div>
                       <div className="flex flex-col">
                         <p>
@@ -409,6 +395,46 @@ const DynamicFirms = ({
                         </Link>
                       </div>
                       <Address firmContent={firmContent} />
+                      {session && session.id == firmContent.user.data?.id && (
+                        <div className="flex flex-row mt-2 gap-2">
+                          <Link
+                            href={`/firma/${firmContent.slug}/duzenle`}
+                            className="flex border items-center rounded-md px-2 py-1 text-sm hover:shadow-lg"
+                          >
+                            <RiEditBoxLine
+                              className="mr-2 text-sm text-secondary"
+                              aria-hidden="true"
+                            />
+                            Düzenle
+                          </Link>
+                          <Link
+                            href={`/firma/${firmContent.slug}/fiyat-ekle`}
+                            className="flex whitespace-nowrap border items-center rounded-md px-2 py-1 text-sm hover:shadow-lg"
+                          >
+                            <RiAddFill
+                              className="mr-2 text-sm text-secondary"
+                              aria-hidden="true"
+                            />
+                            Fiyat Gir
+                          </Link>
+                          <Link
+                            href={`/firma/${firmContent.slug}/fiyatlar`}
+                            className="flex whitespace-nowrap border items-center rounded-md px-2 py-1 text-sm hover:shadow-lg"
+                          >
+                            Fiyatlar
+                          </Link>
+                        </div>
+                      )}
+                      {!firmContent.user.data?.id && (
+                        <div className="flex flex-row mt-2 gap-2">
+                          <Link
+                            href={`/firma/${firmContent.slug}/sahiplen`}
+                            className="flex whitespace-nowrap border items-center rounded-md px-2 py-1 text-sm bg-primary text-white hover:shadow-lg"
+                          >
+                            Bu işletmeyi sahiplenin
+                          </Link>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -438,7 +464,7 @@ const DynamicFirms = ({
                   </h2>
                   {session && session.id == firmContent.user.data?.id && (
                     <Link
-                      href={`/firma/${firmContent.slug}/hizmet-noktalarini-duzenle`}
+                      href={`/firma/${firmContent.slug}/hizmet-noktalari`}
                       className="underline text-secondary"
                     >
                       Düzenle
@@ -602,6 +628,7 @@ export async function getStaticProps(context) {
     logo,
     gallery,
     video,
+    fullname,
     address,
     email,
     website,
@@ -624,6 +651,7 @@ export async function getStaticProps(context) {
     logo,
     gallery,
     video,
+    fullname,
     address,
     email,
     website,

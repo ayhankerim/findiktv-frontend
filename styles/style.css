@@ -30,6 +30,20 @@ article.NewsContent a:hover {
   @apply text-dark;
   @apply no-underline;
 }
+article.NewsContent ul {
+  @apply list-disc;
+  @apply text-base;
+  @apply ml-4;
+}
+article.NewsContent ol {
+  @apply list-decimal;
+  @apply text-base;
+  @apply ml-4;
+}
+article.NewsContent ol li, article.NewsContent ul li {
+  @apply mb-4;
+  @apply pl-4;
+}
 article.NewsContent .adsInline .band {
     position: relative;
     display: flex;

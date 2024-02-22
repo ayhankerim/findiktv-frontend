@@ -1174,3 +1174,116 @@ export async function getGraphData({
   }
   return results
 }
+
+export async function getUserEnteredPrices({
+  product,
+  type,
+  minDate,
+  maxDate,
+  approvalStatus,
+  user,
+}) {
+  const gqlEndpoint = getStrapiURL("/graphql")
+  const itemsRes = await fetch(gqlEndpoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.NEXT_PUBLIC_SECRET_TOKEN}`,
+    },
+    body: JSON.stringify({
+      query: `
+        query getUserEnteredPrices(
+          $product: String!
+          $type: [String]!
+          $minDate: DateTime
+          $maxDate: DateTime
+          $approvalStatus: [String]!
+          $user: ID
+        ) {
+          prices(
+            filters: {
+              product: { slug: { eq: $product } }
+              user: { id: { eq: $user } }
+              type: { in: $type }
+              and: [{ date: { gte: $minDate } }, { date: { lte: $maxDate } }]
+              approvalStatus: { in: $approvalStatus }
+            }
+            sort: "date:desc"
+            pagination: { limit: 100 }
+          ) {
+            data {
+              id
+              attributes {
+                date
+                min
+                max
+                average
+                city {
+                  data {
+                    id
+                    attributes {
+                      title
+                      slug
+                    }
+                  }
+                }
+                approvalStatus
+              }
+            }
+          }
+        }
+      `,
+      variables: {
+        product,
+        type,
+        minDate,
+        maxDate,
+        approvalStatus,
+        user,
+      },
+    }),
+  })
+
+  const itemsData = await itemsRes.json()
+  if (itemsData.data?.prices == null || itemsData.data?.prices.length === 0) {
+    return null
+  }
+  return itemsData.data.prices.data
+}
+
+export async function updatePrice(price) {
+  const gqlEndpoint = getStrapiURL("/graphql")
+  const itemsRes = await fetch(gqlEndpoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.NEXT_PUBLIC_SECRET_TOKEN}`,
+    },
+    body: JSON.stringify({
+      query: `
+        mutation updatePrice ($price: ID!) {
+          updatePrice(id: $price, data: { approvalStatus: ignored }) {
+            data {
+              id
+              attributes {
+                approvalStatus
+              }
+            }
+          }
+        }
+      `,
+      variables: {
+        price,
+      },
+    }),
+  })
+
+  const itemsData = await itemsRes.json()
+  if (
+    itemsData.data?.updatePrice == null ||
+    itemsData.data?.updatePrice.length === 0
+  ) {
+    return null
+  }
+  return itemsData.data.updatePrice.data
+}
