@@ -1,13 +1,8 @@
 import React, { useState } from "react"
 import { useRouter } from "next/router"
 import { getSession, useSession } from "next-auth/react"
-import {
-  fetchAPI,
-  getFirmData,
-  getCityCode,
-  getGlobalData,
-  createCity,
-} from "@/utils/api"
+import { fetchAPI, getGlobalData } from "@/utils/api"
+import { getFirmData, getCityCode, createCity } from "@/utils/api-firms"
 import * as yup from "yup"
 import { Formik, Form, Field } from "formik"
 import toast, { Toaster } from "react-hot-toast"

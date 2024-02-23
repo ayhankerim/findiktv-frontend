@@ -42,9 +42,8 @@ function SamplePrevArrow(props) {
 }
 const settings = {
   dots: false,
+  className: "firmArticles",
   speed: 500,
-  autoplay: true,
-  autoplaySpeed: 5000,
   nextArrow: <SampleNextArrow />,
   prevArrow: <SamplePrevArrow />,
   slidesToShow: 3,

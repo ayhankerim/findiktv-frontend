@@ -1,12 +1,8 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/router"
 import { getSession, useSession } from "next-auth/react"
-import {
-  fetchAPI,
-  getFirmData,
-  getSectorListData,
-  getGlobalData,
-} from "@/utils/api"
+import { fetchAPI, getGlobalData } from "@/utils/api"
+import { getFirmData, getSectorListData } from "@/utils/api-firms"
 import * as yup from "yup"
 import { Formik, Form, Field } from "formik"
 import toast, { Toaster } from "react-hot-toast"
@@ -135,6 +131,27 @@ const DynamicFirm = ({ firmContent, sectorList, global, firmContext }) => {
           return true
         }
       }),
+    fullname: yup
+      .string()
+      .min(10, "Çok kısa, lütfen kontrol ediniz!")
+      .max(300, "Çok uzun, lütfen kontrol ediniz!")
+      .test("Bad Word", "Argo ifade içeremez!", function (value) {
+        var bad_words = badwords
+        var check_text = value
+        var error = 0
+        for (var i = 0; i < bad_words.length; i++) {
+          var val = bad_words[i]
+          if (check_text?.toLowerCase().indexOf(val.toString()) > -1) {
+            error = error + 1
+          }
+        }
+
+        if (error > 0) {
+          return false
+        } else {
+          return true
+        }
+      }),
     googlemaps: yup
       .string()
       .max(50, "Çok uzun, lütfen kontrol ediniz!")
@@ -193,7 +210,7 @@ const DynamicFirm = ({ firmContent, sectorList, global, firmContext }) => {
       .string()
       .min(10, "Çok kısa, lütfen kontrol ediniz!")
       .max(200, "Çok uzun, lütfen kontrol ediniz!")
-      .test("Bad Word", "Açıklama argo ifade içeremez!", function (value) {
+      .test("Bad Word", "Argo ifade içeremez!", function (value) {
         var bad_words = badwords
         var check_text = value
         var error = 0
@@ -214,7 +231,7 @@ const DynamicFirm = ({ firmContent, sectorList, global, firmContext }) => {
       .string()
       .min(10, "Çok kısa, lütfen kontrol ediniz!")
       .max(4000, "Çok uzun, lütfen kontrol ediniz!")
-      .test("Bad Word", "Açıklama argo ifade içeremez!", function (value) {
+      .test("Bad Word", "Argo ifade içeremez!", function (value) {
         var bad_words = badwords
         var check_text = value
         var error = 0
@@ -258,6 +275,7 @@ const DynamicFirm = ({ firmContent, sectorList, global, firmContext }) => {
               phone: firmContent.phone,
               video: firmContent.video,
               description: firmContent.description,
+              fullname: firmContent.fullname,
               about: firmContent.about,
             }}
             validationSchema={firmDataSchema}
@@ -286,6 +304,7 @@ const DynamicFirm = ({ firmContent, sectorList, global, firmContext }) => {
                         email: values.email,
                         video: values.video,
                         description: values.description,
+                        fullname: values.fullname,
                         about: values.about,
                         address: [
                           {
@@ -325,6 +344,13 @@ const DynamicFirm = ({ firmContent, sectorList, global, firmContext }) => {
               setFieldTouched,
             }) => (
               <Form className="w-full mb-8">
+                <FormField
+                  keyCode="fullname"
+                  text="Firma Resmi Adı"
+                  placeholder="Lütfen giriniz"
+                  errors={errors}
+                  touched={touched}
+                />
                 <FormField
                   keyCode="sector"
                   text="Sektör"
@@ -607,6 +633,7 @@ export const getServerSideProps = async (context) => {
   const {
     name,
     slug,
+    fullname,
     description,
     about,
     firm_category,
@@ -625,6 +652,7 @@ export const getServerSideProps = async (context) => {
     id: firmData.id,
     name,
     slug,
+    fullname,
     description,
     about,
     firm_category,

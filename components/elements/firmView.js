@@ -21,13 +21,19 @@ const getValidUrl = (url = "") => {
 
   return newUrl
 }
-const FirmView = ({ firms }) => {
+const FirmView = ({ firms, view = "wide" }) => {
   return (
-    <div className="flex flex-col gap-4">
+    <div
+      className={`flex flex-col ${
+        view === "card" ? "lg:flex-row" : ""
+      } gap-4 my-2`}
+    >
       {firms.data.map((item, i) => (
         <div
           key={item.id}
-          className="flex flex-col lg:flex-row w-full gap-2 p-1 bg-lightgray hover:bg-lightgray/60 shadow"
+          className={`flex flex-col w-full ${
+            view === "card" ? "md:w-1/2 lg:w-1/4" : "lg:flex-row"
+          } gap-2 p-1 bg-lightgray hover:bg-lightgray/60 shadow`}
         >
           <div className="flex-none relative w-[200px] h-[200px] m-auto overflow-hidden bg-white">
             <Image
@@ -107,7 +113,11 @@ const FirmView = ({ firms }) => {
                 </div>
               </address>
             </div>
-            <div className="flex flex-none justify-center lg:justify-end">
+            <div
+              className={`flex flex-none justify-center ${
+                view === "card" ? "" : "lg:justify-end"
+              }`}
+            >
               <Link
                 href={`/firma/${item.attributes.slug}`}
                 className="min-w-[160px] text-center text-white hover:text-secondary border border-secondary rounded bg-secondary hover:bg-transparent px-5 py-2 transition duration-150 ease-out md:ease-in"

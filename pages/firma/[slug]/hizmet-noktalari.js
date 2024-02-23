@@ -3,7 +3,8 @@ import { getSession } from "next-auth/react"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { turkeyApi } from "@/utils/turkiye-api"
-import { fetchAPI, getFirmData, getGlobalData } from "@/utils/api"
+import { fetchAPI, getGlobalData } from "@/utils/api"
+import { getFirmData } from "@/utils/api-firms"
 import * as yup from "yup"
 import { Formik, Form, Field } from "formik"
 import toast, { Toaster } from "react-hot-toast"
@@ -71,7 +72,7 @@ const PriceEntries = ({ global, firmContent, firmContext }) => {
       .ensure()
       .required("Lütfen seçiniz!")
       .oneOf(
-        [turkeyApi.provinces.map((item) => item.id.toString())],
+        [turkeyApi.provinces.map((item) => item.id.toString()), "999"],
         "Lütfen seçiniz!"
       ),
   })
@@ -227,10 +228,11 @@ const PriceEntries = ({ global, firmContent, firmContext }) => {
                           as="select"
                           name="province"
                           id="province"
+                          disabled={cities.length > 0 && cities[0].id === 999}
                           onChange={(e) => {
                             setFieldValue("province", e.target.value)
                             setFieldValue("district", "0")
-                            e.target.value
+                            e.target.value && e.target.value !== "999"
                               ? setFieldValue(
                                   "districtOptions",
                                   turkeyApi.provinces.find(
@@ -244,6 +246,7 @@ const PriceEntries = ({ global, firmContent, firmContext }) => {
                           <option disabled value={""} defaultValue>
                             Lütfen Seçiniz!
                           </option>
+                          <option value={999}>TÜM İLLER</option>
                           {turkeyApi.provinces.map((item, i) => (
                             <option
                               key={item.id}
@@ -321,11 +324,11 @@ const PriceEntries = ({ global, firmContent, firmContext }) => {
                       >
                         <div className="grid lg:grid-cols-3 gap-3 items-center">
                           <div className="col-span">
-                            {
-                              turkeyApi.provinces.find(
-                                (a) => a.id === parseInt(item.id)
-                              ).name
-                            }
+                            {item.id !== 999
+                              ? turkeyApi.provinces.find(
+                                  (a) => a.id === parseInt(item.id)
+                                ).name
+                              : "TÜM İLLER"}
                           </div>
                           <div className="col-span">
                             {item.districts.length > 0 ? (

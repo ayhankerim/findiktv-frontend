@@ -1,11 +1,7 @@
 import React from "react"
 import { useRouter } from "next/router"
-import {
-  getSectorData,
-  getSectorListData,
-  fetchAPI,
-  getGlobalData,
-} from "@/utils/api"
+import { fetchAPI, getGlobalData } from "@/utils/api"
+import { getSectorData, getSectorListData } from "@/utils/api-firms"
 import Layout from "@/components/layout"
 import Seo from "@/components/elements/seo"
 import FirmView from "@/components/elements/firmView"

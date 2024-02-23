@@ -2,7 +2,8 @@ import React from "react"
 import dynamic from "next/dynamic"
 import { useRouter } from "next/router"
 import { useSession } from "next-auth/react"
-import { getFirmData, getAdsData, fetchAPI, getGlobalData } from "@/utils/api"
+import { getAdsData, fetchAPI, getGlobalData } from "@/utils/api"
+import { getFirmData } from "@/utils/api-firms"
 import { turkeyApi } from "@/utils/turkiye-api"
 import { getPriceCard, getGraphData } from "@/utils/api-prices"
 import Layout from "@/components/layout"
@@ -81,8 +82,6 @@ const Gallery = ({ firmContent }) => {
   const settings = {
     dots: false,
     speed: 500,
-    autoplay: true,
-    autoplaySpeed: 5000,
     nextArrow: <SampleNextArrow />,
     prevArrow: <SamplePrevArrow />,
     slidesToShow: firmContent.gallery.data.length > 2 ? 2 : 1,
@@ -222,9 +221,9 @@ const LocalBusSeo = ({ firmContent }) => {
     ? firmContent.servicePoints[0].provinces.map((province) => ({
         geoMidpoint: {
           latitude: turkeyApi.provinces.find((item) => item.id === province.id)
-            .coordinates.latitude,
+            ?.coordinates.latitude,
           longitude: turkeyApi.provinces.find((item) => item.id === province.id)
-            .coordinates.longitude,
+            ?.coordinates.longitude,
         },
         geoRadius: "40000",
       }))
@@ -475,44 +474,48 @@ const DynamicFirms = ({
                 <div className="min-h-[8vh] mt-5 md:mt-4 pb-4 border-b border-secondary/20">
                   {firmContent.servicePoints ? (
                     <ul className="flex flex-col gap-2">
-                      {firmContent.servicePoints[0].provinces.map(
-                        (province, i) => {
-                          const provinceData = turkeyApi.provinces.find(
-                            (item) => item.id === province.id
-                          )
-                          return (
-                            <li key={i} className="flex gap-2">
-                              <Link
-                                href={`/firma/konum/${slugify(
-                                  provinceData.name
-                                )}`}
-                                className="font-bold hover:underline"
-                              >
-                                {provinceData.name}
-                              </Link>
-                              {province.districts.length > 0 ? (
-                                <ul className="flex gap-2">
-                                  {province.districts.map((districtId, j) => (
-                                    <li key={j}>
-                                      {
-                                        turkeyApi.provinces
-                                          .find(
-                                            (item) => item.id === province.id
-                                          )
-                                          .districts.find(
-                                            (district) =>
-                                              district.id === districtId
-                                          )?.name
-                                      }
-                                    </li>
-                                  ))}
-                                </ul>
-                              ) : (
-                                <p>Tüm ilçeler</p>
-                              )}
-                            </li>
-                          )
-                        }
+                      {firmContent.servicePoints[0].provinces[0].id !== 999 ? (
+                        firmContent.servicePoints[0].provinces.map(
+                          (province, i) => {
+                            const provinceData = turkeyApi.provinces.find(
+                              (item) => item.id === province.id
+                            )
+                            return (
+                              <li key={i} className="flex gap-2">
+                                <Link
+                                  href={`/firma/konum/${slugify(
+                                    provinceData.name
+                                  )}`}
+                                  className="font-bold hover:underline"
+                                >
+                                  {provinceData.name}
+                                </Link>
+                                {province.districts.length > 0 ? (
+                                  <ul className="flex gap-2">
+                                    {province.districts.map((districtId, j) => (
+                                      <li key={j}>
+                                        {
+                                          turkeyApi.provinces
+                                            .find(
+                                              (item) => item.id === province.id
+                                            )
+                                            .districts.find(
+                                              (district) =>
+                                                district.id === districtId
+                                            )?.name
+                                        }
+                                      </li>
+                                    ))}
+                                  </ul>
+                                ) : (
+                                  <p>Tüm ilçeler</p>
+                                )}
+                              </li>
+                            )
+                          }
+                        )
+                      ) : (
+                        <li>Tüm Türkiye</li>
                       )}
                     </ul>
                   ) : (

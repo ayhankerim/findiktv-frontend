@@ -28,7 +28,7 @@ const IconSelector = ({ icon }) => {
       return <MdOutlineWhatshot className="text-xl text-danger" />
       break
     default:
-      return <MdAddChart className="text-lg text-midgray" />
+      return ""
       break
   }
 }
@@ -40,6 +40,8 @@ const ModuleLoader = ({ title, theme, component, children }) => {
       setColors(["border-secondary/20", "bg-secondary/60"])
     } else if (theme === "red") {
       setColors(["border-danger/40", "bg-danger/80"])
+    } else if (theme === "green") {
+      setColors(["border-primary/40", "bg-primary/80"])
     }
   }, [theme])
   return (
