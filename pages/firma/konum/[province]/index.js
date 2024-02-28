@@ -107,7 +107,7 @@ export async function getStaticPaths(context) {
     const slugArray = !slug ? false : slug
 
     return {
-      params: { slug: slugArray },
+      params: { province: slugArray },
       // Specify the locale to render
       locale,
     }
