@@ -1,6 +1,6 @@
 import React from "react"
 import { useRouter } from "next/router"
-import { fetchAPI, getGlobalData } from "@/utils/api"
+import { getGlobalData } from "@/utils/api"
 import { getAllFirmListData, getSectorListData } from "@/utils/api-firms"
 import { turkeyApi } from "@/utils/turkiye-api"
 import { slugify } from "@/utils/slugify"
@@ -88,31 +88,11 @@ const DynamicSectors = ({
 }
 
 export async function getStaticPaths(context) {
-  // Get all pages from Strapi
-  const cities = await context.locales.reduce(
-    async (currentcitiesPromise, locale) => {
-      const currentcities = await currentcitiesPromise
-      const localecities = await fetchAPI("/cities", {
-        locale,
-        fields: ["slug", "locale"],
-      })
-      return [...currentcities, ...localecities.data]
-    },
-    Promise.resolve([])
-  )
-
-  const paths = cities.map((city) => {
-    const { slug, locale } = city.attributes
-    // Decompose the slug that was saved in Strapi
-    const slugArray = !slug ? false : slug
-
+  const paths = turkeyApi.provinces.map((item) => {
     return {
-      params: { province: slugArray },
-      // Specify the locale to render
-      locale,
+      params: { province: slugify(item.name) },
     }
   })
-
   return { paths, fallback: "blocking" }
 }
 
@@ -131,7 +111,9 @@ export async function getStaticProps(context) {
       item.attributes.servicePoints.some(
         (point) =>
           point.provinces &&
-          point.provinces.some((province) => province.id === provinceData.id)
+          point.provinces.some(
+            (province) => province.id === provinceData.id || province.id === 999
+          )
       )
   )
   const sectorList = await getSectorListData()
