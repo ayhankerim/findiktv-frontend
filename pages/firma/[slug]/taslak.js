@@ -1,12 +1,13 @@
-import React from "react"
+import React, { useState } from "react"
 import dynamic from "next/dynamic"
-import { useRouter } from "next/router"
+import Router, { useRouter } from "next/router"
 import { useSession, getSession } from "next-auth/react"
 import { getAdsData, getEditors, fetchAPI, getGlobalData } from "@/utils/api"
 import { getFirmData } from "@/utils/api-firms"
 import { turkeyApi } from "@/utils/turkiye-api"
 import { useSelector } from "react-redux"
 import { getPriceCard, getGraphData } from "@/utils/api-prices"
+import toast, { Toaster } from "react-hot-toast"
 import Layout from "@/components/layout"
 import Seo from "@/components/elements/seo"
 import VideoEmbed from "@/components/elements/video-embed"
@@ -26,6 +27,8 @@ import {
 } from "react-icons/md"
 import { RiEditBoxLine, RiAddFill } from "react-icons/ri"
 import { FcApproval } from "react-icons/fc"
+import { MdRocketLaunch } from "react-icons/md"
+import { BiLoaderCircle } from "react-icons/bi"
 import Moment from "moment"
 import "moment/locale/tr"
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs"
@@ -40,6 +43,13 @@ const Loader = ({ cssClass }) => (
     <div></div>
   </div>
 )
+const notify = (type, message) => {
+  if (type === "success") {
+    toast.success(message)
+  } else if (type === "error") {
+    toast.error(message)
+  }
+}
 const PriceChart = dynamic(
   () => import("@/components/elements/price/chart-new"),
   {
@@ -217,58 +227,6 @@ const Address = ({ firmContent }) => {
     </address>
   )
 }
-const LocalBusSeo = ({ firmContent }) => {
-  const areaServedArray = firmContent.servicePoints
-    ? firmContent.servicePoints[0].provinces.map((province) => ({
-        geoMidpoint: {
-          latitude: turkeyApi.provinces.find((item) => item.id === province.id)
-            ?.coordinates.latitude,
-          longitude: turkeyApi.provinces.find((item) => item.id === province.id)
-            ?.coordinates.longitude,
-        },
-        geoRadius: "40000",
-      }))
-    : null
-  return (
-    <LocalBusinessJsonLd
-      type="Store"
-      id={firmContent.slug}
-      name={firmContent.name}
-      description={firmContent.description}
-      url={`http://www.findiktv.com/firma/${firmContent.slug}`}
-      telephone={`+90${firmContent.phone}`}
-      address={{
-        streetAddress: firmContent.address
-          ? firmContent.address[0]?.address
-          : "",
-        addressLocality:
-          firmContent.address &&
-          firmContent.address[0].provinceId &&
-          firmContent.address[0]?.districtId
-            ? turkeyApi.provinces
-                .find((a) => a.id === firmContent.address[0].provinceId)
-                .districts.find(
-                  (d) => d.id === firmContent.address[0].districtId
-                ).name
-            : "",
-        addressRegion:
-          firmContent.address && firmContent.address[0].provinceId
-            ? turkeyApi.provinces.find(
-                (item) => item.id === firmContent.address[0].provinceId
-              ).name
-            : "",
-        addressCountry: "TR",
-      }}
-      geo={{
-        latitude: firmContent.address ? firmContent.address[0]?.latitude : "",
-        longitude: firmContent.address ? firmContent.address[0]?.longitude : "",
-      }}
-      images={[firmContent.gallery.data.map((item, i) => item.attributes.url)]}
-      sameAs={[firmContent.website]}
-      areaServed={areaServedArray}
-    />
-  )
-}
 const getValidUrl = (url = "") => {
   let newUrl = decodeURI(url)
   newUrl = newUrl.trim().replace(/\s/g, "")
@@ -291,6 +249,7 @@ const DynamicFirms = ({
   advertisement,
   firmContext,
 }) => {
+  const [loading, setLoading] = useState(false)
   const router = useRouter()
   const { data: session } = useSession()
   const userData = useSelector((state) => state.user.userData)
@@ -324,14 +283,39 @@ const DynamicFirms = ({
     dateModified: Moment(firmContext.updatedAt).toISOString(),
     tags: [],
   }
+  const publishFirm = async (firm) => {
+    setLoading(true)
+    try {
+      const result = await fetchAPI(
+        `/firms/${firm}`,
+        {},
+        {
+          method: "PUT",
+          body: JSON.stringify({
+            data: {
+              publishedAt: Moment().format(),
+            },
+          }),
+        }
+      )
+      notify("success", "Başarıyla Yayına Alındı.")
+      setTimeout(() => {
+        Router.push(`/firma/${result.data.attributes.slug}`)
+      }, 1000)
+    } catch (err) {
+      console.error(err)
+      notify("error", "Bir sorunla karşılaştık.")
+    }
+    setLoading(false)
+  }
   return (
     <Layout global={global} pageContext={firmContext}>
       <Seo metadata={metadataWithDefaults} others={articleSeoData} />
-      <LocalBusSeo firmContent={firmContent} />
       <main className="container flex flex-col justify-between gap-4 pt-2 bg-white">
         <div className="flex flex-col lg:flex-row items-start justify-between gap-4 pt-2">
           <div className="flex flex-col flex-1 w-full gap-3">
             <div className="flex flex-col items-end justify-between border rounded-xl border-lightgray">
+              <Toaster position="top-right" reverseOrder={false} />
               <Gallery firmContent={firmContent} />
               <div className="flex flex-col sm:flex-row w-full gap-4 p-4">
                 <div className="w-full md:w-3/12 relative top-[-30px] lg:top-[-100px] mb-[-20px] lg:mb-[-80px]">
@@ -405,53 +389,66 @@ const DynamicFirms = ({
                         </p>
                       </div>
                       <Address firmContent={firmContent} />
-                      {session &&
-                        (session.id == firmContent.user.data?.id ||
-                          userData?.role?.type === "editor") && (
-                          <div className="flex flex-row mt-2 gap-2">
-                            <Link
-                              href={`/firma/${firmContent.slug}/duzenle`}
-                              className="flex border items-center rounded-md px-2 py-1 text-sm hover:shadow-lg"
-                            >
-                              <RiEditBoxLine
-                                className="mr-2 text-sm text-secondary"
-                                aria-hidden="true"
-                              />
-                              Düzenle
-                            </Link>
-                            {firmContent.firm_category.data.attributes.slug ===
-                              "findik-alim-satim" && (
-                              <>
-                                <Link
-                                  href={`/firma/${firmContent.slug}/fiyat-ekle`}
-                                  className="flex whitespace-nowrap border items-center rounded-md px-2 py-1 text-sm hover:shadow-lg"
-                                >
-                                  <RiAddFill
-                                    className="mr-2 text-sm text-secondary"
-                                    aria-hidden="true"
-                                  />
-                                  Fiyat Gir
-                                </Link>
-                                <Link
-                                  href={`/firma/${firmContent.slug}/fiyatlar`}
-                                  className="flex whitespace-nowrap border items-center rounded-md px-2 py-1 text-sm hover:shadow-lg"
-                                >
-                                  Fiyatlar
-                                </Link>
-                              </>
-                            )}
-                          </div>
-                        )}
-                      {!firmContent.user.data?.id && (
-                        <div className="flex flex-row mt-2 gap-2">
-                          <Link
-                            href={`/firma/${firmContent.slug}/sahiplen`}
-                            className="flex whitespace-nowrap border items-center rounded-md px-2 py-1 text-sm bg-primary text-white hover:shadow-lg"
+                      <div className="flex flex-row mt-2 gap-2">
+                        {session &&
+                          (session.id == firmContent.user.data?.id ||
+                            userData?.role?.type === "editor") && (
+                            <>
+                              <Link
+                                href={`/firma/${firmContent.slug}/duzenle`}
+                                className="flex border items-center rounded-md px-2 py-1 text-sm hover:shadow-lg"
+                              >
+                                <RiEditBoxLine
+                                  className="mr-2 text-sm text-secondary"
+                                  aria-hidden="true"
+                                />
+                                Düzenle
+                              </Link>
+                              {firmContent.firm_category.data.attributes
+                                .slug === "findik-alim-satim" && (
+                                <>
+                                  <Link
+                                    href={`/firma/${firmContent.slug}/fiyat-ekle`}
+                                    className="flex whitespace-nowrap border items-center rounded-md px-2 py-1 text-sm hover:shadow-lg"
+                                  >
+                                    <RiAddFill
+                                      className="mr-2 text-sm text-secondary"
+                                      aria-hidden="true"
+                                    />
+                                    Fiyat Gir
+                                  </Link>
+                                  <Link
+                                    href={`/firma/${firmContent.slug}/fiyatlar`}
+                                    className="flex whitespace-nowrap border items-center rounded-md px-2 py-1 text-sm hover:shadow-lg"
+                                  >
+                                    Fiyatlar
+                                  </Link>
+                                </>
+                              )}
+                            </>
+                          )}
+                        {firmContent.isEditor && (
+                          <button
+                            onClick={() => publishFirm(firmContent.id)}
+                            type="button"
+                            disabled={loading}
+                            className="flex items-center text-white bg-primary whitespace-nowrap border rounded-md px-6 py-1 text-sm hover:shadow-lg"
                           >
-                            Bu işletmeyi sahiplenin
-                          </Link>
-                        </div>
-                      )}
+                            {loading ? (
+                              <span role="status">
+                                <BiLoaderCircle className="mr-2 inline-block align-middle text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" />
+                                <span className="sr-only">Yayınlanıyor...</span>
+                                <span>Yayınlanıyor...</span>
+                              </span>
+                            ) : (
+                              <span>
+                                YAYINLA{" "}
+                                <MdRocketLaunch className="inline-block ml-2" />
+                              </span>
+                            )}
+                          </button>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -667,6 +664,7 @@ export const getServerSideProps = async (context) => {
     createdAt,
     updatedAt,
     publishedAt,
+    isEditor,
   }
   if (publishedAt != null) {
     return {

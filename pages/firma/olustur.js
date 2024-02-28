@@ -1,17 +1,16 @@
-import { useEffect, useState } from "react"
-import Router, { useRouter } from "next/router"
+import { useState } from "react"
+import Router from "next/router"
 import Select from "react-select"
 import { getSession, useSession } from "next-auth/react"
-import { useSelector, useDispatch } from "react-redux"
-import { fetchAPI, getGlobalData } from "@/utils/api"
-import { getFirmData, getSectorListData } from "@/utils/api-firms"
+import { useSelector } from "react-redux"
+import { getEditors, fetchAPI, getGlobalData } from "@/utils/api"
+import { getSectorListData } from "@/utils/api-firms"
 import { slugify } from "@/utils/slugify"
 import * as yup from "yup"
 import { Formik, Form, Field } from "formik"
 import toast, { Toaster } from "react-hot-toast"
 import { badwords } from "@/utils/badwords"
 import { BiLoaderCircle } from "react-icons/bi"
-import { turkeyApi } from "@/utils/turkiye-api"
 import { RiArrowGoBackFill } from "react-icons/ri"
 import Link from "next/link"
 import Layout from "@/components/layout"
@@ -69,11 +68,10 @@ const FormField = ({
     </div>
   )
 }
-const DynamicFirm = ({ sectorList, pageContext, global }) => {
+const DynamicFirm = ({ sectorList, pageContext, isEditor, global }) => {
   const [loading, setLoading] = useState(false)
   const { data: session } = useSession()
   const userData = useSelector((state) => state.user.userData)
-  console.log(session, userData)
   const metadata = {
     id: 1,
     metaTitle: `Firma Profilini Düzenle`,
@@ -155,8 +153,7 @@ const DynamicFirm = ({ sectorList, pageContext, global }) => {
                         name: values.name,
                         slug: slugify(values.name),
                         publishedAt: null,
-                        user:
-                          userData.role.type === "editor" ? null : userData.id,
+                        user: isEditor ? null : userData.id,
                       },
                     }),
                   }
@@ -275,6 +272,9 @@ export const getServerSideProps = async (context) => {
   const { locale, locales, defaultLocale } = context
   const globalLocale = await getGlobalData(locale)
   const session = await getSession(context)
+  const isEditor = await getEditors({
+    user: session.id,
+  })
   const pageContext = {
     locale,
     locales,
@@ -293,6 +293,7 @@ export const getServerSideProps = async (context) => {
     props: {
       global: globalLocale.data,
       sectorList: sectorList,
+      isEditor: isEditor,
       pageContext: {
         ...pageContext,
       },

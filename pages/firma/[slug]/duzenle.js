@@ -322,12 +322,14 @@ const DynamicFirm = ({ firmContent, sectorList, global, firmContext }) => {
                       data: {
                         firm_category: values.sector,
                         website: values.website,
-                        phone: parseInt(
-                          values.phone
-                            .toString()
-                            .replace("+90", "")
-                            .replace(/\D/g, "")
-                        ),
+                        phone: values.phone
+                          ? parseInt(
+                              values.phone
+                                .toString()
+                                .replace("+90", "")
+                                .replace(/\D/g, "")
+                            )
+                          : null,
                         email: values.email,
                         video: values.video,
                         description: values.description,
@@ -605,7 +607,7 @@ const DynamicFirm = ({ firmContent, sectorList, global, firmContext }) => {
                     <Link
                       className="w-full bg-midgray hover:bg-midgray/90 text-white rounded p-4 text-base transition duration-150 ease-out md:ease-in"
                       href={`/firma/${firmContent.slug}${
-                        firmContent.publishedAt === null && "/taslak"
+                        firmContent.publishedAt === null ? "/taslak" : ""
                       }`}
                     >
                       <RiArrowGoBackFill className="mr-2 inline-block align-middle w-4 h-4 text-gray-200" />

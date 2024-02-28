@@ -140,7 +140,7 @@ const PriceEntries = ({ global, firmContent, firmContext }) => {
                       <Link
                         className="w-full bg-midgray hover:bg-midgray/90 text-white rounded p-2 text-sm transition duration-150 ease-out md:ease-in"
                         href={`/firma/${firmContent.slug}${
-                          firmContent.publishedAt === null && "/taslak"
+                          firmContent.publishedAt === null ? "/taslak" : ""
                         }`}
                       >
                         <RiArrowGoBackFill className="mr-2 inline-block align-middle w-4 h-4 text-gray-200" />

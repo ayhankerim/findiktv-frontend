@@ -208,6 +208,14 @@ const DynamicSectors = ({
                   objectFit: "cover",
                 }}
               />
+              <div className="absolute flex justify-center w-full bottom-[10px] z-20">
+                <Link
+                  className="hover:bg-white text-white hover:text-secondary border border-white rounded p-4 text-base transition duration-150 ease-out md:ease-in"
+                  href={`/firma/olustur`}
+                >
+                  <span>FİRMA EKLE</span>
+                </Link>
+              </div>
             </div>
             {searchResults && searchResults.data.length > 0 && (
               <main className="container flex flex-col justify-between gap-4 pt-2 bg-white">
@@ -231,7 +239,7 @@ const DynamicSectors = ({
         <div className="flex flex-col lg:flex-row items-start justify-between gap-4 pt-2">
           <div className="flex flex-col w-full gap-3">
             <ModuleLoader
-              title="SON GİRİLEN FİRMALAR"
+              title="SON EKLENEN FİRMALAR"
               theme="default"
               component=""
             >
