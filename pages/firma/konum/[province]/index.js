@@ -1,6 +1,6 @@
 import React from "react"
 import { useRouter } from "next/router"
-import { getGlobalData } from "@/utils/api"
+import { fetchAPI, getGlobalData } from "@/utils/api"
 import { getAllFirmListData, getSectorListData } from "@/utils/api-firms"
 import { turkeyApi } from "@/utils/turkiye-api"
 import { slugify } from "@/utils/slugify"
