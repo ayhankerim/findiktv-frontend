@@ -142,7 +142,9 @@ const FirmAddPrice = ({ firmContent, global, firmContext }) => {
       <main className="container flex flex-col justify-between gap-4 pt-2 bg-white">
         <div className="flex flex-col lg:flex-row items-start justify-between gap-4 pt-2">
           <div className="flex flex-col flex-1 w-full gap-3">
-            {firmContent.servicePoints ? (
+            {firmContent.servicePoints &&
+            firmContent.servicePoints[0].provinces.length > 0 &&
+            firmContent.servicePoints[0].provinces[0].id != 999 ? (
               <div className="flex flex-col p-4">
                 <div className="w-full">
                   <div className="flex flex-col lg:flex-row gap-2 mb-2 justify-between">
