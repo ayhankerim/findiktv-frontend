@@ -1,10 +1,11 @@
 import React from "react"
 import dynamic from "next/dynamic"
 import { useRouter } from "next/router"
-import { useSession } from "next-auth/react"
-import { getAdsData, fetchAPI, getGlobalData } from "@/utils/api"
+import { useSession, getSession } from "next-auth/react"
+import { getAdsData, getEditors, fetchAPI, getGlobalData } from "@/utils/api"
 import { getFirmData } from "@/utils/api-firms"
 import { turkeyApi } from "@/utils/turkiye-api"
+import { useSelector } from "react-redux"
 import { getPriceCard, getGraphData } from "@/utils/api-prices"
 import Layout from "@/components/layout"
 import Seo from "@/components/elements/seo"
@@ -194,7 +195,7 @@ const Address = ({ firmContent }) => {
               <span>{firmContent.email}</span>
             </a>
           ) : (
-            <span>E-posta adresi girilmemiş</span>
+            <span className="text-midgray">E-posta adresi girilmemiş</span>
           )}
         </div>
         <div className="flex items-center gap-2">
@@ -292,6 +293,7 @@ const DynamicFirms = ({
 }) => {
   const router = useRouter()
   const { data: session } = useSession()
+  const userData = useSelector((state) => state.user.userData)
   if (!router.isFallback && !firmContent) {
     return {
       notFound: true,
@@ -345,16 +347,18 @@ const DynamicFirms = ({
                       priority={true}
                       fill
                     />
-                    {session && session.id == firmContent.user.data?.id && (
-                      <div className="absolute flex justify-center items-center w-full h-full group-hover:bg-white/50 z-0 group-hover:z-20">
-                        <Link
-                          className="bg-secondary/80 py-2 px-4 text-white rounded hover:bg-secondary"
-                          href={`/firma/${firmContent.slug}/gorsel-duzenle`}
-                        >
-                          Düzenle
-                        </Link>
-                      </div>
-                    )}
+                    {session &&
+                      (session.id == firmContent.user.data?.id ||
+                        userData?.role?.type === "editor") && (
+                        <div className="absolute flex justify-center items-center w-full h-full group-hover:bg-white/50 z-0 group-hover:z-20">
+                          <Link
+                            className="bg-secondary/80 py-2 px-4 text-white rounded hover:bg-secondary"
+                            href={`/firma/${firmContent.slug}/gorsel-duzenle`}
+                          >
+                            Düzenle
+                          </Link>
+                        </div>
+                      )}
                   </div>
                 </div>
                 <div className="flex flex-col w-full md:w-9/12 gap-2">
@@ -363,7 +367,10 @@ const DynamicFirms = ({
                       <div className="flex flex-col lg:flex-row w-full justify-between gap-2 items-start">
                         <div className="flex items-center gap-2">
                           <h1 className="font-semibold text-xl text-dark">
-                            {firmContent.name}
+                            {firmContent.name}{" "}
+                            <span className="text-warning">
+                              İNCELEME BEKLİYOR
+                            </span>
                             {firmContent.user.data?.id && (
                               <div className="inline-block ml-2 text-lg">
                                 <Tooltip
@@ -398,41 +405,43 @@ const DynamicFirms = ({
                         </p>
                       </div>
                       <Address firmContent={firmContent} />
-                      {session && session.id == firmContent.user.data?.id && (
-                        <div className="flex flex-row mt-2 gap-2">
-                          <Link
-                            href={`/firma/${firmContent.slug}/duzenle`}
-                            className="flex border items-center rounded-md px-2 py-1 text-sm hover:shadow-lg"
-                          >
-                            <RiEditBoxLine
-                              className="mr-2 text-sm text-secondary"
-                              aria-hidden="true"
-                            />
-                            Düzenle
-                          </Link>
-                          {firmContent.firm_category.data.attributes.slug ===
-                            "findik-alim-satim" && (
-                            <>
-                              <Link
-                                href={`/firma/${firmContent.slug}/fiyat-ekle`}
-                                className="flex whitespace-nowrap border items-center rounded-md px-2 py-1 text-sm hover:shadow-lg"
-                              >
-                                <RiAddFill
-                                  className="mr-2 text-sm text-secondary"
-                                  aria-hidden="true"
-                                />
-                                Fiyat Gir
-                              </Link>
-                              <Link
-                                href={`/firma/${firmContent.slug}/fiyatlar`}
-                                className="flex whitespace-nowrap border items-center rounded-md px-2 py-1 text-sm hover:shadow-lg"
-                              >
-                                Fiyatlar
-                              </Link>
-                            </>
-                          )}
-                        </div>
-                      )}
+                      {session &&
+                        (session.id == firmContent.user.data?.id ||
+                          userData?.role?.type === "editor") && (
+                          <div className="flex flex-row mt-2 gap-2">
+                            <Link
+                              href={`/firma/${firmContent.slug}/duzenle`}
+                              className="flex border items-center rounded-md px-2 py-1 text-sm hover:shadow-lg"
+                            >
+                              <RiEditBoxLine
+                                className="mr-2 text-sm text-secondary"
+                                aria-hidden="true"
+                              />
+                              Düzenle
+                            </Link>
+                            {firmContent.firm_category.data.attributes.slug ===
+                              "findik-alim-satim" && (
+                              <>
+                                <Link
+                                  href={`/firma/${firmContent.slug}/fiyat-ekle`}
+                                  className="flex whitespace-nowrap border items-center rounded-md px-2 py-1 text-sm hover:shadow-lg"
+                                >
+                                  <RiAddFill
+                                    className="mr-2 text-sm text-secondary"
+                                    aria-hidden="true"
+                                  />
+                                  Fiyat Gir
+                                </Link>
+                                <Link
+                                  href={`/firma/${firmContent.slug}/fiyatlar`}
+                                  className="flex whitespace-nowrap border items-center rounded-md px-2 py-1 text-sm hover:shadow-lg"
+                                >
+                                  Fiyatlar
+                                </Link>
+                              </>
+                            )}
+                          </div>
+                        )}
                       {!firmContent.user.data?.id && (
                         <div className="flex flex-row mt-2 gap-2">
                           <Link
@@ -584,46 +593,32 @@ const DynamicFirms = ({
   )
 }
 
-export async function getStaticPaths(context) {
-  // Get all pages from Strapi
-  const firms = await context.locales.reduce(
-    async (currentfirmsPromise, locale) => {
-      const currentfirms = await currentfirmsPromise
-      const localefirms = await fetchAPI("/firms", {
-        locale,
-        fields: ["slug"],
-      })
-      return [...currentfirms, ...localefirms.data]
-    },
-    Promise.resolve([])
-  )
-
-  const paths = firms.map((firm) => {
-    const { slug } = firm.attributes
-    // Decompose the slug that was saved in Strapi
-    const slugArray = !slug ? false : slug
-
-    return {
-      params: { slug: slugArray },
-    }
-  })
-
-  return { paths, fallback: "blocking" }
-}
-
-export async function getStaticProps(context) {
+export const getServerSideProps = async (context) => {
   const { params, locale, locales, defaultLocale } = context
+  const session = await getSession(context)
+  if (!session) {
+    return {
+      notFound: true,
+    }
+  }
   const priceType = ["stockmarket", "openmarket", "tmo"]
   const approvalStatus = ["approved", "adjustment"]
   const priceQualities = ["Sivri", "Levant", "Giresun"]
 
   const globalLocale = await getGlobalData(locale)
+  const isEditor = await getEditors({
+    user: session.id,
+  })
   const advertisement = await getAdsData()
   const firmData = await getFirmData({
     slug: params.slug,
   })
-
-  if (firmData == null || firmData.attributes.publishedAt == null) {
+  if (firmData == null) {
+    return {
+      notFound: true,
+    }
+  }
+  if (session.id != firmData.attributes.user?.data?.id && !isEditor) {
     return {
       notFound: true,
     }
@@ -673,7 +668,14 @@ export async function getStaticProps(context) {
     updatedAt,
     publishedAt,
   }
-
+  if (publishedAt != null) {
+    return {
+      redirect: {
+        destination: `/firma/${slug}`,
+        permanent: true,
+      },
+    }
+  }
   const firmContext = {
     locale,
     locales,
@@ -717,7 +719,6 @@ export async function getStaticProps(context) {
         ...firmContext,
       },
     },
-    revalidate: 60 * 60 * 4,
   }
 }
 

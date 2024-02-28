@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useRef } from "react"
 import { getSession } from "next-auth/react"
 import Link from "next/link"
+import Select from "react-select"
 import { useRouter } from "next/router"
 import { turkeyApi } from "@/utils/turkiye-api"
 import { fetchAPI, getGlobalData } from "@/utils/api"
@@ -11,7 +12,7 @@ import toast, { Toaster } from "react-hot-toast"
 import Layout from "@/components/layout"
 import Seo from "@/components/elements/seo"
 import { BiLoaderCircle } from "react-icons/bi"
-import { RiArrowGoBackFill } from "react-icons/ri"
+import { RiArrowGoBackFill, RiCloseCircleLine } from "react-icons/ri"
 import Moment from "moment"
 import "moment/locale/tr"
 
@@ -30,6 +31,8 @@ const PriceEntries = ({ global, firmContent, firmContext }) => {
   const [cities, setCityList] = useState([])
   const [loading, setLoading] = useState(false)
   const router = useRouter()
+  const provinceRef = useRef(null)
+  const districtRef = useRef(null)
 
   const metadata = {
     id: 1,
@@ -74,6 +77,15 @@ const PriceEntries = ({ global, firmContent, firmContext }) => {
       .oneOf(
         [turkeyApi.provinces.map((item) => item.id.toString()), "999"],
         "Lütfen seçiniz!"
+      ),
+    district: yup
+      .array()
+      .min(1, "İlçe seçiniz!")
+      .of(
+        yup.object().shape({
+          label: yup.string().required(),
+          value: yup.string().required(),
+        })
       ),
   })
   const deleteCity = async (province, district) => {
@@ -127,7 +139,9 @@ const PriceEntries = ({ global, firmContent, firmContext }) => {
                     <div className="flex flex-col">
                       <Link
                         className="w-full bg-midgray hover:bg-midgray/90 text-white rounded p-2 text-sm transition duration-150 ease-out md:ease-in"
-                        href={`/firma/${firmContent.slug}`}
+                        href={`/firma/${firmContent.slug}${
+                          firmContent.publishedAt === null && "/taslak"
+                        }`}
                       >
                         <RiArrowGoBackFill className="mr-2 inline-block align-middle w-4 h-4 text-gray-200" />
                         <span>Geri dön</span>
@@ -154,21 +168,22 @@ const PriceEntries = ({ global, firmContent, firmContext }) => {
                 <Formik
                   initialValues={{
                     province: "",
-                    district: "",
+                    district: [],
                   }}
                   validationSchema={servicePointsSchema}
                   onSubmit={async (
                     values,
                     { setSubmitting, setErrors, resetForm }
                   ) => {
+                    console.log(values)
                     setLoading(true)
                     cities.push({
                       id: parseInt(values.province),
                       districts:
-                        values.district === "0" ||
-                        values.district.find((p) => p === "0")
+                        values.district.value === 0 ||
+                        values.district.find((p) => p.value === 0)
                           ? []
-                          : values.district.map((a) => parseInt(a)),
+                          : values.district.map((a) => parseInt(a.value)),
                     })
                     try {
                       setErrors({ api: null })
@@ -189,10 +204,11 @@ const PriceEntries = ({ global, firmContent, firmContext }) => {
                         }
                       )
                       notify("success", "Başarıyla eklendi.")
+                      provinceRef.current.clearValue()
                       resetForm({
                         values: {
                           province: "",
-                          district: "",
+                          district: [],
                         },
                       })
                     } catch (err) {
@@ -216,75 +232,83 @@ const PriceEntries = ({ global, firmContent, firmContext }) => {
                     setFieldValue,
                     setFieldTouched,
                   }) => (
-                    <Form className="grid lg:grid-cols-3 bg-lightgray p-2 gap-3">
+                    <Form className="grid lg:grid-cols-4 bg-lightgray p-2 gap-3">
                       <div className="col-span">
-                        <Field
-                          className={classNames(
-                            errors.province && touched.province
-                              ? "border-danger"
-                              : "border-inputgray",
-                            "text-base focus:outline outline-offset-2 outline-secondary/30 py-1 px-2 border w-full"
-                          )}
-                          as="select"
-                          name="province"
-                          id="province"
-                          disabled={cities.length > 0 && cities[0].id === 999}
-                          onChange={(e) => {
-                            setFieldValue("province", e.target.value)
-                            setFieldValue("district", "0")
-                            e.target.value && e.target.value !== "999"
-                              ? setFieldValue(
-                                  "districtOptions",
-                                  turkeyApi.provinces.find(
-                                    (item) =>
-                                      item.id === parseInt(e.target.value)
-                                  ).districts
-                                )
-                              : setFieldValue("districtOptions", "")
+                        <Select
+                          ref={provinceRef}
+                          classNames={{
+                            control: (state) =>
+                              "w-full text-base focus:outline outline-offset-2 outline-secondary/30 px-2 border !rounded-none",
                           }}
-                        >
-                          <option disabled value={""} defaultValue>
-                            Lütfen Seçiniz!
-                          </option>
-                          <option value={999}>TÜM İLLER</option>
-                          {turkeyApi.provinces.map((item, i) => (
-                            <option
-                              key={item.id}
-                              value={item.id}
-                              disabled={cities.find((a) => a.id === item.id)}
-                            >
-                              {item.name}
-                            </option>
-                          ))}
-                        </Field>
+                          classNamePrefix="react-select"
+                          isDisabled={cities.length > 0 && cities[0].id === 999}
+                          isLoading={loading}
+                          isClearable={true}
+                          isSearchable={true}
+                          name="province"
+                          placeholder="İl Seçiniz"
+                          options={[
+                            { value: 999, label: "Tüm İller" },
+                            ...turkeyApi.provinces.map((item) => ({
+                              value: item.id,
+                              label: item.name,
+                              isDisabled: cities.find((a) => a.id === item.id),
+                            })),
+                          ]}
+                          onBlur={() => setFieldTouched("province", true)}
+                          onChange={(p) => {
+                            setFieldValue("province", p?.value || "")
+                            setFieldValue("district", "")
+                            districtRef.current.clearValue()
+                          }}
+                        />
                         {errors.province && touched.province && (
                           <p className="text-danger">{errors.province}</p>
                         )}
                       </div>
-                      <div className="col-span">
-                        <Field
-                          className={classNames(
-                            errors.district && touched.district
-                              ? "border-danger"
-                              : "border-inputgray",
-                            "text-base focus:outline outline-offset-2 outline-secondary/30 py-1 px-2 border w-full"
-                          )}
-                          as="select"
+                      <div className="col-span lg:col-span-2">
+                        <Select
+                          ref={districtRef}
+                          isMulti
+                          classNames={{
+                            control: (state) =>
+                              "w-full text-base focus:outline outline-offset-2 outline-secondary/30 px-2 border !rounded-none",
+                          }}
+                          classNamePrefix="react-select"
+                          isLoading={loading}
+                          isClearable={true}
+                          isSearchable={true}
+                          isDisabled={values.province === ""}
                           name="district"
-                          id="district"
-                          multiple={true}
-                        >
-                          <option value="0" defaultValue>
-                            Tüm ilçeler
-                          </option>
-                          {values.districtOptions &&
-                            values.districtOptions.map((option) => (
-                              <option key={option.id} value={option.id}>
-                                {option.name}
-                              </option>
-                            ))}
-                        </Field>
-                        <p>CTRL basılı tutup birden çok seçim yapabilirsiniz</p>
+                          placeholder="İlçe Seçiniz"
+                          options={[
+                            { value: 0, label: "Tüm İlçeler" },
+                            ...(turkeyApi.provinces
+                              .find(
+                                (province) =>
+                                  province.id === parseInt(values.province)
+                              )
+                              ?.districts.map((item) => ({
+                                value: item.id,
+                                label: item.name,
+                                isDisabled: cities.find(
+                                  (a) => a.id === item.id
+                                ),
+                              })) || []),
+                          ]}
+                          onChange={(e) => {
+                            console.log("b", values.province, values.district)
+                            setFieldTouched("district", true)
+                            setFieldValue(
+                              "district",
+                              e.map((d) => ({
+                                value: d.value,
+                                label: d.label,
+                              }))
+                            )
+                          }}
+                        />
+                        <p>Birden çok seçim yapabilirsiniz</p>
                         {errors.district && touched.district && (
                           <p className="text-danger">{errors.district}</p>
                         )}
@@ -322,7 +346,7 @@ const PriceEntries = ({ global, firmContent, firmContext }) => {
                         key={i}
                         className={`p-2 mb-2 border border-lightgray`}
                       >
-                        <div className="grid lg:grid-cols-3 gap-3 items-center">
+                        <div className="grid lg:grid-cols-4 gap-3 items-center">
                           <div className="col-span">
                             {item.id !== 999
                               ? turkeyApi.provinces.find(
@@ -330,38 +354,30 @@ const PriceEntries = ({ global, firmContent, firmContext }) => {
                                 ).name
                               : "TÜM İLLER"}
                           </div>
-                          <div className="col-span">
+                          <div className="col-span lg:col-span-2 flex flex-wrap gap-2">
                             {item.districts.length > 0 ? (
                               item.districts.map((district, index) => {
                                 return (
                                   <div
                                     key={index}
-                                    className={`p-2 mb-1 border border-lightgray`}
+                                    className={`flex items-center group p-2 mb-1 border border-lightgray gap-2`}
                                   >
-                                    <div className="grid grid-cols-2 gap-3 items-center">
-                                      <div className="col-span">
-                                        {
-                                          turkeyApi.provinces
-                                            .find(
-                                              (a) => a.id === parseInt(item.id)
-                                            )
-                                            .districts.find(
-                                              (a) => a.id === parseInt(district)
-                                            )?.name
-                                        }
-                                      </div>
-                                      <div className="col-span text-right">
-                                        <button
-                                          type="button"
-                                          className="w-16 bg-danger hover:bg-danger/90 text-sm text-white rounded p-2 text-base transition duration-150 ease-out md:ease-in"
-                                          onClick={() =>
-                                            deleteCity(item.id, district)
-                                          }
-                                        >
-                                          Sil
-                                        </button>
-                                      </div>
-                                    </div>
+                                    {
+                                      turkeyApi.provinces
+                                        .find((a) => a.id === parseInt(item.id))
+                                        .districts.find(
+                                          (a) => a.id === parseInt(district)
+                                        )?.name
+                                    }
+                                    <button
+                                      type="button"
+                                      className="text-sm text-danger group-hover:text-white group-hover:bg-danger rounded-full p-1 text-base transition duration-150 ease-out md:ease-in"
+                                      onClick={() =>
+                                        deleteCity(item.id, district)
+                                      }
+                                    >
+                                      <RiCloseCircleLine />
+                                    </button>
                                   </div>
                                 )
                               })
@@ -372,10 +388,10 @@ const PriceEntries = ({ global, firmContent, firmContext }) => {
                           <div className="col-span text-right">
                             <button
                               type="button"
-                              className="w-24 bg-danger hover:bg-danger/90 text-sm text-white rounded p-2 text-base transition duration-150 ease-out md:ease-in"
+                              className="inline-flex items-center hover:bg-danger text-danger hover:text-white border border-danger text-sm rounded p-2 gap-2 text-base transition duration-150 ease-out md:ease-in"
                               onClick={() => deleteCity(item.id, null)}
                             >
-                              Sil
+                              Tüm ili sil <RiCloseCircleLine />
                             </button>
                           </div>
                         </div>
@@ -383,7 +399,9 @@ const PriceEntries = ({ global, firmContent, firmContext }) => {
                     )
                   })
                 ) : (
-                  <div>Hiçbir hizmet noktası bulunmamaktadır.</div>
+                  <div className="my-4">
+                    Hiçbir hizmet noktası bulunmamaktadır.
+                  </div>
                 )}
               </div>
             </div>
@@ -410,7 +428,7 @@ export const getServerSideProps = async (context) => {
     slug: params.slug,
   })
 
-  const { name, slug, servicePoints, user } = firmData.attributes
+  const { name, slug, servicePoints, user, publishedAt } = firmData.attributes
 
   const firmContent = {
     id: firmData.id,
@@ -418,6 +436,7 @@ export const getServerSideProps = async (context) => {
     slug,
     servicePoints,
     user,
+    publishedAt,
   }
   const firmContext = {
     locale,

@@ -222,7 +222,9 @@ const PriceEntries = ({ global, firmContent, firmContext }) => {
                     <div className="flex flex-col">
                       <Link
                         className="w-full bg-midgray hover:bg-midgray/90 text-white rounded p-2 text-sm transition duration-150 ease-out md:ease-in"
-                        href={`/firma/${firmContent.slug}`}
+                        href={`/firma/${firmContent.slug}${
+                          firmContent.publishedAt === null && "/taslak"
+                        }`}
                       >
                         <RiArrowGoBackFill className="mr-2 inline-block align-middle w-4 h-4 text-gray-200" />
                         <span>Geri dön</span>
@@ -396,7 +398,9 @@ const PriceEntries = ({ global, firmContent, firmContext }) => {
                         <div className="flex flex-col lg:w-1/5">
                           <Link
                             className="w-full bg-midgray hover:bg-midgray/90 text-white rounded p-4 text-base transition duration-150 ease-out md:ease-in"
-                            href={`/firma/${firmContent.slug}`}
+                            href={`/firma/${firmContent.slug}${
+                              firmContent.publishedAt === null && "/taslak"
+                            }`}
                           >
                             <RiArrowGoBackFill className="mr-2 inline-block align-middle w-4 h-4 text-gray-200" />
                             <span>Geri dön</span>
@@ -448,7 +452,7 @@ export const getServerSideProps = async (context) => {
     slug: params.slug,
   })
 
-  const { name, slug, servicePoints, user } = firmData.attributes
+  const { name, slug, servicePoints, user, publishedAt } = firmData.attributes
 
   const firmContent = {
     id: firmData.id,
@@ -456,6 +460,7 @@ export const getServerSideProps = async (context) => {
     slug,
     servicePoints,
     user,
+    publishedAt,
   }
   const firmContext = {
     locale,

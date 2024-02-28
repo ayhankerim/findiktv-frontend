@@ -20,6 +20,19 @@ import MobileNavMenu from "./mobile-nav-menu"
 import Image from "next/image"
 import CustomLink from "./custom-link"
 import Advertisement from "@/components/elements/advertisement"
+import useSWR from "swr"
+
+const fetcher = async (url, token) => {
+  const response = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  if (!response.ok) {
+    throw new Error("Failed to fetch user data")
+  }
+  return response.json()
+}
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ")
@@ -34,31 +47,27 @@ const Navbar = ({ navbar, pageContext }) => {
   const userData = useSelector((state) => state.user.userData)
   const [mobileMenuIsShown, setMobileMenuIsShown] = useState(false)
 
+  const { data: userResponse, error: userError } = useSWR(
+    session
+      ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/users/me?populate=avatar,city,SystemAvatar,profile_cover,role`
+      : null,
+    (url) => fetcher(url, session.jwt)
+  )
+
+  useEffect(() => {
+    if (userResponse) {
+      dispatch(updateUser(userResponse))
+    }
+    if (userError) {
+      setError(userError)
+    }
+    setLoaded(true)
+  }, [dispatch, userResponse, userError])
+
   useEffect(() => {
     if (session === null) {
       dispatch(updateUser({}))
-      return
     }
-    userData &&
-      Object.entries(userData).length === 0 &&
-      (async () => {
-        try {
-          const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/users/me?populate=avatar,city,SystemAvatar,profile_cover`,
-            {
-              headers: {
-                Authorization: `Bearer ${session.jwt}`,
-              },
-            }
-          )
-          dispatch(updateUser(response.data))
-        } catch (error) {
-          setError(error.message)
-        } finally {
-          setLoaded(true)
-        }
-      })()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, session])
   return (
     <>

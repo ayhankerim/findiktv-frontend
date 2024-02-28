@@ -221,7 +221,9 @@ const FirmAddPrice = ({ firmContent, global, lastEntries, firmContext }) => {
                 <div className="flex flex-col">
                   <Link
                     className="w-full bg-midgray hover:bg-midgray/90 text-white rounded p-2 text-sm transition duration-150 ease-out md:ease-in"
-                    href={`/firma/${firmContent.slug}`}
+                    href={`/firma/${firmContent.slug}${
+                      firmContent.publishedAt === null && "/taslak"
+                    }`}
                   >
                     <RiArrowGoBackFill className="mr-2 inline-block align-middle w-4 h-4 text-gray-200" />
                     <span>Geri dön</span>
@@ -254,7 +256,7 @@ export const getServerSideProps = async (context) => {
     slug: params.slug,
   })
 
-  const { name, slug } = firmData.attributes
+  const { name, slug, publishedAt } = firmData.attributes
 
   const lastEntries = await getUserEnteredPrices({
     product: "findik",
@@ -268,6 +270,7 @@ export const getServerSideProps = async (context) => {
     id: firmData.id,
     name,
     slug,
+    publishedAt,
   }
   const firmContext = {
     locale,

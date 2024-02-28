@@ -146,7 +146,10 @@ export async function getFirmData({ slug }) {
           }
         }
         query firmdata($slug: String!) {
-          firms(filters: { slug: { eq: $slug } }) {
+          firms(
+            filters: { slug: { eq: $slug } }
+            publicationState: PREVIEW
+          ) {
             data {
               id
               attributes {

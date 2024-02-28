@@ -158,7 +158,7 @@ const DynamicSectors = ({
                       isClearable={true}
                       isSearchable={true}
                       name="province"
-                      placeholder="Tüm Türkiye"
+                      placeholder="Tüm İller"
                       options={turkeyApi.provinces.map((item) => ({
                         value: item.id,
                         label: item.name,

@@ -34,6 +34,7 @@ const FormField = ({
   placeholder,
   errors,
   touched,
+  required,
   children,
   ...customAttr
 }) => {
@@ -44,6 +45,7 @@ const FormField = ({
         className="block lg:w-1/5 text-sm font-medium text-midgray"
       >
         {text}
+        {required ? <span className="text-danger ml-2">*</span> : ""}
       </label>
       <div className="flex flex-col lg:w-4/5">
         <Field
@@ -133,12 +135,14 @@ const DynamicFirm = ({ firmContent, sectorList, global, firmContext }) => {
       }),
     fullname: yup
       .string()
+      .nullable()
       .min(10, "Çok kısa, lütfen kontrol ediniz!")
       .max(300, "Çok uzun, lütfen kontrol ediniz!")
       .test("Bad Word", "Argo ifade içeremez!", function (value) {
         var bad_words = badwords
         var check_text = value
         var error = 0
+        if (!value) return true
         for (var i = 0; i < bad_words.length; i++) {
           var val = bad_words[i]
           if (check_text?.toLowerCase().indexOf(val.toString()) > -1) {
@@ -173,9 +177,14 @@ const DynamicFirm = ({ firmContent, sectorList, global, firmContext }) => {
         /^-?([1-8]?[1-9]|[1-9]0)\.{1}\d{1,6}/,
         "Geçerli bir değer giriniz!"
       ),
-    email: yup.string().email("Lütfen geçerli bir mail adresi giriniz!"),
+    email: yup
+      .string()
+      .nullable()
+      .required("Lütfen geçerli bir mail adresi giriniz!")
+      .email("Lütfen geçerli bir mail adresi giriniz!"),
     phone: yup
       .string()
+      .nullable()
       .test(
         "Invalid Number",
         "Lütfen geçerli bir telefon numarası giriniz!",
@@ -194,12 +203,14 @@ const DynamicFirm = ({ firmContent, sectorList, global, firmContext }) => {
       .nullable(),
     website: yup
       .string()
+      .nullable()
       .matches(
         /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
         "Geçerli bir web sitesi giriniz!"
       ),
     video: yup
       .string()
+      .nullable()
       .min(25, "Çok kısa, lütfen kontrol ediniz!")
       .max(50, "Çok uzun, lütfen kontrol ediniz!")
       .matches(
@@ -208,12 +219,14 @@ const DynamicFirm = ({ firmContent, sectorList, global, firmContext }) => {
       ),
     description: yup
       .string()
+      .nullable()
       .min(10, "Çok kısa, lütfen kontrol ediniz!")
       .max(200, "Çok uzun, lütfen kontrol ediniz!")
       .test("Bad Word", "Argo ifade içeremez!", function (value) {
         var bad_words = badwords
         var check_text = value
         var error = 0
+        if (!value) return true
         for (var i = 0; i < bad_words.length; i++) {
           var val = bad_words[i]
           if (check_text?.toLowerCase().indexOf(val.toString()) > -1) {
@@ -229,12 +242,14 @@ const DynamicFirm = ({ firmContent, sectorList, global, firmContext }) => {
       }),
     about: yup
       .string()
+      .nullable()
       .min(10, "Çok kısa, lütfen kontrol ediniz!")
       .max(4000, "Çok uzun, lütfen kontrol ediniz!")
       .test("Bad Word", "Argo ifade içeremez!", function (value) {
         var bad_words = badwords
         var check_text = value
         var error = 0
+        if (!value) return true
         for (var i = 0; i < bad_words.length; i++) {
           var val = bad_words[i]
           if (check_text?.toLowerCase().indexOf(val.toString()) > -1) {
@@ -264,12 +279,24 @@ const DynamicFirm = ({ firmContent, sectorList, global, firmContext }) => {
           <Formik
             initialValues={{
               sector: firmContent.firm_category.data.id,
-              province: firmContent.address[0].provinceId,
-              district: firmContent.address[0].districtId,
-              address: firmContent.address[0].address,
-              googlemaps: firmContent.address[0].googleMaps,
-              latitude: firmContent.address[0].latitude,
-              longitude: firmContent.address[0].longitude,
+              province: firmContent.address
+                ? firmContent.address[0].provinceId
+                : "",
+              district: firmContent.address
+                ? firmContent.address[0].districtId
+                : "",
+              address: firmContent.address
+                ? firmContent.address[0].address
+                : "",
+              googlemaps: firmContent.address
+                ? firmContent.address[0].googleMaps
+                : "",
+              latitude: firmContent.address
+                ? firmContent.address[0].latitude
+                : "",
+              longitude: firmContent.address
+                ? firmContent.address[0].longitude
+                : "",
               website: firmContent.website,
               email: firmContent.email,
               phone: firmContent.phone,
@@ -519,6 +546,7 @@ const DynamicFirm = ({ firmContent, sectorList, global, firmContext }) => {
                   placeholder="Kurumsal e-posta adresiniz"
                   errors={errors}
                   touched={touched}
+                  required={true}
                 />
                 <FormField
                   keyCode="phone"
@@ -576,7 +604,9 @@ const DynamicFirm = ({ firmContent, sectorList, global, firmContext }) => {
                   <div className="flex flex-col lg:w-1/5">
                     <Link
                       className="w-full bg-midgray hover:bg-midgray/90 text-white rounded p-4 text-base transition duration-150 ease-out md:ease-in"
-                      href={`/firma/${firmContent.slug}`}
+                      href={`/firma/${firmContent.slug}${
+                        firmContent.publishedAt === null && "/taslak"
+                      }`}
                     >
                       <RiArrowGoBackFill className="mr-2 inline-block align-middle w-4 h-4 text-gray-200" />
                       <span>Geri dön</span>
