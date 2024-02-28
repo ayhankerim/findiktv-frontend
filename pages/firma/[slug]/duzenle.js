@@ -576,7 +576,7 @@ const DynamicFirm = ({ firmContent, sectorList, global, firmContext }) => {
                 <FormField
                   keyCode="description"
                   text="Kısa Açıklama / Slogan"
-                  placeholder="ısa Açıklama / Slogan"
+                  placeholder="Kısa Açıklama / Slogan"
                   errors={errors}
                   touched={touched}
                   as="textarea"
