@@ -88,11 +88,31 @@ const DynamicSectors = ({
 }
 
 export async function getStaticPaths(context) {
-  const paths = turkeyApi.provinces.map((item) => {
+  // Get all pages from Strapi
+  const cities = await context.locales.reduce(
+    async (currentcitiesPromise, locale) => {
+      const currentcities = await currentcitiesPromise
+      const localecities = await fetchAPI("/cities", {
+        locale,
+        fields: ["slug", "locale"],
+      })
+      return [...currentcities, ...localecities.data]
+    },
+    Promise.resolve([])
+  )
+
+  const paths = cities.map((city) => {
+    const { slug, locale } = city.attributes
+    // Decompose the slug that was saved in Strapi
+    const slugArray = !slug ? false : slug
+
     return {
-      params: { province: slugify(item.name) },
+      params: { slug: slugArray },
+      // Specify the locale to render
+      locale,
     }
   })
+
   return { paths, fallback: "blocking" }
 }
 
