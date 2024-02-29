@@ -569,7 +569,7 @@ export async function getUpdatedFirms() {
   return firmsData.data.firms
 }
 export async function searchFirm({ search, province, sector }) {
-  const turkiye = province ? ": 999," : undefined
+  const turkiye = province ? 999 : undefined
   const gqlEndpoint = getStrapiURL("/graphql")
   const firmsRes = await fetch(gqlEndpoint, {
     method: "POST",
@@ -595,8 +595,8 @@ export async function searchFirm({ search, province, sector }) {
                     name: { containsi: $search }
                     firm_category: { id: { eq: $sector } }
                     or: [
-                        {servicePoints: { contains: $province }},
-                        {servicePoints: { contains: $turkiye }}
+                        {servicePoints: { containsi: $province }},
+                        {servicePoints: { containsi: $turkiye }}
                     ]
                 }
                 sort: ["publishedAt:desc"]

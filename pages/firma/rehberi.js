@@ -77,9 +77,7 @@ const DynamicSectors = ({
             setErrors({ api: null })
             const searchResult = await searchFirm({
               search: values.search,
-              province: values.province
-                ? `: ${parseInt(values.province)},`
-                : undefined,
+              province: values.province ? parseInt(values.province) : undefined,
               sector: values.sector ? parseInt(values.sector) : undefined,
             })
             setSearchResults(searchResult)
@@ -208,7 +206,7 @@ const DynamicSectors = ({
                   objectFit: "cover",
                 }}
               />
-              <div className="absolute flex justify-center w-full bottom-[10px] z-20">
+              <div className="absolute flex justify-center w-full bottom-[10px] z-10">
                 <Link
                   className="hover:bg-white text-white hover:text-secondary border border-white rounded p-4 text-base transition duration-150 ease-out md:ease-in"
                   href={`/firma/olustur`}
@@ -217,7 +215,7 @@ const DynamicSectors = ({
                 </Link>
               </div>
             </div>
-            {searchResults && searchResults.data.length > 0 && (
+            {searchResults && (
               <main className="container flex flex-col justify-between gap-4 pt-2 bg-white">
                 <div className="flex flex-col lg:flex-row items-start justify-between gap-4 pt-2">
                   <div className="flex flex-col w-full gap-3">
@@ -226,7 +224,13 @@ const DynamicSectors = ({
                       theme="green"
                       component=""
                     >
-                      <FirmView firms={searchResults} view={"card"} />
+                      {searchResults.data.length > 0 ? (
+                        <FirmView firms={searchResults} view={"card"} />
+                      ) : (
+                        <div className="text-warning my-4">
+                          Aramanızla eşleşen sonuç bulunamadı.
+                        </div>
+                      )}
                     </ModuleLoader>
                   </div>
                 </div>
