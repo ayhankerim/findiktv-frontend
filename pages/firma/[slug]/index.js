@@ -5,12 +5,17 @@ import { useSession } from "next-auth/react"
 import { getAdsData, fetchAPI, getGlobalData } from "@/utils/api"
 import { getFirmData } from "@/utils/api-firms"
 import { turkeyApi } from "@/utils/turkiye-api"
-import { getPriceCard, getGraphData } from "@/utils/api-prices"
+import {
+  getPriceCard,
+  getUserLastPrice,
+  getGraphData,
+} from "@/utils/api-prices"
 import Layout from "@/components/layout"
 import Seo from "@/components/elements/seo"
 import VideoEmbed from "@/components/elements/video-embed"
 import AverageCard from "@/components/elements/price/average-card-new"
 import LatestArticles from "@/components/elements/article/latest-firm-articles"
+import CityPriceList from "@/components/sections/city-price-list"
 import Link from "next/link"
 import Image from "next/image"
 import Slider from "react-slick"
@@ -284,6 +289,7 @@ const getValidUrl = (url = "") => {
 const DynamicFirms = ({
   firmContent,
   priceCardData,
+  lastPriceDate,
   graphData,
   preview,
   global,
@@ -321,6 +327,23 @@ const DynamicFirms = ({
     datePublished: Moment(firmContext.createdAt).toISOString(),
     dateModified: Moment(firmContext.updatedAt).toISOString(),
     tags: [],
+  }
+  const priceCity = {
+    title: `${Moment(lastPriceDate.attributes.date).format(
+      "DD-MM-YYYY"
+    )} Tarihli ${firmContent.name} Fındık Fiyatları`,
+    description: `Bu liste ${firmContent.name} firmasına ait fiyatları gösterir.`,
+    date: Moment(lastPriceDate.attributes.date).format("YYYY-MM-DD"),
+    product: {
+      data: {
+        id: process.env.NEXT_PUBLIC_FINDIK_ID,
+        attributes: {
+          slug: "findik",
+        },
+      },
+    },
+    priceType: "all",
+    approvalStatus: "all",
   }
   return (
     <Layout global={global} pageContext={firmContext}>
@@ -538,6 +561,7 @@ const DynamicFirms = ({
               "findik-alim-satim" && (
               <>
                 {priceCardData && <AverageCard priceCardData={priceCardData} />}
+                <CityPriceList data={priceCity} user={firmContent.user} />
                 <PriceChart grapghData={graphData} />
               </>
             )}
@@ -554,7 +578,7 @@ const DynamicFirms = ({
                 </div>
               )}
             </div>
-            <div id="Video" className="flex flex-col mb-8">
+            <div id="FirmNews" className="flex flex-col mb-8">
               <div className="flex flex-row items-center justify-between border-b border-secondary/20 relative">
                 <h2 className="font-semibold text-base text-midgray">
                   Firma Haberleri
@@ -697,6 +721,11 @@ export async function getStaticProps(context) {
         value1: null,
         value2: null,
       }))
+  const userLastPriceDate = user.data
+    ? await getUserLastPrice({
+        user: user.data?.id,
+      })
+    : []
   const graphData = user.data
     ? await getGraphData({
         product: "findik",
@@ -710,6 +739,7 @@ export async function getStaticProps(context) {
     props: {
       firmContent: firmContent,
       priceCardData: priceCard,
+      lastPriceDate: userLastPriceDate,
       graphData: graphData,
       advertisement: advertisement,
       global: globalLocale.data,

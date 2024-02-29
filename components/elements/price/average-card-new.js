@@ -41,6 +41,7 @@ function currencyFormatter(value) {
   return amount
 }
 const getBgColor = (value1, value2) => {
+  if (!value1 || !value2) return "bg-nochange/20"
   if (value1 > value2) return "bg-up/80"
   else if (value1 < value2) return "bg-down/80"
   else return "bg-nochange/20"

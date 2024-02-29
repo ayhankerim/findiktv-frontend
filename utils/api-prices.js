@@ -1288,3 +1288,40 @@ export async function updatePrice(price) {
   }
   return itemsData.data.updatePrice.data
 }
+
+export async function getUserLastPrice({ user }) {
+  const gqlEndpoint = getStrapiURL("/graphql")
+  const itemsRes = await fetch(gqlEndpoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.NEXT_PUBLIC_SECRET_TOKEN}`,
+    },
+    body: JSON.stringify({
+      query: `
+        query getUserLastPrice($user: ID) {
+          prices(
+            filters: { user: { id: { eq: $user } } }
+            sort: ["date:desc"]
+            pagination: {limit: 1}
+          ) {
+            data {
+              attributes {
+                date
+              }
+            }
+          }
+        }
+      `,
+      variables: {
+        user,
+      },
+    }),
+  })
+
+  const itemsData = await itemsRes.json()
+  if (itemsData.data?.prices == null || itemsData.data?.prices.length === 0) {
+    return null
+  }
+  return itemsData.data.prices.data[0]
+}

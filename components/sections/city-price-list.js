@@ -248,7 +248,7 @@ const PriceTableRow = ({ index, item, productSlug }) => {
   )
 }
 const fetcher = (...args) => fetch(...args).then((res) => res.json())
-const CityPriceList = ({ data }) => {
+const CityPriceList = ({ data, user }) => {
   const refreshInterval = 1000 * 60 * 60 * 24
   const priceQualities = ["Sivri", "Levant", "Giresun"]
   let priceData = []
@@ -275,6 +275,7 @@ const CityPriceList = ({ data }) => {
               $eq: data.product.data.id,
             },
           },
+          user: { id: { $eq: user?.data.id } },
           approvalStatus: {
             $in: approvalStatus(data.approvalStatus),
           },
@@ -306,6 +307,7 @@ const CityPriceList = ({ data }) => {
         date: {
           $lte: Moment(data.date).startOf("day").format("YYYY-MM-DD"),
         },
+        user: { id: { $eq: user?.data.id } },
       },
       product: {
         id: {
@@ -447,11 +449,11 @@ const CityPriceList = ({ data }) => {
     return (
       <span role="status">
         <BiLoaderCircle className="mr-2 inline-block align-middle w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" />
-        <span className="sr-only">Gönderiliyor...</span>
-        <span>Gönderiliyor...</span>
+        <span className="sr-only">Fiyatlar Getiriliyor...</span>
+        <span>Fiyatlar Getiriliyor...</span>
       </span>
     )
-  const newPriceData = [...priceData, fiskobirlik, ferrero]
+  const newPriceData = user ? priceData : [...priceData, fiskobirlik, ferrero]
   return (
     <SWRConfig value={{ provider: () => new Map() }}>
       <div className="flex flex-col">
