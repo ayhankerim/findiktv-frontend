@@ -6,13 +6,18 @@ import { getAdsData, getEditors, fetchAPI, getGlobalData } from "@/utils/api"
 import { getFirmData } from "@/utils/api-firms"
 import { turkeyApi } from "@/utils/turkiye-api"
 import { useSelector } from "react-redux"
-import { getPriceCard, getGraphData } from "@/utils/api-prices"
+import {
+  getPriceCard,
+  getUserLastPrice,
+  getGraphData,
+} from "@/utils/api-prices"
 import toast, { Toaster } from "react-hot-toast"
 import Layout from "@/components/layout"
 import Seo from "@/components/elements/seo"
 import VideoEmbed from "@/components/elements/video-embed"
 import AverageCard from "@/components/elements/price/average-card-new"
 import LatestArticles from "@/components/elements/article/latest-firm-articles"
+import CityPriceList from "@/components/sections/city-price-list"
 import Link from "next/link"
 import Image from "next/image"
 import Slider from "react-slick"
@@ -243,6 +248,7 @@ const getValidUrl = (url = "") => {
 const DynamicFirms = ({
   firmContent,
   priceCardData,
+  lastPriceDate,
   graphData,
   preview,
   global,
@@ -307,6 +313,23 @@ const DynamicFirms = ({
       notify("error", "Bir sorunla karşılaştık.")
     }
     setLoading(false)
+  }
+  const priceCity = {
+    title: `${Moment(lastPriceDate.attributes.date).format(
+      "DD-MM-YYYY"
+    )} Tarihli ${firmContent.name} Fındık Fiyatları`,
+    description: `Bu liste ${firmContent.name} firmasına ait fiyatları gösterir.`,
+    date: Moment(lastPriceDate.attributes.date).format("YYYY-MM-DD"),
+    product: {
+      data: {
+        id: process.env.NEXT_PUBLIC_FINDIK_ID,
+        attributes: {
+          slug: "findik",
+        },
+      },
+    },
+    priceType: "all",
+    approvalStatus: "all",
   }
   return (
     <Layout global={global} pageContext={firmContext}>
@@ -389,7 +412,7 @@ const DynamicFirms = ({
                         </p>
                       </div>
                       <Address firmContent={firmContent} />
-                      <div className="flex flex-row mt-2 gap-2">
+                      <div className="flex flex-row flex-wrap mt-2 gap-2">
                         {session &&
                           (session.id == firmContent.user.data?.id ||
                             userData?.role?.type === "editor") && (
@@ -462,8 +485,8 @@ const DynamicFirms = ({
                   </h2>
                   <span className="absolute h-[5px] w-2/5 max-w-[180px] left-0 bottom-[-5px] bg-secondary/60"></span>
                 </div>
-                <div
-                  className="min-h-[20vh] mt-5 md:mt-4 pb-4 border-b border-secondary/20"
+                <article
+                  className="NewsContent firmPage min-h-[20vh] mt-5 md:mt-4 pb-4 border-b border-secondary/20"
                   dangerouslySetInnerHTML={{
                     __html: firmContent.about
                       ? firmContent.about
@@ -489,7 +512,7 @@ const DynamicFirms = ({
                 <div className="min-h-[8vh] mt-5 md:mt-4 pb-4 border-b border-secondary/20">
                   {firmContent.servicePoints &&
                   firmContent.servicePoints[0].provinces[0] ? (
-                    <ul className="flex flex-col gap-2">
+                    <ul className="flex flex-col gap-2 divide-y divide-secondary/20">
                       {firmContent.servicePoints[0].provinces[0].id !== 999 ? (
                         firmContent.servicePoints[0].provinces.map(
                           (province, i) => {
@@ -502,12 +525,12 @@ const DynamicFirms = ({
                                   href={`/firma/konum/${slugify(
                                     provinceData.name
                                   )}`}
-                                  className="font-bold hover:underline"
+                                  className="w-1/4 font-bold underline hover:no-underline"
                                 >
                                   {provinceData.name}
                                 </Link>
                                 {province.districts.length > 0 ? (
-                                  <ul className="flex gap-2">
+                                  <ul className="flex flex-wrap w-3/4 gap-2">
                                     {province.districts.map((districtId, j) => (
                                       <li key={j}>
                                         {
@@ -544,6 +567,7 @@ const DynamicFirms = ({
               "findik-alim-satim" && (
               <>
                 {priceCardData && <AverageCard priceCardData={priceCardData} />}
+                <CityPriceList data={priceCity} user={firmContent.user} />
                 <PriceChart grapghData={graphData} />
               </>
             )}
@@ -697,6 +721,11 @@ export const getServerSideProps = async (context) => {
         value1: null,
         value2: null,
       }))
+  const userLastPriceDate = user.data
+    ? await getUserLastPrice({
+        user: user.data?.id,
+      })
+    : []
   const graphData = user.data
     ? await getGraphData({
         product: "findik",
@@ -711,6 +740,7 @@ export const getServerSideProps = async (context) => {
       firmContent: firmContent,
       priceCardData: priceCard,
       graphData: graphData,
+      lastPriceDate: userLastPriceDate,
       advertisement: advertisement,
       global: globalLocale.data,
       firmContext: {

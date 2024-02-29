@@ -227,7 +227,7 @@ export async function getFirmData({ slug }) {
   // Return the first item since there should only be one result per slug
   return firmsData.data.firms.data[0]
 }
-export async function getCityCode({ cityCode }) {
+export async function getCityCode({ cityCode, user }) {
   // Find the pages that match this slug
   const gqlEndpoint = getStrapiURL("/graphql")
   const cityRes = await fetch(gqlEndpoint, {
@@ -238,26 +238,21 @@ export async function getCityCode({ cityCode }) {
     },
     body: JSON.stringify({
       query: `
-        query getCityByCode($cityCode: [Int!]) {
+        query getCityByCode($cityCode: [Int!], $user: ID) {
           cities(filters: { cityCode: { in: $cityCode } }) {
             data {
               id
               attributes {
                 cityCode
-                Sivri: prices (
+                Sivri: prices(
                   filters: {
-                    type: {
-                      eq: "openmarket",
-                    },
-                    approvalStatus: {
-                      eq: "adjustment",
-                    },
-                    quality: {
-                      eq: "Sivri",
-                    },
-                  },
+                    type: { eq: "openmarket" }
+                    approvalStatus: { eq: "adjustment" }
+                    quality: { eq: "Sivri" }
+                    user: { id: { eq: $user } }
+                  }
                   pagination: { limit: 1 }
-                ){
+                ) {
                   data {
                     attributes {
                       min
@@ -266,20 +261,15 @@ export async function getCityCode({ cityCode }) {
                     }
                   }
                 }
-                Levant: prices (
+                Levant: prices(
                   filters: {
-                    type: {
-                      eq: "openmarket",
-                    },
-                    approvalStatus: {
-                      eq: "adjustment",
-                    },
-                    quality: {
-                      eq: "Levant",
-                    },
-                  },
+                    type: { eq: "openmarket" }
+                    approvalStatus: { eq: "adjustment" }
+                    quality: { eq: "Levant" }
+                    user: { id: { eq: $user } }
+                  }
                   pagination: { limit: 1 }
-                ){
+                ) {
                   data {
                     attributes {
                       min
@@ -288,20 +278,15 @@ export async function getCityCode({ cityCode }) {
                     }
                   }
                 }
-                Giresun: prices (
+                Giresun: prices(
                   filters: {
-                    type: {
-                      eq: "openmarket",
-                    },
-                    approvalStatus: {
-                      eq: "adjustment",
-                    },
-                    quality: {
-                      eq: "Giresun",
-                    },
-                  },
+                    type: { eq: "openmarket" }
+                    approvalStatus: { eq: "adjustment" }
+                    quality: { eq: "Giresun" }
+                    user: { id: { eq: $user } }
+                  }
                   pagination: { limit: 1 }
-                ){
+                ) {
                   data {
                     attributes {
                       min
@@ -317,6 +302,7 @@ export async function getCityCode({ cityCode }) {
       `,
       variables: {
         cityCode,
+        user,
       },
     }),
   })

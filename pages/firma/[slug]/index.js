@@ -422,7 +422,7 @@ const DynamicFirms = ({
                       </div>
                       <Address firmContent={firmContent} />
                       {session && session.id == firmContent.user.data?.id && (
-                        <div className="flex flex-row mt-2 gap-2">
+                        <div className="flex flex-row flex-wrap mt-2 gap-2">
                           <Link
                             href={`/firma/${firmContent.slug}/duzenle`}
                             className="flex border items-center rounded-md px-2 py-1 text-sm hover:shadow-lg"
@@ -479,8 +479,8 @@ const DynamicFirms = ({
                   </h2>
                   <span className="absolute h-[5px] w-2/5 max-w-[180px] left-0 bottom-[-5px] bg-secondary/60"></span>
                 </div>
-                <div
-                  className="min-h-[20vh] mt-5 md:mt-4 pb-4 border-b border-secondary/20"
+                <article
+                  className="NewsContent firmPage min-h-[20vh] mt-5 md:mt-4 pb-4 border-b border-secondary/20"
                   dangerouslySetInnerHTML={{
                     __html: firmContent.about
                       ? firmContent.about
@@ -524,7 +524,7 @@ const DynamicFirms = ({
                                   {provinceData.name}
                                 </Link>
                                 {province.districts.length > 0 ? (
-                                  <ul className="flex gap-2">
+                                  <ul className="flex flex-wrap gap-2">
                                     {province.districts.map((districtId, j) => (
                                       <li key={j}>
                                         {

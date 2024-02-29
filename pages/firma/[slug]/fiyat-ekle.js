@@ -271,15 +271,15 @@ const FirmAddPrice = ({ firmContent, global, firmContext }) => {
                         enableReinitialize={true}
                         initialValues={{
                           minimum_price: formatter.format(
-                            cityData?.attributes[productQuality].data[0]
+                            cityData?.attributes[productQuality]?.data[0]
                               ?.attributes.min || 0
                           ),
                           maximum_price: formatter.format(
-                            cityData?.attributes[productQuality].data[0]
+                            cityData?.attributes[productQuality]?.data[0]
                               ?.attributes.max || 0
                           ),
                           average_price: formatter.format(
-                            cityData?.attributes[productQuality].data[0]
+                            cityData?.attributes[productQuality]?.data[0]
                               ?.attributes.average || 0
                           ),
                           date: Moment(new Date()).format("YYYY-MM-DD"),
@@ -673,6 +673,7 @@ export const getServerSideProps = async (context) => {
 
   const systemIds = await getCityCode({
     cityCode: servicePointsAll,
+    user: session.id,
   })
 
   const firmContent = {
