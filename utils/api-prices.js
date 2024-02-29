@@ -1228,6 +1228,7 @@ export async function getUserEnteredPrices({
                   }
                 }
                 approvalStatus
+                createdAt
               }
             }
           }

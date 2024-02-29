@@ -82,20 +82,25 @@ const PriceItem = ({ item }) => {
         </div>
         <div className="col-span">
           <button
-            className={`disabled:opacity-75 w-full ${
+            className={`disabled:opacity-50 disabled:cursor-not-allowed	 w-full ${
               item.attributes.approvalStatus === "ignored" || deleted
                 ? "hidden"
                 : "bg-danger hover:bg-danger/90"
             } text-sm text-white rounded p-2 text-base transition duration-150 ease-out md:ease-in`}
             type="button"
+            title="2 saatten eski kayıtları silemezsiniz!"
             onClick={() => removePrice(item.id)}
-            disabled={item.attributes.approvalStatus === "ignored"}
+            disabled={
+              item.attributes.approvalStatus === "ignored" ||
+              Moment().subtract(2, "hours").valueOf() >=
+                Moment(item.attributes.createdAt).valueOf()
+            }
           >
             {loading ? (
               <span role="status">
                 <BiLoaderCircle className="inline-block align-middle w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" />
-                <span className="sr-only">Kaydediliyor ...</span>
-                <span>Kaydediliyor...</span>
+                <span className="sr-only">Siliniyor ...</span>
+                <span>Siliniyor...</span>
               </span>
             ) : (
               <span>Sil</span>
@@ -261,7 +266,7 @@ export const getServerSideProps = async (context) => {
   const lastEntries = await getUserEnteredPrices({
     product: "findik",
     type: type,
-    minDate: Moment().subtract(2, "days").format(),
+    minDate: Moment().subtract(365, "days").format(),
     approvalStatus: approvalStatus,
     user: session.id,
   })
