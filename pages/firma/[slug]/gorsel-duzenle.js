@@ -150,6 +150,12 @@ const PriceEntries = ({ global, firmContent, firmContext }) => {
         }),
       }
     )
+    await axios.get(`/api/revalidate`, {
+      params: {
+        url: `/firma/${firmContent.slug}`,
+        secret: process.env.NEXT_PUBLIC_REVALIDATION_SECRET_TOKEN,
+      },
+    })
     setFirmGallery(galleryUpdate.data.attributes.gallery)
     notify("success", "Başarıyla güncellendi.")
   }
@@ -223,6 +229,13 @@ const PriceEntries = ({ global, firmContent, firmContext }) => {
                             }),
                           }
                         )
+                        await axios.get(`/api/revalidate`, {
+                          params: {
+                            url: `/firma/${firmContent.slug}`,
+                            secret:
+                              process.env.NEXT_PUBLIC_REVALIDATION_SECRET_TOKEN,
+                          },
+                        })
                         setFirmLogo(logoUpdate.data.attributes.logo)
                         notify("success", "Başarıyla eklendi.")
                         resetForm({
@@ -371,6 +384,13 @@ const PriceEntries = ({ global, firmContent, firmContext }) => {
                             }),
                           }
                         )
+                        await axios.get(`/api/revalidate`, {
+                          params: {
+                            url: `/firma/${firmContent.slug}`,
+                            secret:
+                              process.env.NEXT_PUBLIC_REVALIDATION_SECRET_TOKEN,
+                          },
+                        })
                         setFirmGallery(galleryUpdate.data.attributes.gallery)
                         notify("success", "Başarıyla eklendi.")
                         resetForm({

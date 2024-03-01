@@ -7,6 +7,7 @@ import { turkeyApi } from "@/utils/turkiye-api"
 import { fetchAPI, getGlobalData } from "@/utils/api"
 import { getFirmData } from "@/utils/api-firms"
 import * as yup from "yup"
+import axios from "axios"
 import { Formik, Form, Field } from "formik"
 import toast, { Toaster } from "react-hot-toast"
 import Layout from "@/components/layout"
@@ -115,6 +116,12 @@ const PriceEntries = ({ global, firmContent, firmContext }) => {
           }),
         }
       )
+      await axios.get(`/api/revalidate`, {
+        params: {
+          url: `/firma/${firmContent.slug}`,
+          secret: process.env.NEXT_PUBLIC_REVALIDATION_SECRET_TOKEN,
+        },
+      })
       setCityList(newCityList)
       notify("success", "Başarıyla silindi.")
     } catch (err) {
@@ -175,7 +182,6 @@ const PriceEntries = ({ global, firmContent, firmContext }) => {
                     values,
                     { setSubmitting, setErrors, resetForm }
                   ) => {
-                    console.log(values)
                     setLoading(true)
                     cities.push({
                       id: parseInt(values.province),
@@ -203,6 +209,13 @@ const PriceEntries = ({ global, firmContent, firmContext }) => {
                           }),
                         }
                       )
+                      await axios.get(`/api/revalidate`, {
+                        params: {
+                          url: `/firma/${firmContent.slug}`,
+                          secret:
+                            process.env.NEXT_PUBLIC_REVALIDATION_SECRET_TOKEN,
+                        },
+                      })
                       notify("success", "Başarıyla eklendi.")
                       provinceRef.current.clearValue()
                       resetForm({
@@ -297,7 +310,6 @@ const PriceEntries = ({ global, firmContent, firmContext }) => {
                               })) || []),
                           ]}
                           onChange={(e) => {
-                            console.log("b", values.province, values.district)
                             setFieldTouched("district", true)
                             setFieldValue(
                               "district",

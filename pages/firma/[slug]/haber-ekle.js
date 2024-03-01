@@ -285,6 +285,14 @@ const PriceEntries = ({ global, firmContent, firmContext }) => {
                               }),
                             }
                           )
+                          await axios.get(`/api/revalidate`, {
+                            params: {
+                              url: `/firma/${firmContent.slug}`,
+                              secret:
+                                process.env
+                                  .NEXT_PUBLIC_REVALIDATION_SECRET_TOKEN,
+                            },
+                          })
                           notify("success", "Haber girişiniz alınmıştır.")
                         } catch (err) {
                           console.error(err)

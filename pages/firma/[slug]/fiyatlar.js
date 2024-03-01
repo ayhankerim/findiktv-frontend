@@ -4,6 +4,7 @@ import { getSession } from "next-auth/react"
 import { getGlobalData } from "@/utils/api"
 import { getFirmData } from "@/utils/api-firms"
 import { getUserEnteredPrices, updatePrice } from "@/utils/api-prices"
+import axios from "axios"
 import toast, { Toaster } from "react-hot-toast"
 import { BiLoaderCircle } from "react-icons/bi"
 import Tooltip from "@/components/elements/tooltip"
@@ -22,7 +23,7 @@ const notify = (type, message) => {
   }
 }
 
-const PriceItem = ({ item }) => {
+const PriceItem = ({ item, slug }) => {
   const [loading, setLoading] = useState(false)
   const [deleted, setDeleted] = useState(false)
   const formatter = new Intl.NumberFormat("tr-TR", {
@@ -33,6 +34,12 @@ const PriceItem = ({ item }) => {
     setLoading(true)
     try {
       await updatePrice(price)
+      await axios.get(`/api/revalidate`, {
+        params: {
+          url: `/firma/${slug}`,
+          secret: process.env.NEXT_PUBLIC_REVALIDATION_SECRET_TOKEN,
+        },
+      })
       setDeleted(true)
       notify("success", "Fiyat kaldırıldı, teşekkür ederiz.")
     } catch (err) {
@@ -215,7 +222,13 @@ const FirmAddPrice = ({ firmContent, global, lastEntries, firmContext }) => {
                       </div>
                     </div>
                     {lastEntries.map((item, i) => {
-                      return <PriceItem item={item} key={i} />
+                      return (
+                        <PriceItem
+                          item={item}
+                          slug={firmContent.slug}
+                          key={i}
+                        />
+                      )
                     })}
                   </>
                 ) : (

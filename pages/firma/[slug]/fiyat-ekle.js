@@ -3,6 +3,7 @@ import { useRouter } from "next/router"
 import { getSession, useSession } from "next-auth/react"
 import { fetchAPI, getGlobalData } from "@/utils/api"
 import { getFirmData, getCityCode, createCity } from "@/utils/api-firms"
+import axios from "axios"
 import * as yup from "yup"
 import { Formik, Form, Field } from "formik"
 import toast, { Toaster } from "react-hot-toast"
@@ -344,6 +345,14 @@ const FirmAddPrice = ({ firmContent, global, firmContext }) => {
                                 }),
                               }
                             )
+                            await axios.get(`/api/revalidate`, {
+                              params: {
+                                url: `/firma/${firmContent.slug}`,
+                                secret:
+                                  process.env
+                                    .NEXT_PUBLIC_REVALIDATION_SECRET_TOKEN,
+                              },
+                            })
                             notify(
                               "success",
                               "Fiyat girişiniz alındı, teşekkür ederiz."

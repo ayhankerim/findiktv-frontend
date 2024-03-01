@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/router"
 import { getSession, useSession } from "next-auth/react"
+import axios from "axios"
 import { fetchAPI, getGlobalData } from "@/utils/api"
 import { getFirmData, getSectorListData } from "@/utils/api-firms"
 import * as yup from "yup"
@@ -350,6 +351,12 @@ const DynamicFirm = ({ firmContent, sectorList, global, firmContext }) => {
                     }),
                   }
                 )
+                await axios.get(`/api/revalidate`, {
+                  params: {
+                    url: `/firma/${firmContent.slug}`,
+                    secret: process.env.NEXT_PUBLIC_REVALIDATION_SECRET_TOKEN,
+                  },
+                })
                 notify("success", "Bilgileriniz güncellenmiştir.")
               } catch (err) {
                 console.error(err)

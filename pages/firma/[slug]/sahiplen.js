@@ -3,6 +3,7 @@ import { useRouter } from "next/router"
 import { getSession, useSession } from "next-auth/react"
 import { fetchAPI, getGlobalData } from "@/utils/api"
 import { getFirmData } from "@/utils/api-firms"
+import axios from "axios"
 import toast, { Toaster } from "react-hot-toast"
 import { BiLoaderCircle } from "react-icons/bi"
 import { RiArrowGoBackFill } from "react-icons/ri"
@@ -75,6 +76,12 @@ const FirmAddPrice = ({
         }
       )
       setSuccess(true)
+      await axios.get(`/api/revalidate`, {
+        params: {
+          url: `/firma/${firmContent.slug}`,
+          secret: process.env.NEXT_PUBLIC_REVALIDATION_SECRET_TOKEN,
+        },
+      })
       notify("success", "Sayfa sahipliği alımı başarılı.")
       setTimeout(() => {
         router.push(`/firma/${firmContent.slug}`)
