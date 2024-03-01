@@ -1,7 +1,6 @@
 import React from "react"
 import { CKEditor } from "@ckeditor/ckeditor5-react"
 import Editor from "ckeditor5-custom-build"
-import "@/styles/ck-content.module.css"
 
 const editorConfiguration = {
   toolbar: [
