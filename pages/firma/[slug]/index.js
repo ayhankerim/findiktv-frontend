@@ -329,11 +329,11 @@ const DynamicFirms = ({
     tags: [],
   }
   const priceCity = {
-    title: `${Moment(lastPriceDate.attributes.date).format(
+    title: `${Moment(lastPriceDate.attributes?.date).format(
       "DD-MM-YYYY"
     )} Tarihli ${firmContent.name} Fındık Fiyatları`,
     description: `Bu liste ${firmContent.name} firmasına ait fiyatları gösterir.`,
-    date: Moment(lastPriceDate.attributes.date).format("YYYY-MM-DD"),
+    date: Moment(lastPriceDate.attributes?.date).format("YYYY-MM-DD"),
     product: {
       data: {
         id: process.env.NEXT_PUBLIC_FINDIK_ID,
@@ -506,7 +506,7 @@ const DynamicFirms = ({
                 <div className="min-h-[8vh] mt-5 md:mt-4 pb-4 border-b border-secondary/20">
                   {firmContent.servicePoints &&
                   firmContent.servicePoints[0].provinces[0] ? (
-                    <ul className="flex flex-col gap-2">
+                    <ul className="flex flex-col gap-2 divide-y divide-secondary/20">
                       {firmContent.servicePoints[0].provinces[0].id !== 999 ? (
                         firmContent.servicePoints[0].provinces.map(
                           (province, i) => {
@@ -519,12 +519,12 @@ const DynamicFirms = ({
                                   href={`/firma/konum/${slugify(
                                     provinceData.name
                                   )}`}
-                                  className="font-bold hover:underline"
+                                  className="w-1/4 font-bold underline hover:no-underline"
                                 >
                                   {provinceData.name}
                                 </Link>
                                 {province.districts.length > 0 ? (
-                                  <ul className="flex flex-wrap gap-2">
+                                  <ul className="flex flex-wrap w-3/4 gap-2">
                                     {province.districts.map((districtId, j) => (
                                       <li key={j}>
                                         {
