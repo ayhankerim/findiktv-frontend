@@ -378,16 +378,17 @@ const DynamicFirms = ({
                             <span className="text-warning">
                               İNCELEME BEKLİYOR
                             </span>
-                            {firmContent.user.data?.id && (
-                              <div className="inline-block ml-2 text-lg">
-                                <Tooltip
-                                  orientation="bottom"
-                                  tooltipText="Sayfa firma yetkilisi tarafından yönetiliyor"
-                                >
-                                  <FcApproval />
-                                </Tooltip>
-                              </div>
-                            )}
+                            {firmContent.user.data?.id &&
+                              firmContent.user.data.attributes.confirmed && (
+                                <div className="inline-block ml-2 text-lg">
+                                  <Tooltip
+                                    orientation="bottom"
+                                    tooltipText="Sayfa firma yetkilisi tarafından yönetiliyor"
+                                  >
+                                    <FcApproval />
+                                  </Tooltip>
+                                </div>
+                              )}
                           </h1>
                         </div>
                       </div>

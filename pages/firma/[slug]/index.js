@@ -328,23 +328,25 @@ const DynamicFirms = ({
     dateModified: Moment(firmContext.updatedAt).toISOString(),
     tags: [],
   }
-  const priceCity = {
-    title: `${Moment(lastPriceDate.attributes?.date).format(
-      "DD-MM-YYYY"
-    )} Tarihli ${firmContent.name} Fındık Fiyatları`,
-    description: `Bu liste ${firmContent.name} firmasına ait fiyatları gösterir.`,
-    date: Moment(lastPriceDate.attributes?.date).format("YYYY-MM-DD"),
-    product: {
-      data: {
-        id: process.env.NEXT_PUBLIC_FINDIK_ID,
-        attributes: {
-          slug: "findik",
+  const priceCity = lastPriceDate
+    ? {
+        title: `${Moment(lastPriceDate.attributes?.date).format(
+          "DD-MM-YYYY"
+        )} Tarihli ${firmContent.name} Fındık Fiyatları`,
+        description: `Bu liste ${firmContent.name} firmasına ait fiyatları gösterir.`,
+        date: Moment(lastPriceDate.attributes?.date).format("YYYY-MM-DD"),
+        product: {
+          data: {
+            id: process.env.NEXT_PUBLIC_FINDIK_ID,
+            attributes: {
+              slug: "findik",
+            },
+          },
         },
-      },
-    },
-    priceType: "all",
-    approvalStatus: "all",
-  }
+        priceType: "all",
+        approvalStatus: "all",
+      }
+    : null
   return (
     <Layout global={global} pageContext={firmContext}>
       <Seo metadata={metadataWithDefaults} others={articleSeoData} />
@@ -387,16 +389,17 @@ const DynamicFirms = ({
                         <div className="flex items-center gap-2">
                           <h1 className="font-semibold text-xl text-dark">
                             {firmContent.name}
-                            {firmContent.user.data?.id && (
-                              <div className="inline-block ml-2 text-lg">
-                                <Tooltip
-                                  orientation="bottom"
-                                  tooltipText="Sayfa firma yetkilisi tarafından yönetiliyor"
-                                >
-                                  <FcApproval />
-                                </Tooltip>
-                              </div>
-                            )}
+                            {firmContent.user.data?.id &&
+                              firmContent.user.data.attributes.confirmed && (
+                                <div className="inline-block ml-2 text-lg">
+                                  <Tooltip
+                                    orientation="bottom"
+                                    tooltipText="Sayfa firma yetkilisi tarafından yönetiliyor"
+                                  >
+                                    <FcApproval />
+                                  </Tooltip>
+                                </div>
+                              )}
                           </h1>
                         </div>
                       </div>
@@ -519,12 +522,12 @@ const DynamicFirms = ({
                                   href={`/firma/konum/${slugify(
                                     provinceData.name
                                   )}`}
-                                  className="w-1/4 font-bold underline hover:no-underline"
+                                  className="min-w-[80px] font-bold underline hover:no-underline"
                                 >
                                   {provinceData.name}
                                 </Link>
                                 {province.districts.length > 0 ? (
-                                  <ul className="flex flex-wrap w-3/4 gap-2">
+                                  <ul className="flex flex-wrap gap-2">
                                     {province.districts.map((districtId, j) => (
                                       <li key={j}>
                                         {
@@ -558,13 +561,23 @@ const DynamicFirms = ({
               </div>
             </div>
             {firmContent.firm_category.data.attributes.slug ===
-              "findik-alim-satim" && (
-              <>
-                {priceCardData && <AverageCard priceCardData={priceCardData} />}
-                <CityPriceList data={priceCity} user={firmContent.user} />
-                <PriceChart grapghData={graphData} />
-              </>
-            )}
+              "findik-alim-satim" &&
+              firmContent.user.data &&
+              priceCity && (
+                <div id="prices" className="flex flex-col mb-8">
+                  <div className="flex flex-row items-center justify-between border-b border-secondary/20 relative mb-8">
+                    <h2 className="font-semibold text-base text-midgray">
+                      {firmContent.name} Fındık Alım Fiyatı
+                    </h2>
+                    <span className="absolute h-[5px] w-2/5 max-w-[180px] left-0 bottom-[-5px] bg-secondary/60"></span>
+                  </div>
+                  {priceCardData && (
+                    <AverageCard priceCardData={priceCardData} />
+                  )}
+                  <CityPriceList data={priceCity} user={firmContent.user} />
+                  <PriceChart grapghData={graphData} />
+                </div>
+              )}
             <div id="Video" className="flex flex-col mb-8">
               <div className="flex flex-row items-center justify-between border-b border-secondary/20 relative">
                 <h2 className="font-semibold text-base text-midgray">Video</h2>
@@ -723,9 +736,9 @@ export async function getStaticProps(context) {
       }))
   const userLastPriceDate = user.data
     ? await getUserLastPrice({
-        user: user.data?.id,
+        user: user.data.id,
       })
-    : []
+    : null
   const graphData = user.data
     ? await getGraphData({
         product: "findik",

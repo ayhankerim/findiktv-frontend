@@ -242,20 +242,6 @@ const DynamicSectors = ({
       <main className="container flex flex-col justify-between gap-4 pt-2 bg-white">
         <div className="flex flex-col lg:flex-row items-start justify-between gap-4 pt-2">
           <div className="flex flex-col w-full gap-3">
-            <ModuleLoader
-              title="SON EKLENEN FİRMALAR"
-              theme="default"
-              component=""
-            >
-              <FirmView firms={updatedFirms} view={"card"} />
-            </ModuleLoader>
-            <ModuleLoader
-              title="SON GÜNCELLENEN FİRMALAR"
-              theme="default"
-              component=""
-            >
-              <FirmView firms={latestFirms} view={"card"} />
-            </ModuleLoader>
             <ModuleLoader title="SEKTÖRLER" theme="default" component="">
               <div className="flex gap-4 my-4">
                 {sectorList
@@ -276,6 +262,20 @@ const DynamicSectors = ({
                     </div>
                   ))}
               </div>
+            </ModuleLoader>
+            <ModuleLoader
+              title="SON EKLENEN FİRMALAR"
+              theme="default"
+              component=""
+            >
+              <FirmView firms={updatedFirms} view={"card"} />
+            </ModuleLoader>
+            <ModuleLoader
+              title="SON GÜNCELLENEN FİRMALAR"
+              theme="default"
+              component=""
+            >
+              <FirmView firms={latestFirms} view={"card"} />
             </ModuleLoader>
           </div>
         </div>

@@ -1320,7 +1320,10 @@ export async function getUserLastPrice({ user }) {
   })
 
   const itemsData = await itemsRes.json()
-  if (itemsData.data?.prices == null || itemsData.data?.prices.length === 0) {
+  if (
+    itemsData.data?.prices == null ||
+    itemsData.data?.prices.data.length === 0
+  ) {
     return null
   }
   return itemsData.data.prices.data[0]

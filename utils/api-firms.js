@@ -185,6 +185,7 @@ export async function getFirmData({ slug }) {
                       name
                       surname
                       email
+                      confirmed
                     }
                   }
                 }
