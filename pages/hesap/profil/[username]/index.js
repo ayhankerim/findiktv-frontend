@@ -348,6 +348,19 @@ const DynamicUsers = ({ userContent, advertisement, global, userContext }) => {
                             )}
                           </Menu>
                         )}
+                        {userContent.firm.data && (
+                          <Link
+                            href={`/firma/${userContent.firm.data.attributes.slug}`}
+                            title={`${userContent.firm.data.attributes.name}`}
+                            className="flex w-full border items-center rounded-md px-2 py-1 text-sm hover:shadow-lg"
+                          >
+                            <RiEditBoxLine
+                              className="mr-2 text-sm text-secondary"
+                              aria-hidden="true"
+                            />
+                            Firmaya Git
+                          </Link>
+                        )}
                       </div>
                     )}
                   </div>
@@ -521,6 +534,7 @@ export async function getStaticProps(context) {
     about,
     avatar,
     role,
+    firm,
     city,
     SocialAccounts,
     SystemAvatar,
@@ -539,6 +553,7 @@ export async function getStaticProps(context) {
     about,
     avatar,
     role,
+    firm,
     city,
     SocialAccounts,
     SystemAvatar,

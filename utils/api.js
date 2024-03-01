@@ -1292,6 +1292,15 @@ export async function getUserData({ username }) {
                 name
                 surname
                 about
+                firm {
+                  data {
+                    id
+                    attributes {
+                      name
+                      slug
+                    }
+                  }
+                }
                 city {
                   data {
                     id
@@ -1481,6 +1490,44 @@ export async function getEditors({ user }) {
     return null
   }
   return usersData.data.usersPermissionsUsers.data.length > 0
+}
+
+export async function userFirmCheck(user) {
+  const gqlEndpoint = getStrapiURL("/graphql")
+  const usersRes = await fetch(gqlEndpoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.NEXT_PUBLIC_SECRET_TOKEN}`,
+    },
+    body: JSON.stringify({
+      query: `
+        query hasFirmCheck($user: ID!) {
+          usersPermissionsUser(id: $user) {
+            data {
+              id
+              attributes {
+                firm {
+                  data {
+                    id
+                  }
+                }
+              }
+            }
+          }
+        }
+      `,
+      variables: {
+        user,
+      },
+    }),
+  })
+
+  const usersData = await usersRes.json()
+  if (usersData.data?.usersPermissionsUser == null) {
+    return null
+  }
+  return usersData.data.usersPermissionsUser.data
 }
 
 // Get site data from Strapi (metadata, navbar, footer...)

@@ -3,7 +3,7 @@ import Router from "next/router"
 import Select from "react-select"
 import { getSession, useSession } from "next-auth/react"
 import { useSelector } from "react-redux"
-import { getEditors, fetchAPI, getGlobalData } from "@/utils/api"
+import { getEditors, userFirmCheck, fetchAPI, getGlobalData } from "@/utils/api"
 import { getSectorListData } from "@/utils/api-firms"
 import { slugify } from "@/utils/slugify"
 import * as yup from "yup"
@@ -68,10 +68,15 @@ const FormField = ({
     </div>
   )
 }
-const DynamicFirm = ({ sectorList, pageContext, isEditor, global }) => {
+const DynamicFirm = ({
+  sectorList,
+  pageContext,
+  isEditor,
+  userData,
+  global,
+}) => {
   const [loading, setLoading] = useState(false)
   const { data: session } = useSession()
-  const userData = useSelector((state) => state.user.userData)
   const metadata = {
     id: 1,
     metaTitle: `Firma Profilini Düzenle`,
@@ -189,6 +194,7 @@ const DynamicFirm = ({ sectorList, pageContext, isEditor, global }) => {
                   placeholder="Lütfen giriniz"
                   errors={errors}
                   touched={touched}
+                  disabled={userData.attributes.firm.data}
                 />
                 <div className="flex flex-col lg:flex-row gap-2 mb-6">
                   <label
@@ -207,6 +213,7 @@ const DynamicFirm = ({ sectorList, pageContext, isEditor, global }) => {
                       isLoading={loading}
                       isClearable={false}
                       isSearchable={true}
+                      isDisabled={userData.attributes.firm.data}
                       name="sector"
                       placeholder="Sektör Seçiniz"
                       options={[
@@ -228,6 +235,11 @@ const DynamicFirm = ({ sectorList, pageContext, isEditor, global }) => {
                 {errors.api && (
                   <p className="text-red-500 h-12 text-sm mt-1 ml-2 text-left">
                     {errors.api}
+                  </p>
+                )}
+                {userData.attributes.firm.data && (
+                  <p className="text-red-500 h-12 text-sm mt-1 ml-2 text-left">
+                    Bir kullanıcı sadece bir adet firma oluşturabilir!
                   </p>
                 )}
                 <div className="flex justify-end gap-2 mb-6">
@@ -272,9 +284,6 @@ export const getServerSideProps = async (context) => {
   const { locale, locales, defaultLocale } = context
   const globalLocale = await getGlobalData(locale)
   const session = await getSession(context)
-  const isEditor = await getEditors({
-    user: session.id,
-  })
   const pageContext = {
     locale,
     locales,
@@ -288,12 +297,17 @@ export const getServerSideProps = async (context) => {
       },
     }
   }
+  const userData = await userFirmCheck(session.id)
+  const isEditor = await getEditors({
+    user: session.id,
+  })
   const sectorList = await getSectorListData()
   return {
     props: {
       global: globalLocale.data,
       sectorList: sectorList,
       isEditor: isEditor,
+      userData: userData,
       pageContext: {
         ...pageContext,
       },
