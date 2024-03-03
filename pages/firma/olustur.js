@@ -193,7 +193,7 @@ const DynamicFirm = ({
                   placeholder="Lütfen giriniz"
                   errors={errors}
                   touched={touched}
-                  disabled={userData.attributes.firm.data}
+                  disabled={!isEditor && userData.attributes.firm.data}
                 />
                 <div className="flex flex-col lg:flex-row gap-2 mb-6">
                   <label
@@ -212,7 +212,7 @@ const DynamicFirm = ({
                       isLoading={loading}
                       isClearable={false}
                       isSearchable={true}
-                      isDisabled={userData.attributes.firm.data}
+                      isDisabled={!isEditor && userData.attributes.firm.data}
                       name="sector"
                       placeholder="Sektör Seçiniz"
                       options={[
@@ -236,7 +236,7 @@ const DynamicFirm = ({
                     {errors.api}
                   </p>
                 )}
-                {userData.attributes.firm.data && (
+                {!isEditor && userData.attributes.firm.data && (
                   <p className="text-red-500 h-12 text-sm mt-1 ml-2 text-left">
                     Bir kullanıcı sadece bir adet firma oluşturabilir!
                   </p>
@@ -256,7 +256,9 @@ const DynamicFirm = ({
                     <button
                       className="disabled:opacity-75 w-full bg-secondary hover:bg-secondary/90 text-white rounded p-4 text-base transition duration-150 ease-out md:ease-in"
                       type="submit"
-                      disabled={loading}
+                      disabled={
+                        loading || (!isEditor && userData.attributes.firm.data)
+                      }
                     >
                       {loading ? (
                         <span role="status">

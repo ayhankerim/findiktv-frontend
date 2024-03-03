@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import React, { useEffect, useState, useRef } from "react"
 import { useRouter } from "next/router"
 import { getSession, useSession } from "next-auth/react"
 import axios from "axios"
@@ -7,6 +7,7 @@ import { getFirmData, getSectorListData } from "@/utils/api-firms"
 import * as yup from "yup"
 import { Formik, Form, Field } from "formik"
 import toast, { Toaster } from "react-hot-toast"
+import Select from "react-select"
 import { badwords } from "@/utils/badwords"
 import { BiLoaderCircle } from "react-icons/bi"
 import { PatternFormat } from "react-number-format"
@@ -80,6 +81,8 @@ const CustomEditor = dynamic(
 const DynamicFirm = ({ firmContent, sectorList, global, firmContext }) => {
   const [loading, setLoading] = useState(false)
   const router = useRouter()
+  const provinceRef = useRef(null)
+  const districtRef = useRef(null)
   if (!router.isFallback && !firmContent) {
     return {
       notFound: true,
@@ -265,6 +268,30 @@ const DynamicFirm = ({ firmContent, sectorList, global, firmContext }) => {
         }
       }),
   })
+  const findProvinceById = (id) => {
+    const province = turkeyApi.provinces.find((province) => province.id === id)
+    if (province) {
+      return { value: province.id, label: province.name }
+    }
+    return ""
+  }
+  const findDistrictById = (id) => {
+    if (!id) return ""
+    const districtArray = turkeyApi.provinces
+      .find((province) => province.id === firmContent.address[0].provinceId)
+      ?.districts.find((district) => district.id === id)
+    if (districtArray) {
+      return { value: districtArray.id, label: districtArray.name }
+    }
+    return ""
+  }
+  const findSectorById = (id) => {
+    const province = turkeyApi.provinces.find((province) => province.id === id)
+    if (province) {
+      return { value: province.id, label: province.name }
+    }
+    return ""
+  }
   return (
     <Layout global={global} pageContext={firmContext}>
       {/* Add meta tags for SEO*/}
@@ -387,20 +414,45 @@ const DynamicFirm = ({ firmContent, sectorList, global, firmContext }) => {
                   errors={errors}
                   touched={touched}
                 />
-                <FormField
-                  keyCode="sector"
-                  text="Sektör"
-                  placeholder="Sektör"
-                  errors={errors}
-                  touched={touched}
-                  as="select"
-                >
-                  {sectorList.map((item, i) => (
-                    <option value={item.id} key={item.id}>
-                      {item.attributes.name}
-                    </option>
-                  ))}
-                </FormField>
+                <div className="flex flex-col lg:flex-row gap-2 mb-6">
+                  <label
+                    htmlFor="sector"
+                    className="block lg:w-1/5 text-sm font-medium text-midgray"
+                  >
+                    Sektör
+                  </label>
+                  <div className="flex flex-col lg:w-4/5">
+                    <Select
+                      classNames={{
+                        control: (state) =>
+                          "w-full text-base focus:outline outline-offset-2 outline-secondary/30 px-2 border !rounded-none",
+                      }}
+                      classNamePrefix="react-select"
+                      isLoading={loading}
+                      isClearable={false}
+                      isSearchable={true}
+                      name="sector"
+                      placeholder="Sektör Seçiniz"
+                      options={[
+                        ...sectorList.map((item) => ({
+                          value: item.id,
+                          label: item.attributes.name,
+                        })),
+                      ]}
+                      defaultValue={{
+                        label: firmContent.firm_category.data.attributes.name,
+                        value: firmContent.firm_category.data.id,
+                      }}
+                      onBlur={() => setFieldTouched("sector", true)}
+                      onChange={(p) => {
+                        setFieldValue("sector", p?.value || "")
+                      }}
+                    />
+                    {errors.sector && touched.sector && (
+                      <p className="text-danger">{errors.sector}</p>
+                    )}
+                  </div>
+                </div>
                 <div className="flex flex-col lg:flex-row gap-2 mb-6">
                   <label
                     htmlFor="province"
@@ -409,74 +461,73 @@ const DynamicFirm = ({ firmContent, sectorList, global, firmContext }) => {
                     Adres
                   </label>
                   <div className="grid grid-cols-2 lg:w-4/5 gap-2">
-                    <div className="flex flex-col">
-                      <Field
-                        className={classNames(
-                          errors.province && touched.province
-                            ? "border-danger"
-                            : "border-inputgray",
-                          "text-base focus:outline outline-offset-2 outline-secondary/30 py-1 px-2 border"
-                        )}
-                        as="select"
-                        name="province"
-                        id="province"
-                        onChange={(e) => {
-                          setFieldValue("province", e.target.value)
-                          setFieldValue("district", "")
-                          e.target.value
-                            ? setFieldValue(
-                                "districtOptions",
-                                turkeyApi.provinces.find(
-                                  (item) => item.id === parseInt(e.target.value)
-                                ).districts
-                              )
-                            : setFieldValue("districtOptions", "")
+                    <div className="col-span-2 flex flex-col">
+                      <Select
+                        ref={provinceRef}
+                        classNames={{
+                          control: (state) =>
+                            "w-full text-base focus:outline outline-offset-2 outline-secondary/30 px-2 border !rounded-none",
                         }}
-                      >
-                        <option value={""} defaultValue>
-                          Lütfen Seçiniz!
-                        </option>
-                        {turkeyApi.provinces.map((item, i) => (
-                          <option value={item.id} key={item.id}>
-                            {item.name}
-                          </option>
-                        ))}
-                      </Field>
+                        classNamePrefix="react-select"
+                        isLoading={loading}
+                        isClearable={true}
+                        isSearchable={true}
+                        name="province"
+                        placeholder="İl Seçiniz"
+                        options={[
+                          ...turkeyApi.provinces.map((item) => ({
+                            value: item.id,
+                            label: item.name,
+                          })),
+                        ]}
+                        defaultValue={findProvinceById(
+                          firmContent.address &&
+                            firmContent.address[0].provinceId
+                        )}
+                        onBlur={() => setFieldTouched("province", true)}
+                        onChange={(p) => {
+                          setFieldValue("province", p?.value || "")
+                          setFieldValue("district", "")
+                          districtRef.current.clearValue()
+                        }}
+                      />
                       {errors.province && touched.province && (
                         <p className="text-danger">{errors.province}</p>
                       )}
                     </div>
-                    <div className="flex flex-col">
-                      <Field
-                        className={classNames(
-                          errors.district && touched.district
-                            ? "border-danger"
-                            : "border-inputgray",
-                          "text-base focus:outline outline-offset-2 outline-secondary/30 py-1 px-2 border"
-                        )}
-                        as="select"
+                    <div className="col-span-2 flex flex-col">
+                      <Select
+                        ref={districtRef}
+                        classNames={{
+                          control: (state) =>
+                            "w-full text-base focus:outline outline-offset-2 outline-secondary/30 px-2 border !rounded-none",
+                        }}
+                        classNamePrefix="react-select"
+                        isLoading={loading}
+                        isClearable={true}
+                        isSearchable={true}
                         name="district"
-                        id="district"
-                      >
-                        <option value={""} defaultValue>
-                          Lütfen seçiniz
-                        </option>
-                        {turkeyApi.provinces
-                          .find((item) => item.id === values.province)
-                          ?.districts.map((item, i) => {
-                            return (
-                              <option value={item.id} key={item.id}>
-                                {item.name}
-                              </option>
+                        placeholder="İlçe Seçiniz"
+                        options={[
+                          ...(turkeyApi.provinces
+                            .find(
+                              (province) =>
+                                province.id === parseInt(values.province)
                             )
-                          })}
-                        {values.districtOptions &&
-                          values.districtOptions.map((option) => (
-                            <option key={option.id} value={option.id}>
-                              {option.name}
-                            </option>
-                          ))}
-                      </Field>
+                            ?.districts.map((item) => ({
+                              value: item.id,
+                              label: item.name,
+                            })) || []),
+                        ]}
+                        onChange={(e) => {
+                          setFieldTouched("district", true)
+                          setFieldValue("district", e?.value)
+                        }}
+                        defaultValue={findDistrictById(
+                          firmContent.address &&
+                            firmContent.address[0].districtId
+                        )}
+                      />
                       {errors.district && touched.district && (
                         <p className="text-danger">{errors.district}</p>
                       )}
@@ -621,7 +672,7 @@ const DynamicFirm = ({ firmContent, sectorList, global, firmContext }) => {
                       <span>Geri dön</span>
                     </Link>
                   </div>
-                  <div className="flex flex-col lg:w-3/5">
+                  <div className="flex flex-col w-1/2 lg:w-3/5">
                     <button
                       className="disabled:opacity-75 w-full bg-secondary hover:bg-secondary/90 text-white rounded p-4 text-base transition duration-150 ease-out md:ease-in"
                       type="submit"
