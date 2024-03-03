@@ -248,7 +248,7 @@ export async function getCityCode({ cityCode, user }) {
                 Sivri: prices(
                   filters: {
                     type: { eq: "openmarket" }
-                    approvalStatus: { eq: "adjustment" }
+                    approvalStatus: { eq: "firmEntry" }
                     quality: { eq: "Sivri" }
                     user: { id: { eq: $user } }
                   }
@@ -265,7 +265,7 @@ export async function getCityCode({ cityCode, user }) {
                 Levant: prices(
                   filters: {
                     type: { eq: "openmarket" }
-                    approvalStatus: { eq: "adjustment" }
+                    approvalStatus: { eq: "firmEntry" }
                     quality: { eq: "Levant" }
                     user: { id: { eq: $user } }
                   }
@@ -282,7 +282,7 @@ export async function getCityCode({ cityCode, user }) {
                 Giresun: prices(
                   filters: {
                     type: { eq: "openmarket" }
-                    approvalStatus: { eq: "adjustment" }
+                    approvalStatus: { eq: "firmEntry" }
                     quality: { eq: "Giresun" }
                     user: { id: { eq: $user } }
                   }

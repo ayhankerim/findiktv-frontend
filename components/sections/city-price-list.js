@@ -30,7 +30,7 @@ const approvalStatus = (status) => {
     case "approved":
       return ["approved"]
     case "all":
-      return ["adjustment", "waiting", "calculation", "approved"]
+      return ["adjustment", "firmEntry", "waiting", "calculation", "approved"]
     default:
       return ["adjustment"]
   }

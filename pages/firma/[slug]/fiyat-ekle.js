@@ -336,7 +336,7 @@ const FirmAddPrice = ({ firmContent, global, firmContext }) => {
                                     volume: 1,
                                     efficiency: 50,
                                     product: process.env.NEXT_PUBLIC_FINDIK_ID,
-                                    approvalStatus: "adjustment",
+                                    approvalStatus: "firmEntry",
                                     type: priceType,
                                     city: cityId,
                                     user: session.id,

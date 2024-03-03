@@ -669,7 +669,7 @@ export async function getStaticPaths(context) {
 export async function getStaticProps(context) {
   const { params, locale, locales, defaultLocale } = context
   const priceType = ["stockmarket", "openmarket", "tmo"]
-  const approvalStatus = ["approved", "adjustment"]
+  const approvalStatus = ["firmEntry"]
   const priceQualities = ["Sivri", "Levant", "Giresun"]
 
   const globalLocale = await getGlobalData(locale)

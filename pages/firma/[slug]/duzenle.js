@@ -461,7 +461,7 @@ const DynamicFirm = ({ firmContent, sectorList, global, firmContext }) => {
                     Adres
                   </label>
                   <div className="grid grid-cols-2 lg:w-4/5 gap-2">
-                    <div className="col-span-2 flex flex-col">
+                    <div className="col-span-2 lg:col-span-1 flex flex-col">
                       <Select
                         ref={provinceRef}
                         classNames={{
@@ -495,7 +495,7 @@ const DynamicFirm = ({ firmContent, sectorList, global, firmContext }) => {
                         <p className="text-danger">{errors.province}</p>
                       )}
                     </div>
-                    <div className="col-span-2 flex flex-col">
+                    <div className="col-span-2 lg:col-span-1 flex flex-col">
                       <Select
                         ref={districtRef}
                         classNames={{

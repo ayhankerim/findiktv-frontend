@@ -259,7 +259,7 @@ const FirmAddPrice = ({ firmContent, global, lastEntries, firmContext }) => {
 export const getServerSideProps = async (context) => {
   const { params, locale, locales, defaultLocale } = context
   const type = ["openmarket"]
-  const approvalStatus = ["adjustment", "ignored"]
+  const approvalStatus = ["firmEntry", "ignored"]
   const globalLocale = await getGlobalData(locale)
   const session = await getSession(context)
   if (session == null) {

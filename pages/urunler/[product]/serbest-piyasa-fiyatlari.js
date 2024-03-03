@@ -155,7 +155,13 @@ export async function getStaticPaths(context) {
 
 export async function getStaticProps(context) {
   const priceType = ["openmarket"]
-  const approvalStatus = ["approved", "adjustment", "calculation", "waiting"]
+  const approvalStatus = [
+    "approved",
+    "adjustment",
+    "firmEntry",
+    "calculation",
+    "waiting",
+  ]
   const { params, locale, locales, defaultLocale } = context
 
   const globalLocale = await getGlobalData(locale)
