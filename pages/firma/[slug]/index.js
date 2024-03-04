@@ -44,12 +44,9 @@ const Loader = ({ cssClass }) => (
     <div></div>
   </div>
 )
-const PriceChart = dynamic(
-  () => import("@/components/elements/price/chart"),
-  {
-    loading: () => <Loader cssClass="h-[400px]" />,
-  }
-)
+const PriceChart = dynamic(() => import("@/components/elements/price/chart"), {
+  loading: () => <Loader cssClass="h-[400px]" />,
+})
 function SampleNextArrow(props) {
   const { className, style, onClick } = props
   return (

@@ -23,7 +23,6 @@ import Image from "next/image"
 import Slider from "react-slick"
 import { PatternFormat } from "react-number-format"
 import Tooltip from "@/components/elements/tooltip"
-import { LocalBusinessJsonLd } from "next-seo"
 import {
   MdLocationPin,
   MdPhone,
@@ -55,12 +54,9 @@ const notify = (type, message) => {
     toast.error(message)
   }
 }
-const PriceChart = dynamic(
-  () => import("@/components/elements/price/chart"),
-  {
-    loading: () => <Loader cssClass="h-[400px]" />,
-  }
-)
+const PriceChart = dynamic(() => import("@/components/elements/price/chart"), {
+  loading: () => <Loader cssClass="h-[400px]" />,
+})
 function SampleNextArrow(props) {
   const { className, style, onClick } = props
   return (
