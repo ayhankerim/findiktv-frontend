@@ -285,6 +285,7 @@ const Layout = ({
                   style={{
                     objectFit: "cover",
                   }}
+                  priority={false}
                 />
               </div>
               <article
