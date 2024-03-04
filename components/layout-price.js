@@ -9,7 +9,7 @@ import { Popover, Transition } from "@headlessui/react"
 import { TbChevronDown } from "react-icons/tb"
 import Navbar from "./elements/navbar"
 import Footer from "./elements/footer"
-import AverageCard from "@/components/elements/price/average-card-new"
+import AverageCard from "@/components/elements/price/average-card"
 import ModuleLoader from "@/components/elements/module-loader"
 import NotificationBanner from "./elements/notification-banner"
 
@@ -32,14 +32,11 @@ const Advertisement = dynamic(
 const Breadcrumb = dynamic(() => import("@/components/elements/breadcrumb"), {
   loading: () => <Loader cssClass="h-[25px]" />,
 })
-const PriceChart = dynamic(
-  () => import("@/components/elements/price/chart-new"),
-  {
-    loading: () => <Loader cssClass="h-[400px]" />,
-  }
-)
+const PriceChart = dynamic(() => import("@/components/elements/price/chart"), {
+  loading: () => <Loader cssClass="h-[400px]" />,
+})
 const TermlyPriceChange = dynamic(
-  () => import("@/components/elements/price/termly-price-changes-new"),
+  () => import("@/components/elements/price/termly-price-changes"),
   {
     loading: () => <Loader cssClass="h-[840px]" />,
   }
@@ -51,7 +48,7 @@ const CityPriceList = dynamic(
   }
 )
 const LatestPriceEntries = dynamic(
-  () => import("@/components/elements/price/latest-price-entries-new"),
+  () => import("@/components/elements/price/latest-price-entries"),
   {
     loading: () => <Loader cssClass="h-[540px]" />,
   }

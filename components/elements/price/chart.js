@@ -1,19 +1,11 @@
 import React, { useEffect, useState } from "react"
 import HighchartsReact from "highcharts-react-official"
 import Highcharts from "highcharts/highstock"
-//import HighchartsMore from "highcharts/highcharts-more"
-//import HighchartsExporting from "highcharts/modules/exporting"
-//import HighchartsExportData from "highcharts/modules/export-data"
-//import HighchartsAccessibility from "highcharts/modules/accessibility"
 import HighchartsData from "highcharts/modules/data"
 import Advertisement from "@/components/elements/advertisement"
 
 if (typeof Highcharts === "object") {
-  //HighchartsExporting(Highcharts)
-  //HighchartsExportData(Highcharts)
-  //HighchartsAccessibility(Highcharts)
   HighchartsData(Highcharts)
-  //HighchartsMore(Highcharts)
   Highcharts.setOptions({
     lang: {
       loading: "Yükleniyor...",
@@ -56,6 +48,9 @@ if (typeof Highcharts === "object") {
       ],
       exportButtonTitle: "Dışarı Aktar",
       printButtonTitle: "Yazdır",
+      rangeSelectorFrom: "Başlangıç",
+      rangeSelectorTo: "Bitiş",
+      rangeSelectorZoom: "Periyot",
       downloadPNG: "PNG Olarak indir",
       downloadJPEG: "JPEG olarak indir",
       downloadPDF: "PDF olarak indir",
@@ -69,40 +64,8 @@ if (typeof Highcharts === "object") {
     },
   })
 }
-const average = (arr) => {
-  let sums = {},
-    counts = {},
-    volume = {},
-    quality = {},
-    results = [],
-    date
-  for (var i = 0; i < arr.length; i++) {
-    date =
-      new Date(arr[i].attributes.date).setHours(0, 0, 0) + 24 * 60 * 60 * 1000
-    if (!(date in sums)) {
-      sums[date] = 0
-      counts[date] = 0
-      volume[date] = 0
-      quality[date] = ""
-    }
-    sums[date] += arr[i].attributes.average * arr[i].attributes.volume
-    volume[date] += arr[i].attributes.volume
-    quality[date] = arr[i].attributes.quality
-    counts[date]++
-  }
 
-  for (date in sums) {
-    results.push({
-      date: date,
-      average: sums[date] / volume[date],
-      volume: volume[date],
-      quality: quality[date],
-    })
-  }
-  return results
-}
-
-const PriceChart = ({ city, product, type, grapghData }) => {
+const PriceChart = ({ grapghData }) => {
   const [chartOptions, setChartOptions] = useState({
     chart: {
       backgroundColor: "transparent",
@@ -138,24 +101,11 @@ const PriceChart = ({ city, product, type, grapghData }) => {
         title: {
           text: "Fiyat",
         },
-        height: "80%",
+        height: "100%",
         lineWidth: 2,
         resize: {
           enabled: true,
         },
-      },
-      {
-        labels: {
-          align: "right",
-          x: -3,
-        },
-        title: {
-          text: "Hacim",
-        },
-        top: "85%",
-        height: "15%",
-        offset: 0,
-        lineWidth: 2,
       },
     ],
     tooltip: {
@@ -182,7 +132,6 @@ const PriceChart = ({ city, product, type, grapghData }) => {
   })
   useEffect(() => {
     grapghData &&
-      grapghData.data &&
       setChartOptions({
         series: [
           {
@@ -191,32 +140,32 @@ const PriceChart = ({ city, product, type, grapghData }) => {
               fillColor: "transparent",
               lineColor: Highcharts.getOptions().colors[0],
             },
-            data: average(grapghData.data).map(function (item) {
+            data: grapghData.map(function (item) {
               return [
                 new Date(new Date().setTime(item.date)).setHours(0, 0, 0),
                 item.average,
               ]
             }),
           },
-          {
-            type: "column",
-            name: "Hacim",
-            color: "rgb(67, 67, 72)",
-            tooltip: {
-              valueSuffix: " kg",
-              valueDecimals: 2,
-            },
-            data: average(grapghData.data).map(function (item) {
-              return [
-                new Date(new Date().setTime(item.date)).setHours(0, 0, 0),
-                item.volume,
-              ]
-            }),
-            yAxis: 1,
-          },
+          // {
+          //   type: "column",
+          //   name: "Hacim",
+          //   color: "rgb(67, 67, 72)",
+          //   tooltip: {
+          //     valueSuffix: " kg",
+          //     valueDecimals: 2,
+          //   },
+          //   data: grapghData.map(function (item) {
+          //     return [
+          //       new Date(new Date().setTime(item.date)).setHours(0, 0, 0),
+          //       Number(item.volume),
+          //     ]
+          //   }),
+          //   yAxis: 1,
+          // },
         ],
       })
-  }, [city, grapghData, product, type])
+  }, [grapghData])
   return (
     <>
       <div className="border border-lightgray rounded p-3">

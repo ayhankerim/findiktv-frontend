@@ -15,7 +15,7 @@ import toast, { Toaster } from "react-hot-toast"
 import Layout from "@/components/layout"
 import Seo from "@/components/elements/seo"
 import VideoEmbed from "@/components/elements/video-embed"
-import AverageCard from "@/components/elements/price/average-card-new"
+import AverageCard from "@/components/elements/price/average-card"
 import LatestArticles from "@/components/elements/article/latest-firm-articles"
 import CityPriceList from "@/components/sections/city-price-list"
 import Link from "next/link"
@@ -56,7 +56,7 @@ const notify = (type, message) => {
   }
 }
 const PriceChart = dynamic(
-  () => import("@/components/elements/price/chart-new"),
+  () => import("@/components/elements/price/chart"),
   {
     loading: () => <Loader cssClass="h-[400px]" />,
   }
