@@ -4,7 +4,7 @@ This frontend relies on Next's [Static Generation](https://nextjs.org/docs/basic
 
 ## Routes
 
-**pages/[[...slug]].js**
+**pages/[[...slug]].js** 
 
 This file generates all the app's route. First, it fetches all the pages entries in Strapi. Then, it creates one route per page found. These routes can look like this:
 
