@@ -1,7 +1,7 @@
-import {sectionRenderer} from "@/app/[lang]/utils/section-renderer";
+import {sectionRenderer} from "@/app/utils/section-renderer";
 import {Metadata} from "next";
-import {getPageBySlug} from "@/app/[lang]/utils/get-page-by-slug";
-import {FALLBACK_SEO} from "@/app/[lang]/utils/constants";
+import {getPageBySlug} from "@/app/utils/get-page-by-slug";
+import {FALLBACK_SEO} from "@/app/utils/constants";
 
 
 type Props = {
@@ -13,7 +13,7 @@ type Props = {
 
 
 export async function generateMetadata({params}: Props): Promise<Metadata> {
-    const page = await getPageBySlug(params.slug, params.lang);
+    const page = await getPageBySlug(params.slug, "tr");
 
     if (!page.data[0].attributes?.seo) return FALLBACK_SEO;
     const metadata = page.data[0].attributes.seo
@@ -26,7 +26,7 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
 
 
 export default async function PageRoute({params}: Props) {
-    const page = await getPageBySlug(params.slug, params.lang);
+    const page = await getPageBySlug(params.slug, "tr");
     if (page.data.length === 0) return null;
     const contentSections = page.data[0].attributes.contentSections;
     return contentSections.map((section: any, index: number) => sectionRenderer(section, index));
