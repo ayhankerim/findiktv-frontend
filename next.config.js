@@ -123,7 +123,7 @@ const nextConfig = {
     formats: ["image/avif", "image/webp"],
     domains: ["imagedelivery.net"],
     loader: "custom",
-    loaderFile: "./utils/imageLoader.js",
+    loaderFile: "./src/app/utils/imageLoader.ts",
   },
   swcMinify: true,
   productionBrowserSourceMaps: true,
@@ -133,19 +133,19 @@ const nextConfig = {
 }
 
 module.exports = nextConfig
-module.exports = withSentryConfig(
-  module.exports,
-  {
-    silent: true,
-    org: "sentry-silhouetted-81493",
-    project: "findiktv-frontend",
-  },
-  {
-    widenClientFileUpload: true,
-    transpileClientSDK: true,
-    tunnelRoute: "/monitoring",
-    hideSourceMaps: true,
-    disableLogger: true,
-    automaticVercelMonitors: true,
-  }
-)
+// module.exports = withSentryConfig(
+//   module.exports,
+//   {
+//     silent: true,
+//     org: "sentry-silhouetted-81493",
+//     project: "findiktv-frontend",
+//   },
+//   {
+//     widenClientFileUpload: true,
+//     transpileClientSDK: true,
+//     tunnelRoute: "/monitoring",
+//     hideSourceMaps: true,
+//     disableLogger: true,
+//     automaticVercelMonitors: true,
+//   }
+// )
