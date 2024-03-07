@@ -310,23 +310,25 @@ const DynamicFirms = ({
     }
     setLoading(false)
   }
-  const priceCity = {
-    title: `${Moment(lastPriceDate.attributes.date).format(
-      "DD-MM-YYYY"
-    )} Tarihli ${firmContent.name} Fındık Fiyatları`,
-    description: `Bu liste ${firmContent.name} firmasına ait fiyatları gösterir.`,
-    date: Moment(lastPriceDate.attributes.date).format("YYYY-MM-DD"),
-    product: {
-      data: {
-        id: process.env.NEXT_PUBLIC_FINDIK_ID,
-        attributes: {
-          slug: "findik",
+  const priceCity = lastPriceDate.attributes
+    ? {
+        title: `${Moment(lastPriceDate.attributes.date).format(
+          "DD-MM-YYYY"
+        )} Tarihli ${firmContent.name} Fındık Fiyatları`,
+        description: `Bu liste ${firmContent.name} firmasına ait fiyatları gösterir.`,
+        date: Moment(lastPriceDate.attributes.date).format("YYYY-MM-DD"),
+        product: {
+          data: {
+            id: process.env.NEXT_PUBLIC_FINDIK_ID,
+            attributes: {
+              slug: "findik",
+            },
+          },
         },
-      },
-    },
-    priceType: "all",
-    approvalStatus: "all",
-  }
+        priceType: "all",
+        approvalStatus: "all",
+      }
+    : null
   return (
     <Layout global={global} pageContext={firmContext}>
       <Seo metadata={metadataWithDefaults} others={articleSeoData} />
