@@ -1,8 +1,8 @@
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
-import { signIn } from "@/utils/auth"
+import { signIn, userData } from "@/app/utils/auth"
 
-export default NextAuth({
+const handler = NextAuth({
     providers: [
         CredentialsProvider({
             id: "credentials",
@@ -27,8 +27,12 @@ export default NextAuth({
     ],
     callbacks: {
         session: async ({ session, token }) => {
+            const result = await userData({
+                jwt: token.jwt,
+            })
             session.id = token.id
             session.jwt = token.jwt
+            session.user.data = result
             return Promise.resolve(session)
         },
         jwt: async ({ token, user }) => {
@@ -41,3 +45,4 @@ export default NextAuth({
         },
     },
 })
+export { handler as GET, handler as POST };
