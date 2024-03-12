@@ -36,11 +36,12 @@ async function getGlobal(lang: string): Promise<any> {
       "navbar.links",
       "navbar.button",
       "navbar.logo",
+      "footer.logo",
       "footer.button",
       "footer.columns",
+      "footer.columns.links",
       "footer.smallText",
       "footer.copyright",
-      "footer.categories",
     ],
     locale: lang,
   };
@@ -81,9 +82,9 @@ export default async function RootLayout({
 
   const { notificationBanner, navbar, footer } = global.data.attributes;
 
-  const navbarLogoUrl = getStrapiMedia(navbar.logo?.data.attributes.url);
+  const navbarLogoUrl = getStrapiMedia(navbar.logo.data.attributes.url);
 
-  const footerLogoUrl = getStrapiMedia(footer.footer?.logo.data.attributes.url);
+  const footerLogoUrl = getStrapiMedia(footer.logo.data.attributes.url);
 
   return (
     <SessionWrapper>
@@ -164,11 +165,9 @@ export default async function RootLayout({
             </div>
             <Footer
               logoUrl={footerLogoUrl}
-              logoText={footer.footerLogo?.logoText}
-              menuLinks={footer.menuLinks || []}
-              categoryLinks={footer.categories?.data || []}
-              legalLinks={footer.legalLinks || []}
-              socialLinks={footer.socialLinks || []}
+              columns={footer.columns || []}
+              smallText={footer.smallText || ""}
+              copyright={footer.copyright || ""}
             />
           </div>
         </body>

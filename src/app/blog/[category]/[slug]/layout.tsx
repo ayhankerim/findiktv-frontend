@@ -18,7 +18,7 @@ async function fetchSideMenuData(filter: string) {
         ? {
             filters: {
               category: {
-                name: filter,
+                title: filter,
               },
             },
           }

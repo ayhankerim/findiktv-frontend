@@ -206,7 +206,7 @@ const MenuBar = ({ menuLinks }: { menuLinks: Array<MainNavLink> }) => {
                 navLink.marked
                   ? "bg-secondary border-b-dark hover:border-b-danger hover:bg-danger"
                   : "hover:border-b-secondary hover:bg-lightgray",
-                navLink.url === path && "border-b-secondary",
+                navLink.url === path && "border-b-secondary text-secondary",
                 "border-b-2 border-transparent hover:border-b-2 transition duration-150 ease-out md:ease-in"
               )}
               key={navLink.id}
