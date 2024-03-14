@@ -153,7 +153,8 @@ export default async function RootLayout({
               });
             `}
           </Script>
-          <div className="flex flex-col flex-grow justify-between min-h-screen">
+          {children}
+          {/* <div className="flex flex-col flex-grow justify-between min-h-screen">
             <div className="flex flex-col">
               <Navbar
                 links={navbar.links}
@@ -169,7 +170,7 @@ export default async function RootLayout({
               smallText={footer.smallText || ""}
               copyright={footer.copyright || ""}
             />
-          </div>
+          </div> */}
         </body>
       </html>
     </SessionWrapper>

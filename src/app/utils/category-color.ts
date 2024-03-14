@@ -15,6 +15,6 @@ export function categoryColor(cat: string): string {
     case "teknoloji":
       return "#0055ff";
     default:
-      return "rgb(107,114,128)";
+      return "#6b7280";
   }
 }

@@ -2,24 +2,24 @@ import PageHeader from "@/app/components/PageHeader";
 import { fetchAPI } from "@/app/utils/fetch-api";
 import BlogList from "@/app/views/blog-list";
 
-async function fetchPostsByCategory(filter: string) {
+async function fetchPostsByCity(filter: string) {
   try {
     const token = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
     const path = `/articles`;
     const urlParamsObject = {
       sort: { createdAt: "desc" },
       filters: {
-        category: {
+        tags: {
           slug: filter,
         },
       },
       populate: {
-        cover: { fields: ["url"] },
-        category: {
-          populate: "*",
+        image: { fields: ["url"] },
+        tags: {
+          populate: ["title", "slug", "content"],
         },
-        authorsBio: {
-          populate: "*",
+        category: {
+          populate: ["title", "slug"],
         },
       },
     };
@@ -31,22 +31,22 @@ async function fetchPostsByCategory(filter: string) {
   }
 }
 
-export default async function CategoryRoute({
+export default async function CityRoute({
   params,
 }: {
-  params: { category: string };
+  params: { slug: string };
 }) {
-  const filter = params.category;
-  const { data } = await fetchPostsByCategory(filter);
+  const filter = params.slug;
+  const { data } = await fetchPostsByCity(filter);
 
   //TODO: CREATE A COMPONENT FOR THIS
   if (data.length === 0) return <div>Not Posts In this category</div>;
 
-  const { name, description } = data[0]?.attributes.category.data.attributes;
+  const { title, content } = data[0]?.attributes.tags.data[0].attributes;
 
   return (
     <div>
-      <PageHeader heading={name} text={description} />
+      <PageHeader heading={title} text={content} />
       <BlogList data={data} />
     </div>
   );
