@@ -150,7 +150,9 @@ const SpecialButtons = ({ button, closeMenu }: SpecialButtonsProps) => {
             passHref
           >
             <MdLogin className={CssClass} />
-            <span className="inline-flex font-semibold m-2">Giriş Yap</span>
+            <span className="inline-flex font-semibold m-2">
+              Kullanıcı Girişi
+            </span>
           </Link>
         )}
       </li>

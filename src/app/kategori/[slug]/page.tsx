@@ -1,84 +1,155 @@
-"use client";
-import { useState, useEffect, useCallback } from "react";
+import { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { fetchAPI } from "@/app/utils/fetch-api";
-
-import Loader from "@/app/components/Loader";
-import Blog from "@/app/views/blog-list";
+import { FALLBACK_SEO } from "@/app/utils/constants";
+import BlogList from "@/app/views/blog-list";
+import ArticleSlider from "@/app/views/slider";
 import PageHeader from "@/app/components/PageHeader";
+import ArticlesInfinite from "@/app/components/ArticlesInfinite";
 
-interface Meta {
-  pagination: {
-    start: number;
-    limit: number;
-    total: number;
+type Props = {
+  params: {
+    lang: string;
+    slug: string;
+  };
+};
+const SLIDER_SIZE = 5;
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const page = await fetchPostsByCategory(params.slug, []);
+
+  if (!page?.data[0]?.attributes?.category.data?.attributes.metadata)
+    return FALLBACK_SEO;
+  const metadata = page.data[0].attributes.category.data?.attributes.metadata;
+
+  return {
+    title: metadata.metaTitle + " Haberleri | " + FALLBACK_SEO.siteName,
+    description: metadata.metaDescription,
   };
 }
-export default function CategoryPage() {
-  const [meta, setMeta] = useState<Meta | undefined>();
-  const [data, setData] = useState<any>([]);
-  const [isLoading, setLoading] = useState(true);
-
-  const fetchData = useCallback(async (start: number, limit: number) => {
-    setLoading(true);
-    try {
-      const token = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
-      const path = `/articles`;
-      const urlParamsObject = {
-        sort: { createdAt: "desc" },
-        populate: {
-          image: { fields: ["url"] },
-          category: { populate: "*" },
+async function fetchSliderByCategory(filter: string) {
+  try {
+    const token = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
+    const path = `/articles`;
+    const urlParamsObject = {
+      sort: { createdAt: "desc" },
+      filters: {
+        category: {
+          slug: {
+            $eq: filter,
+          },
         },
-        pagination: {
-          start: start,
-          limit: limit,
+        featured: {
+          $eq: true,
         },
-      };
-      const options = { headers: { Authorization: `Bearer ${token}` } };
-      const responseData = await fetchAPI(path, urlParamsObject, options);
-
-      if (start === 0) {
-        setData(responseData.data);
-      } else {
-        setData((prevData: any[]) => [...prevData, ...responseData.data]);
-      }
-
-      setMeta(responseData.meta);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  function loadMorePosts(): void {
-    const nextPosts = meta!.pagination.start + meta!.pagination.limit;
-    fetchData(nextPosts, Number(process.env.NEXT_PUBLIC_PAGE_LIMIT));
+      },
+      fields: ["title", "slug", "publishedAt"],
+      populate: {
+        homepage_image: { fields: ["url"] },
+        category: { fields: ["slug"] },
+      },
+      pagination: {
+        page: 1,
+        pageSize: SLIDER_SIZE,
+      },
+    };
+    const options = { headers: { Authorization: `Bearer ${token}` } };
+    const responseData = await fetchAPI(path, urlParamsObject, options);
+    return responseData;
+  } catch (error) {
+    console.error(error);
   }
+}
+async function fetchPostsByCategory(filter: string, sliderPosts: any) {
+  const notFeatured = sliderPosts.map((item: any) => item.id);
+  try {
+    const token = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
+    const path = `/articles`;
+    const urlParamsObject = {
+      sort: { createdAt: "desc" },
+      filters: {
+        id: {
+          $notIn: notFeatured,
+        },
+        category: {
+          slug: {
+            $eq: filter,
+          },
+        },
+      },
+      populate: {
+        image: { fields: ["url"] },
+        category: {
+          filters: {
+            slug: {
+              $eq: filter,
+            },
+          },
+          populate: ["title", "slug"],
+        },
+      },
+      pagination: {
+        page: 1,
+        pageSize: process.env.NEXT_PUBLIC_PAGE_LIMIT,
+      },
+    };
+    const options = { headers: { Authorization: `Bearer ${token}` } };
+    const responseData = await fetchAPI(path, urlParamsObject, options);
+    return responseData;
+  } catch (error) {
+    console.error(error);
+  }
+}
 
-  useEffect(() => {
-    fetchData(0, Number(process.env.NEXT_PUBLIC_PAGE_LIMIT));
-  }, [fetchData]);
-
-  if (data.length === 0 && isLoading) return <Loader />;
-
+export default async function CategoryRoute({
+  params,
+}: {
+  params: { slug: string };
+}) {
+  const filter = params.slug;
+  const { data: sliderPosts } = (await fetchSliderByCategory(filter)) || [];
+  const { data } =
+    (await fetchPostsByCategory(
+      filter,
+      sliderPosts.length > 1 ? sliderPosts : []
+    )) || [];
+  if (data.length === 0) return notFound();
+  const used = sliderPosts.concat(data).map((item: any) => item.id);
+  const { title } = data[0]?.attributes.category.data.attributes;
   return (
-    <div>
-      <PageHeader heading="Our Blog" text="Checkout Something Cool" />
-      <Blog data={data}>
-        {meta!.pagination.start + meta!.pagination.limit <
-          meta!.pagination.total && (
-          <div className="flex justify-center">
-            <button
-              type="button"
-              className="px-6 py-3 text-sm rounded-lg hover:underline dark:bg-gray-900 dark:text-gray-400"
-              onClick={loadMorePosts}
-            >
-              Daha eski haberler...
-            </button>
-          </div>
-        )}
-      </Blog>
-    </div>
+    <main>
+      <PageHeader
+        heading={`${title.toLocaleUpperCase("tr-TR")} HABERLERİ`}
+        text=""
+      />
+      {sliderPosts.length > 1 && <ArticleSlider data={sliderPosts} />}
+      <BlogList data={data} />
+      <ArticlesInfinite slug={params.slug} offset={used} />
+    </main>
+  );
+}
+
+export async function generateStaticParams() {
+  const token = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
+  const path = `/categories`;
+  const options = { headers: { Authorization: `Bearer ${token}` } };
+  const categoriesResponse = await fetchAPI(
+    path,
+    {
+      filters: {
+        articles: {
+          id: {
+            $notNull: true,
+          },
+        },
+      },
+    },
+    options
+  );
+  return categoriesResponse.data.map(
+    (category: {
+      attributes: {
+        slug: string;
+      };
+    }) => ({ slug: category.attributes.slug })
   );
 }

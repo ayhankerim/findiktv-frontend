@@ -1,6 +1,12 @@
+import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { getStrapiMedia, formatDate } from "../utils/api-helpers";
+import { getStrapiMedia } from "../utils/api-helpers";
+import { categoryColor } from "@/app/utils/category-color";
+import styles from "@/app/styles/latest-articles.module.scss";
+import Advertisement from "@/app/components/Advertisement";
+import Moment from "moment";
+import "moment/locale/tr";
 
 interface Article {
   id: number;
@@ -37,9 +43,9 @@ export default function PostList({
   children?: React.ReactNode;
 }) {
   return (
-    <section className="container p-6 mx-auto space-y-6 sm:space-y-12">
-      <div className="grid justify-center grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {articles.map((article) => {
+    <section className="container p-6 mx-auto space-y-6 sm:space-y-12 bg-white">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 xl:grid-cols-3 w-full gap-2">
+        {articles.map((article, index) => {
           const imageUrl = getStrapiMedia(
             article.attributes.image.data?.attributes.url
           );
@@ -47,33 +53,53 @@ export default function PostList({
           const category = article.attributes.category.data?.attributes;
 
           return (
-            <Link
-              href={`/blog/${category?.slug}/${article.attributes.slug}`}
-              key={article.id}
-              className="max-w-sm mx-auto group hover:no-underline focus:no-underline dark:bg-gray-900 lg:w-[300px] xl:min-w-[375px] rounded-2xl overflow-hidden shadow-lg"
-            >
-              {imageUrl && (
-                <Image
-                  alt="presentation"
-                  width="240"
-                  height="240"
-                  className="object-cover w-full h-44 "
-                  src={imageUrl}
-                />
-              )}
-              <div className="p-6 space-y-2 relative">
-                <h3 className="text-2xl font-semibold group-hover:underline group-focus:underline">
-                  {article.attributes.title}
-                </h3>
-
-                <div className="flex justify-between items-center">
-                  <span className="text-xs dark:text-gray-400">
-                    {formatDate(article.attributes.publishedAt)}
-                  </span>
+            <React.Fragment key={index}>
+              {index > 2 && index < 12 && index % 4 === 0 && (
+                <div className="flex-1 h-[300px] lg:h-full">
+                  <Advertisement
+                    position="header-top-desktop"
+                    adformat="horizontal"
+                  />
                 </div>
-                <p className="py-4">{article.attributes.description}</p>
-              </div>
-            </Link>
+              )}
+              <article className="flex-1">
+                <Link
+                  href={`/haber/${article.id}/${article.attributes.slug}`}
+                  className={`${styles.cCard} block bg-lightgray rounded overflow-hidden`}
+                >
+                  <div className="relative h-[260px] md:h-[220px] lg:h-[264px] overflow-hidden">
+                    {imageUrl && (
+                      <Image
+                        alt={article.attributes.title}
+                        className="absolute inset-0 h-full w-full object-cover"
+                        priority={false}
+                        fill
+                        sizes="(max-width: 768px) 100vw,
+                                (max-width: 800px) 50vw,
+                                33vw"
+                        src={imageUrl}
+                      />
+                    )}
+                    <div className="absolute bottom-0 bg-white/90 w-full flex items-center min-h-[55px] border-t-4 border-primary py-2 px-4">
+                      <div
+                        className="absolute top-[-1rem] text-white right-2 rounded px-1"
+                        style={{
+                          backgroundColor: categoryColor(category.slug),
+                        }}
+                      >
+                        {Moment(article.attributes.publishedAt)
+                          .fromNow(true)
+                          .toLocaleUpperCase("tr")}{" "}
+                        ÖNCE
+                      </div>
+                      <h3 className="font-semibold">
+                        {article.attributes.title}
+                      </h3>
+                    </div>
+                  </div>
+                </Link>
+              </article>
+            </React.Fragment>
           );
         })}
       </div>
