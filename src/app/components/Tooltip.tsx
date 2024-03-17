@@ -46,8 +46,9 @@ const Tooltip = ({
       case "left":
         return "right-[-6px]";
       case "top":
-      case "bottom":
         return "top-full left-[50%] translate-x-[-50%] -translate-y-2";
+      case "bottom":
+        return "bottom-full left-[50%] translate-x-[-50%] translate-y-2";
       default:
         return "";
     }
