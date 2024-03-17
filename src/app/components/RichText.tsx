@@ -9,7 +9,7 @@ interface RichTextProps {
 const RichText: React.FC<RichTextProps> = ({ data }) => {
   return (
     <article
-      className="container NewsContent py-12 text-base bg-white"
+      className="NewsContent text-base py-4"
       dangerouslySetInnerHTML={{ __html: data.content }}
     />
   );

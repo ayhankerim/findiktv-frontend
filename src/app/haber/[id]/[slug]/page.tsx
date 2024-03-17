@@ -1,16 +1,34 @@
 import { fetchAPI } from "@/app/utils/fetch-api";
 import Post from "@/app/views/post";
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 
-async function getPostBySlug(slug: string) {
+async function getPostBySlug(id: number, slug: string) {
   const token = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
   const path = `/articles`;
   const urlParamsObject = {
-    filters: { slug },
+    filters: {
+      id: {
+        $eq: id,
+      },
+      slug: {
+        $eq: slug,
+      },
+    },
     populate: {
-      image: { fields: ["url"] },
-      authorsBio: { populate: "*" },
-      category: { fields: ["title"] },
+      image: { fields: ["url", "alternativeText"] },
+      homepage_image: { fields: ["url"] },
+      category: { fields: ["title", "slug"] },
+      tags: { fields: ["id", "title", "slug"] },
+      cities: { fields: ["id", "title", "slug"] },
+      view: { fields: ["id", "view"] },
+      comments: { fields: ["id"] },
+      reactions: {
+        fields: ["Value"],
+        populate: {
+          ReactionType: { fields: ["slug"] },
+        },
+      },
       contentSections: {
         populate: {
           __component: "*",
@@ -20,7 +38,6 @@ async function getPostBySlug(slug: string) {
           body: "*",
           content: "*",
           title: "*",
-          author: "*",
         },
       },
     },
@@ -51,22 +68,22 @@ export async function generateMetadata({
   params: { slug: string };
 }): Promise<Metadata> {
   const meta = await getMetaData(params.slug);
-  const metadata = meta[0].attributes;
+  const metadata = meta[0]?.attributes || [];
 
   return {
-    title: metadata.title,
-    description: metadata.summary,
+    title: metadata.title || "",
+    description: metadata.summary || "",
   };
 }
 
 export default async function PostRoute({
   params,
 }: {
-  params: { slug: string };
+  params: { id: number; slug: string };
 }) {
-  const { slug } = params;
-  const data = await getPostBySlug(slug);
-  if (data.data.length === 0) return <h2>no post found</h2>;
+  const { slug, id } = params;
+  const data = await getPostBySlug(id, slug);
+  if (data.data.length === 0) return notFound();
   return <Post data={data.data[0]} />;
 }
 
@@ -77,19 +94,16 @@ export async function generateStaticParams() {
   const articleResponse = await fetchAPI(
     path,
     {
-      populate: ["category"],
+      fields: ["slug", "id"],
     },
     options
   );
-
   return articleResponse.data.map(
     (article: {
+      id: number;
       attributes: {
         slug: string;
-        category: {
-          slug: string;
-        };
       };
-    }) => ({ slug: article.attributes.slug, category: article.attributes.slug })
+    }) => ({ id: article.id.toString(), slug: article.attributes.slug })
   );
 }

@@ -206,7 +206,7 @@ const MenuBar = ({ menuLinks }: { menuLinks: Array<MainNavLink> }) => {
             <li
               className={classNames(
                 navLink.marked
-                  ? "bg-secondary border-b-dark hover:border-b-danger hover:bg-danger"
+                  ? "bg-secondary border-b-dark hover:bg-primary"
                   : "hover:border-b-secondary hover:bg-lightgray",
                 navLink.url === path && "border-b-secondary text-secondary",
                 "border-b-2 border-transparent hover:border-b-2 transition duration-150 ease-out md:ease-in"
@@ -217,7 +217,7 @@ const MenuBar = ({ menuLinks }: { menuLinks: Array<MainNavLink> }) => {
                 <div
                   className={classNames(
                     navLink.marked
-                      ? "bg-secondary text-white hover:bg-danger"
+                      ? "bg-secondary text-white hover:bg-primary"
                       : "hover:text-secondary",
                     "text-base font-bold px-2 py-1"
                   )}

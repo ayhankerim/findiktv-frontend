@@ -1,84 +1,270 @@
+import Image from "next/image";
+import dynamic from "next/dynamic";
 import { formatDate, getStrapiMedia } from "@/app/utils/api-helpers";
 import { postRenderer } from "@/app/utils/post-renderer";
-import Image from "next/image";
-
+import ModuleLoader from "@/app/components/ModuleLoader";
+import ArticleReaction from "../components/ArticleReaction";
+import { fetchAPI } from "../utils/fetch-api";
+interface Comments {
+  id: number;
+}
+interface ReactionType {
+  id: string;
+  attributes: {
+    title: string;
+    slug: string;
+    sort: number;
+    image: any;
+  };
+}
+interface Reactions {
+  id: string;
+  attributes: {
+    Value: number;
+    ReactionType: {
+      data: ReactionType;
+    };
+  };
+}
+interface Tags {
+  id: string;
+  attributes: {
+    title: string;
+    slug: string;
+  };
+}
+interface Cities {
+  id: string;
+  attributes: {
+    title: string;
+    slug: string;
+  };
+}
 interface Article {
   id: number;
   attributes: {
     title: string;
-    description: string;
+    summary: string;
     slug: string;
+    content: string;
     image: {
       data: {
         attributes: {
           url: string;
+          alternativeText: string;
         };
       };
     };
-    authorsBio: {
+    category: {
       data: {
         attributes: {
-          name: string;
-          avatar: {
-            data: {
-              attributes: {
-                url: string;
-              };
-            };
-          };
+          title: string;
+          slug: string;
         };
       };
     };
+    cities: { data: Cities[] };
+    tags: { data: Tags[] };
+    view: {
+      data: {
+        id: number;
+      };
+    };
+    comments: { data: Comments[] };
+    reactions: { data: Reactions[] };
     contentSections: any[];
-    publishedAt: string;
+    publishedAt: Date;
+    updatedAt: Date;
   };
 }
 
-export default function Post({ data }: { data: Article }) {
-  const { title, description, publishedAt, image, authorsBio } =
-    data.attributes;
-  //const author = authorsBio.data?.attributes;
-  const imageUrl = getStrapiMedia(image.data?.attributes.url);
-  //const authorImgUrl = getStrapiMedia(authorsBio.data?.attributes.avatar.data.attributes.url);
-
+const Loader = ({ cssClass }: any) => (
+  <div className={`lds-ellipsis ${cssClass}`}>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+);
+const Advertisement = dynamic(() => import("@/app/components/Advertisement"), {
+  loading: () => <Loader />,
+  ssr: false,
+});
+const Breadcrumb = dynamic(() => import("@/app/components/Breadcrumb"), {
+  loading: () => <Loader />,
+});
+const ArticleDates = dynamic(() => import("@/app/components/ArticleDates"), {
+  loading: () => <Loader />,
+});
+const PageView = dynamic(() => import("@/app/components/ViewCounter"), {
+  loading: () => <Loader cssClass="w-[50px] lg:w-[90px] !float-right !m-0" />,
+  ssr: false,
+});
+const ArticleShare = dynamic(() => import("@/app/components/ArticleShare"), {
+  loading: () => <Loader />,
+});
+const ArticleRelations = dynamic(
+  () => import("../components/ArticleRelations"),
+  {
+    loading: () => <Loader />,
+  }
+);
+const LatestArticles = dynamic(
+  () => import("@/app/components/LatestArticles"),
+  {
+    loading: () => <Loader cssClass="w-[315px] h-[315px]" />,
+    ssr: false,
+  }
+);
+async function fetchReactionTypes() {
+  try {
+    const token = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
+    const path = `/reaction-types`;
+    const urlParamsObject = {
+      filters: {
+        status: {
+          $eq: true,
+        },
+      },
+      fields: ["title", "slug", "sort"],
+      populate: {
+        image: { fields: ["url"] },
+      },
+      sort: ["sort:asc"],
+    };
+    const options = { headers: { Authorization: `Bearer ${token}` } };
+    const responseData = await fetchAPI(path, urlParamsObject, options);
+    return responseData;
+  } catch (error) {
+    console.error(error);
+  }
+}
+export default async function Post({ data: article }: { data: Article }) {
+  const {
+    title,
+    slug,
+    summary,
+    category,
+    cities,
+    tags,
+    image,
+    contentSections,
+    content,
+    publishedAt,
+    updatedAt,
+    view,
+    comments,
+    reactions,
+  } = article.attributes;
+  const { url: imageURL, alternativeText: imageALT } = image.data?.attributes;
+  const imageUrl = getStrapiMedia(imageURL);
+  const { data: reactionTypes } = (await fetchReactionTypes()) || [];
+  const breadcrumbElement = [
+    {
+      title: "FINDIK TV",
+      slug: "/",
+    },
+    {
+      title: category.data.attributes.title.toLocaleUpperCase("tr"),
+      slug: "/kategori/" + category.data.attributes.slug,
+    },
+    {
+      title: title.toLocaleUpperCase("tr"),
+      slug: "/haber/" + article.id + "/" + slug,
+    },
+  ];
   return (
-    <article className="space-y-8 dark:bg-black dark:text-gray-50">
-      {imageUrl && (
-        <Image
-          src={imageUrl}
-          alt="article cover image"
-          width={400}
-          height={400}
-          className="w-full h-96 object-cover rounded-lg"
-        />
-      )}
-      <div className="space-y-6">
-        <h1 className="leading-tight text-5xl font-bold ">{title}</h1>
-        <div className="flex flex-col items-start justify-between w-full md:flex-row md:items-center dark:text-gray-400">
-          {/* <div className="flex items-center md:space-x-2">
-                        {authorImgUrl && (
-                            <Image
-                                src={authorImgUrl}
-                                alt="article cover image"
-                                width={400}
-                                height={400}
-                                className="w-14 h-14 border rounded-full dark:bg-gray-500 dark:border-gray-700"
-                            />
-                        )}
-                        <p className="text-md dark:text-violet-400">
-                            {author && author.name} • {formatDate(publishedAt)}
-                        </p>
-                    </div> */}
+    <div className="container flex flex-col min-h-screen gap-4 pt-2 bg-white">
+      <main className="w-full">
+        <Breadcrumb items={breadcrumbElement} />
+        <header>
+          <h1 className="font-extrabold text-xl lg:text-xxl">{title}</h1>
+          <p className="font-semibold text-lg text-darkgray">{summary}</p>
+          <section className="flex flex-row items-center sm:items-start justify-between mt-4 mb-2">
+            <ArticleDates publishedAt={publishedAt} updatedAt={updatedAt} />
+            <PageView viewId={view.data.id} />
+          </section>
+          <ArticleShare
+            position="articleTop"
+            slug={`${process.env.NEXT_PUBLIC_SITE_URL}/haber/${article.id}/${slug}`}
+            title={title}
+            comment={comments.data.length}
+          />
+        </header>
+        <div className="flex flex-col md:flex-row items-start justify-between gap-4 pt-2">
+          <div className="flex-auto">
+            {imageUrl && (
+              <figure>
+                <div className="relative sm:w-full h-[300px] lg:h-[500px] -mx-4 sm:mx-0 md:mx-0 mb-2">
+                  <Image
+                    src={imageUrl}
+                    alt={imageALT ? imageALT : title}
+                    className="sm:rounded-lg"
+                    priority={true}
+                    placeholder="blur"
+                    blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8/OhZPQAIhwMsJ60FNgAAAABJRU5ErkJggg=="
+                    fill
+                    sizes="(max-width: 768px) 100vw,
+                  (max-width: 800px) 50vw,
+                  33vw"
+                    style={{
+                      objectFit: "cover",
+                    }}
+                  />
+                </div>
+                <figcaption>{imageALT ? imageALT : title}</figcaption>
+              </figure>
+            )}
+            {contentSections.map((section: any, index: number) =>
+              postRenderer(section, index)
+            )}
+            {content && (
+              <article
+                className="NewsContent text-base py-4"
+                dangerouslySetInnerHTML={{ __html: content }}
+              />
+            )}
+            <div className="w-full h-[300px] lg:h-[120px] -mx-2 sm:mx-0">
+              <Advertisement
+                position="article-bottom-desktop"
+                adformat="horizontal"
+              />
+            </div>
+            <ArticleRelations
+              cities={cities}
+              tags={tags}
+              title={title}
+              slug={`${process.env.NEXT_PUBLIC_SITE_URL}/haber/${article.id}/${slug}`}
+              comment={comments.data.length}
+            />
+            <ModuleLoader
+              title="İLGİNİZİ ÇEKEBİLİR"
+              theme="default"
+              component="LatestArticles"
+            >
+              <LatestArticles
+                current={article.id}
+                count={3}
+                position="bottom"
+                product={null}
+                city={null}
+                offset={0}
+              />
+            </ModuleLoader>
+            <ModuleLoader
+              title="BU İÇERİĞE EMOJİYLE TEPKİ VER!"
+              theme="default"
+              component="ArticleReaction"
+            >
+              <ArticleReaction
+                article={article.id}
+                types={reactionTypes}
+                data={reactions}
+              />
+            </ModuleLoader>
+          </div>
         </div>
-      </div>
-
-      <div className="dark:text-gray-100">
-        <p>{description}</p>
-
-        {data.attributes.contentSections.map((section: any, index: number) =>
-          postRenderer(section, index)
-        )}
-      </div>
-    </article>
+      </main>
+    </div>
   );
 }

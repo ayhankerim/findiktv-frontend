@@ -1,5 +1,8 @@
 // This file sets a custom webpack configuration to use your Next.js app
 //const { withSentryConfig } = require("@sentry/nextjs")
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+})
 /**
  * @type {import('next').NextConfig}
  */
@@ -128,7 +131,8 @@ const nextConfig = {
   productionBrowserSourceMaps: true,
 }
 
-module.exports = nextConfig
+//module.exports = nextConfig
+module.exports = withBundleAnalyzer(nextConfig)
 // module.exports = withSentryConfig(
 //   module.exports,
 //   {

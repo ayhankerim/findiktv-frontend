@@ -145,6 +145,7 @@ export async function generateStaticParams() {
           },
         },
       },
+      fields: ["slug"],
     },
     options
   );

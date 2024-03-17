@@ -9,7 +9,7 @@ export default function PageHeader({ heading, text }: PageHeaderProps) {
       <h1 className="text-xxl my-4 lg:text-xxl font-bold font-heading">
         {heading}
       </h1>
-      {text && <span className="text-violet-400 font-bold">{text}</span>}
+      {text && <span className="text-warning font-bold">{text}</span>}
     </div>
   );
 }
