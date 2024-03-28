@@ -1,82 +1,11 @@
 import Image from "next/image";
 import dynamic from "next/dynamic";
-import { formatDate, getStrapiMedia } from "@/app/utils/api-helpers";
+import { getStrapiMedia } from "@/app/utils/api-helpers";
 import { postRenderer } from "@/app/utils/post-renderer";
 import ModuleLoader from "@/app/components/ModuleLoader";
 import ArticleReaction from "../components/ArticleReaction";
 import { fetchAPI } from "../utils/fetch-api";
-interface Comments {
-  id: number;
-}
-interface ReactionType {
-  id: string;
-  attributes: {
-    title: string;
-    slug: string;
-    sort: number;
-    image: any;
-  };
-}
-interface Reactions {
-  id: string;
-  attributes: {
-    Value: number;
-    ReactionType: {
-      data: ReactionType;
-    };
-  };
-}
-interface Tags {
-  id: string;
-  attributes: {
-    title: string;
-    slug: string;
-  };
-}
-interface Cities {
-  id: string;
-  attributes: {
-    title: string;
-    slug: string;
-  };
-}
-interface Article {
-  id: number;
-  attributes: {
-    title: string;
-    summary: string;
-    slug: string;
-    content: string;
-    image: {
-      data: {
-        attributes: {
-          url: string;
-          alternativeText: string;
-        };
-      };
-    };
-    category: {
-      data: {
-        attributes: {
-          title: string;
-          slug: string;
-        };
-      };
-    };
-    cities: { data: Cities[] };
-    tags: { data: Tags[] };
-    view: {
-      data: {
-        id: number;
-      };
-    };
-    comments: { data: Comments[] };
-    reactions: { data: Reactions[] };
-    contentSections: any[];
-    publishedAt: Date;
-    updatedAt: Date;
-  };
-}
+import { Article } from "../utils/model";
 
 const Loader = ({ cssClass }: any) => (
   <div className={`lds-ellipsis ${cssClass}`}>
@@ -116,6 +45,51 @@ const LatestArticles = dynamic(
     ssr: false,
   }
 );
+const Comments = dynamic(() => import("@/app/components/Comments/Comments"), {
+  loading: () => <Loader />,
+});
+
+async function fetchCommentCount(article: number) {
+  try {
+    const token = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
+    const path = `/comments`;
+    const urlParamsObject = {
+      filters: {
+        article: {
+          id: {
+            $eq: article,
+          },
+        },
+        $or: [
+          {
+            approvalStatus: {
+              $eq: "approved",
+            },
+          },
+          {
+            approvalStatus: {
+              $eq: "ignored",
+            },
+          },
+        ],
+        removed: {
+          $eq: false,
+        },
+      },
+      fields: ["id"],
+      sort: ["id:desc"],
+      pagination: {
+        start: 0,
+        limit: 5000,
+      },
+    };
+    const options = { headers: { Authorization: `Bearer ${token}` } };
+    const responseData = await fetchAPI(path, urlParamsObject, options);
+    return responseData;
+  } catch (error) {
+    console.error(error);
+  }
+}
 async function fetchReactionTypes() {
   try {
     const token = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
@@ -159,6 +133,7 @@ export default async function Post({ data: article }: { data: Article }) {
   const { url: imageURL, alternativeText: imageALT } = image.data?.attributes;
   const imageUrl = getStrapiMedia(imageURL);
   const { data: reactionTypes } = (await fetchReactionTypes()) || [];
+  const { data: commentCount } = (await fetchCommentCount(article.id)) || [];
   const breadcrumbElement = [
     {
       title: "FINDIK TV",
@@ -188,7 +163,7 @@ export default async function Post({ data: article }: { data: Article }) {
             position="articleTop"
             slug={`${process.env.NEXT_PUBLIC_SITE_URL}/haber/${article.id}/${slug}`}
             title={title}
-            comment={comments.data.length}
+            comment={commentCount.length}
           />
         </header>
         <div className="flex flex-col md:flex-row items-start justify-between gap-4 pt-2">
@@ -235,7 +210,7 @@ export default async function Post({ data: article }: { data: Article }) {
               tags={tags}
               title={title}
               slug={`${process.env.NEXT_PUBLIC_SITE_URL}/haber/${article.id}/${slug}`}
-              comment={comments.data.length}
+              comment={commentCount.length}
             />
             <ModuleLoader
               title="İLGİNİZİ ÇEKEBİLİR"
@@ -262,6 +237,12 @@ export default async function Post({ data: article }: { data: Article }) {
                 data={reactions}
               />
             </ModuleLoader>
+            <Comments
+              article={article.id}
+              slug={`${process.env.NEXT_PUBLIC_SITE_URL}/haber/${article.id}/${slug}`}
+              count={commentCount.length}
+              data={comments}
+            />
           </div>
         </div>
       </main>

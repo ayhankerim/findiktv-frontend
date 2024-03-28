@@ -22,7 +22,148 @@ async function getPostBySlug(id: number, slug: string) {
       tags: { fields: ["id", "title", "slug"] },
       cities: { fields: ["id", "title", "slug"] },
       view: { fields: ["id", "view"] },
-      comments: { fields: ["id"] },
+      comments: {
+        filters: {
+          $or: [
+            {
+              approvalStatus: {
+                $eq: "approved",
+              },
+            },
+            {
+              approvalStatus: {
+                $eq: "ignored",
+              },
+            },
+          ],
+          removed: {
+            $eq: false,
+          },
+          thread_of: {
+            id: {
+              $null: true,
+            },
+          },
+          reply_to: {
+            id: {
+              $null: true,
+            },
+          },
+        },
+        fields: [
+          "blockedThread",
+          "content",
+          "createdAt",
+          "dislike",
+          "like",
+          "flag",
+          "approvalStatus",
+        ],
+        populate: {
+          user: {
+            fields: [
+              "about",
+              "name",
+              "surname",
+              "username",
+              "blocked",
+              "confirmed",
+            ],
+            populate: {
+              avatar: {
+                populate: "*",
+              },
+              SystemAvatar: {
+                populate: {
+                  image: {
+                    populate: "*",
+                  },
+                },
+                fields: ["*"],
+              },
+              city: {
+                populate: ["title"],
+              },
+              role: {
+                populate: ["name"],
+              },
+            },
+          },
+          thread_ons: {
+            field: ["id"],
+            populate: {
+              user: {
+                fields: [
+                  "about",
+                  "name",
+                  "surname",
+                  "username",
+                  "blocked",
+                  "confirmed",
+                ],
+                populate: {
+                  avatar: {
+                    populate: "*",
+                  },
+                  SystemAvatar: {
+                    populate: {
+                      image: {
+                        populate: "*",
+                      },
+                    },
+                    fields: ["*"],
+                  },
+                  city: {
+                    populate: ["title"],
+                  },
+                  role: {
+                    populate: ["name"],
+                  },
+                },
+              },
+            },
+          },
+          reply_froms: {
+            field: ["id"],
+            populate: {
+              user: {
+                fields: [
+                  "about",
+                  "name",
+                  "surname",
+                  "username",
+                  "blocked",
+                  "confirmed",
+                ],
+                populate: {
+                  avatar: {
+                    populate: "*",
+                  },
+                  SystemAvatar: {
+                    populate: {
+                      image: {
+                        populate: "*",
+                      },
+                    },
+                    fields: ["*"],
+                  },
+                  city: {
+                    populate: ["title"],
+                  },
+                  role: {
+                    populate: ["name"],
+                  },
+                },
+              },
+            },
+          },
+        },
+        sort: ["id:desc"],
+        pagination: {
+          start: 0,
+          limit: 25,
+        },
+      },
       reactions: {
         fields: ["Value"],
         populate: {

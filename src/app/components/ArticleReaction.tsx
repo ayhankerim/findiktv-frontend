@@ -136,7 +136,7 @@ const ArticleReaction: React.FC<ArticleReactionProps> = ({
   });
 
   return (
-    <div className="grid grid-cols-8 md:grid-cols-9 lg:grid-cols-10 xl:grid-cols-11 xxl:grid-cols-12 gap-1 text-xs mt-1 mb-4">
+    <div className="grid grid-cols-7 md:grid-cols-9 lg:grid-cols-10 xl:grid-cols-11 xxl:grid-cols-12 gap-1 text-xs mt-1 mb-4">
       {reactionTypes.map((emoji: ReactionTypes, i: number) => {
         let sum = 0;
         reactions?.data
