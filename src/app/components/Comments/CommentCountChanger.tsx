@@ -31,7 +31,7 @@ const CommentCountChanger: React.FC<CommentCountChangerProp> = ({
                     <button
                       className={classNames(
                         commentLimit === limit
-                          ? "bg-secondary text-white px-2"
+                          ? "bg-secondary text-white px-2 rounded-t"
                           : "hover:underline",
                         ""
                       )}

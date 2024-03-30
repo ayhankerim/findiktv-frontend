@@ -183,8 +183,8 @@ export interface City {
 }
 export interface CommentsProp {
   id: string;
-  slug: string;
-  position: string;
+  //slug: string;
+  //position: string;
   attributes: {
     blockedThread: boolean;
     content: string;
@@ -200,4 +200,14 @@ export interface CommentsProp {
       data: CommentUser;
     };
   };
+}
+
+export interface CommentFormValues {
+  content: string;
+  email: string;
+  name: string;
+  surname: string;
+  password: string;
+  term: boolean;
+  api: string;
 }

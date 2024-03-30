@@ -116,7 +116,7 @@ const CommentReaction = ({ item, comment }: { item: any; comment: any }) => {
   };
   useEffect(() => {
     setCount(comment.attributes[item.id]);
-  }, []);
+  }, [setCount]);
 
   return (
     <Tooltip key={item.id} orientation="bottom" tooltipText={item.title}>

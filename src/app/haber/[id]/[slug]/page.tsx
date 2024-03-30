@@ -49,6 +49,11 @@ async function getPostBySlug(id: number, slug: string) {
               $null: true,
             },
           },
+          user: {
+            id: {
+              $notNull: true,
+            },
+          },
         },
         fields: [
           "blockedThread",

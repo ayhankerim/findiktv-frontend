@@ -6,15 +6,8 @@ import ModuleLoader from "@/app/components/ModuleLoader";
 import ArticleReaction from "../components/ArticleReaction";
 import { fetchAPI } from "../utils/fetch-api";
 import { Article } from "../utils/model";
+import Loader from "../components/Loader";
 
-const Loader = ({ cssClass }: any) => (
-  <div className={`lds-ellipsis ${cssClass}`}>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-  </div>
-);
 const Advertisement = dynamic(() => import("@/app/components/Advertisement"), {
   loading: () => <Loader />,
   ssr: false,
@@ -46,7 +39,8 @@ const LatestArticles = dynamic(
   }
 );
 const Comments = dynamic(() => import("@/app/components/Comments/Comments"), {
-  loading: () => <Loader />,
+  loading: () => <Loader cssClass="h-[250px] w-full" />,
+  ssr: false,
 });
 
 async function fetchCommentCount(article: number) {
@@ -74,6 +68,11 @@ async function fetchCommentCount(article: number) {
         ],
         removed: {
           $eq: false,
+        },
+        user: {
+          id: {
+            $notNull: true,
+          },
         },
       },
       fields: ["id"],
@@ -241,7 +240,7 @@ export default async function Post({ data: article }: { data: Article }) {
               article={article.id}
               slug={`${process.env.NEXT_PUBLIC_SITE_URL}/haber/${article.id}/${slug}`}
               count={commentCount.length}
-              data={comments}
+              data={comments.data}
             />
           </div>
         </div>
