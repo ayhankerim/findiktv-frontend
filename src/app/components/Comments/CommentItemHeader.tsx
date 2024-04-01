@@ -1,19 +1,12 @@
 "use client";
 import React, { Fragment } from "react";
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { Menu, Transition } from "@headlessui/react";
-import classNames from "classnames";
 import toast, { Toaster } from "react-hot-toast";
 import Moment from "moment";
 import "moment/locale/tr";
-import {
-  MdClose,
-  MdComment,
-  MdKeyboardArrowDown,
-  MdKeyboardArrowUp,
-  MdOutlineDateRange,
-} from "react-icons/md";
+import { MdClose, MdOutlineDateRange } from "react-icons/md";
 import Tooltip from "../Tooltip";
 import ProfileCard from "./ProfileCard";
 import { TbDots } from "react-icons/tb";
@@ -29,7 +22,7 @@ const notify = (type: string, message: string) => {
   }
 };
 
-const flagComment = (comment: string, flag: number) => {
+const flagComment = (comment: number, flag: number) => {
   try {
     fetchAPI(
       `/comments/${comment}`,
@@ -72,7 +65,7 @@ const flagComment = (comment: string, flag: number) => {
     console.log(error);
   }
 };
-const deleteComment = (comment: string) => {
+const deleteComment = (comment: number) => {
   try {
     fetchAPI(
       `/comments/${comment}`,
@@ -98,6 +91,7 @@ const deleteComment = (comment: string) => {
     notify("error", "Yorumunuz kaldırılırken bir sorunla karşılaşıldı!");
   }
 };
+
 const CommentItemHeader: React.FC<
   CommentsProp & { slug: string; position: string }
 > = (comment: CommentsProp & { slug: string; position: string }) => {
@@ -195,7 +189,7 @@ const CommentItemHeader: React.FC<
                           target="_blank"
                           rel="nofollow"
                         >
-                          Facebook`ta paylaş
+                          Whatsapp`ta paylaş
                         </Link>
                       </Menu.Item>
                       <Menu.Item>

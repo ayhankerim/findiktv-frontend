@@ -182,9 +182,7 @@ export interface City {
   };
 }
 export interface CommentsProp {
-  id: string;
-  //slug: string;
-  //position: string;
+  id: number;
   attributes: {
     blockedThread: boolean;
     content: string;

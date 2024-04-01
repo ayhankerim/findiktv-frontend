@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import classNames from "classnames";
+import dynamic from "next/dynamic";
 import {
   MdThumbDown,
   MdThumbDownOffAlt,
@@ -9,51 +10,17 @@ import {
 } from "react-icons/md";
 import Tooltip from "../Tooltip";
 import { fetchAPI } from "@/app/utils/fetch-api";
+import { CommentsProp } from "@/app/utils/model";
+import Loader from "@/app/components/Loader";
+//import CommentForm from "./CommentForm";
 
-interface City {
-  attributes: {
-    title: string;
-  };
-}
-interface CommentsProp {
-  id: string;
-  slug: string;
-  position: string;
-  attributes: {
-    blockedThread: boolean;
-    content: string;
-    createdAt: Date;
-    dislike: number;
-    like: number;
-    flag: number;
-    approvalStatus: string;
-    user: {
-      data: {
-        id: number;
-        attributes: {
-          about: string;
-          name: string;
-          surname: string;
-          username: string;
-          blocked: boolean;
-          confirmed: Boolean;
-          avatar: any;
-          SystemAvatar: any;
-          role: {
-            data: {
-              attributes: {
-                name: string;
-              };
-            };
-          };
-          city: {
-            data: City;
-          };
-        };
-      };
-    };
-  };
-}
+const CommentForm = dynamic(
+  () => import("@/app/components/Comments/CommentForm"),
+  {
+    loading: () => <Loader cssClass="h-[250px] w-full" />,
+    ssr: false,
+  }
+);
 
 let commentReactions = [
   {
@@ -109,7 +76,7 @@ const CommentReaction = ({ item, comment }: { item: any; comment: any }) => {
   const [checked, setChecked] = useState(false);
   const [count, setCount] = useState([]);
 
-  const commentReact = async (e: any, type: string) => {
+  const commentReact = async (type: string) => {
     const result = reactionComment(comment.id, type, checked);
     setCount(await result);
     setChecked((checked) => !checked);
@@ -121,7 +88,7 @@ const CommentReaction = ({ item, comment }: { item: any; comment: any }) => {
   return (
     <Tooltip key={item.id} orientation="bottom" tooltipText={item.title}>
       <button
-        onClick={(e) => commentReact(e, item.id)}
+        onClick={() => commentReact(item.id)}
         type="button"
         className={classNames(
           checked ? "text-dark border-dark font-semibold" : "",
@@ -135,32 +102,51 @@ const CommentReaction = ({ item, comment }: { item: any; comment: any }) => {
   );
 };
 
-const CommentItemFooter: React.FC<
-  CommentsProp & { slug: string; position: string }
-> = (comment: CommentsProp & { slug: string; position: string }) => {
-  const [reply, setReply] = useState(false);
+const CommentItemFooter = ({
+  comment,
+  article,
+  commentLimit,
+  commentLimitFunc,
+}: {
+  comment: CommentsProp;
+  article: number;
+  commentLimit: number;
+  commentLimitFunc: (limit: number) => void;
+}) => {
+  const [reply, setReply] = useState<boolean>(false);
+  const commentReply = () => {
+    setReply((reply) => !reply);
+  };
   return (
-    <section
-      className={classNames(
-        reply ? "" : "",
-        "flex items-center justify-between gap-2 text-midgray"
-      )}
-    >
-      {comment.attributes.approvalStatus != "ignored" &&
-        comment.attributes.blockedThread != true && (
-          <button type="button" onClick={() => console.log(0)}>
-            {reply ? "Vazgeç" : "Yanıtla"}
-          </button>
+    <>
+      <section className="flex items-center justify-between gap-2 text-midgray mb-2">
+        {comment.attributes.approvalStatus != "ignored" &&
+          comment.attributes.blockedThread != true && (
+            <button type="button" onClick={() => commentReply()}>
+              {reply ? "Vazgeç" : "Yanıtla"}
+            </button>
+          )}
+        {comment.attributes.approvalStatus != "ignored" && (
+          <div className="flex gap-2">
+            {commentReactions.map((item, i) => (
+              <CommentReaction key={i} item={item} comment={comment} />
+            ))}
+          </div>
         )}
-
-      {comment.attributes.approvalStatus != "ignored" && (
-        <div className="flex gap-2">
-          {commentReactions.map((item, i) => (
-            <CommentReaction key={i} item={item} comment={comment} />
-          ))}
-        </div>
+      </section>
+      {reply && (
+        <CommentForm
+          cancelButton={false}
+          article={article}
+          product={null}
+          city={null}
+          replyto={comment.id}
+          threadOf={comment.id}
+          commentLimit={commentLimit}
+          commentLimitFunc={commentLimitFunc}
+        />
       )}
-    </section>
+    </>
   );
 };
 

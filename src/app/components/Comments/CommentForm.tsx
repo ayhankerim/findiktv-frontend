@@ -9,9 +9,9 @@ import { fetchAPI } from "@/app/utils/fetch-api";
 import { badwords } from "@/app/utils/badwords";
 import { Transition } from "@headlessui/react";
 import { CommentFormValues, Session } from "@/app/utils/model";
-import { BiLoaderCircle } from "react-icons/bi";
 import Dialog from "@/app/components/Dialog";
 import { addComments, registerUser } from "@/app/utils/comment-api";
+import { BiLoaderCircle } from "react-icons/bi";
 
 const notify = (type: string, message: string) => {
   if (type === "success") {
@@ -27,7 +27,8 @@ const CommentForm = ({
   city,
   replyto,
   threadOf,
-  commentListUpdate,
+  commentLimit,
+  commentLimitFunc,
 }: {
   cancelButton: boolean | false;
   article: number;
@@ -35,9 +36,11 @@ const CommentForm = ({
   city: number | null;
   replyto: number | null;
   threadOf: number | null;
-  commentListUpdate: () => void;
+  commentLimit: number;
+  commentLimitFunc: (limit: number) => void;
 }) => {
   const [loading, setLoading] = useState(false);
+  const [show, setShow] = useState(false);
   const { data } = useSession();
   const session = data as Session | null;
   const [isShowing, setIsShowing] = useState(false);
@@ -137,20 +140,11 @@ const CommentForm = ({
             if (/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{1,4}$/i.test(value)) {
               const urlParamsObject = {
                 filters: {
-                  $and: [
-                    {
-                      email: {
-                        $eq: value,
-                      },
-                    },
-                    {
-                      confirmed: {
-                        $eq: true,
-                      },
-                    },
-                  ],
+                  email: {
+                    $eq: value,
+                  },
                 },
-                fields: ["email"],
+                fields: ["email", "confirmed"],
               };
               const options = { headers: { Authorization: `Bearer ${token}` } };
               try {
@@ -159,12 +153,17 @@ const CommentForm = ({
                   urlParamsObject,
                   options
                 );
-
                 if (responseData.length > 0) {
-                  setUserId(responseData[0].id);
-                  resolve(false);
+                  if (responseData[0].confirmed) {
+                    setUserId(null);
+                    resolve(false);
+                  } else {
+                    setUserId(responseData[0].id);
+                    resolve(true);
+                  }
                 } else {
                   setUserId(null);
+                  setShow(true);
                   resolve(true);
                 }
               } catch (error) {
@@ -227,7 +226,7 @@ const CommentForm = ({
               clientIP.ip
             )) || [];
             notify("success", "Yorumunuz eklendi.");
-            commentListUpdate();
+            commentLimitFunc(commentLimit);
             resetForm();
           } catch (err: any) {
             console.error(err);
@@ -368,7 +367,7 @@ const CommentForm = ({
                       />
                     )}
                   </div>
-                  {!errors.email && touched.email && (
+                  {!errors.email && (touched.email || show) && (
                     <div className="flex flex-col gap-2">
                       <div className="flex flex-col">
                         <Field

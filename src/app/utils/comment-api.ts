@@ -4,6 +4,9 @@ import { useEffect } from "react";
 import { fetchAPI } from "./fetch-api";
 import { CommentFormValues } from "./model";
 
+export const commentLimits: { limits: number[] } = {
+  limits: [10, 20, 30, 50, 100],
+};
 export const scrollToComment = (comment: string) => {
   useEffect(() => {
     const scrollToTarget = () => {
@@ -22,7 +25,7 @@ export const pointedComment = () => {
   return pointedComment;
 };
 
-export const fetchComments = (article: number) => {
+export const fetchComments = (article: number, commentLimit: number) => {
   try {
     const token = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
     const path = `/comments/`;
@@ -175,7 +178,7 @@ export const fetchComments = (article: number) => {
       sort: ["id:desc"],
       pagination: {
         start: 0,
-        limit: 25,
+        limit: commentLimit,
       },
     };
     const options = { headers: { Authorization: `Bearer ${token}` } };

@@ -3,10 +3,12 @@ import dynamic from "next/dynamic";
 import { getStrapiMedia } from "@/app/utils/api-helpers";
 import { postRenderer } from "@/app/utils/post-renderer";
 import ModuleLoader from "@/app/components/ModuleLoader";
-import ArticleReaction from "../components/ArticleReaction";
-import { fetchAPI } from "../utils/fetch-api";
-import { Article } from "../utils/model";
-import Loader from "../components/Loader";
+import { fetchAPI } from "@/app/utils/fetch-api";
+import { Article } from "@/app/utils/model";
+import Loader from "@/app/components/Loader";
+import ArticleReaction from "@/app/components/ArticleReaction";
+import Comments from "@/app/components/Comments/Comments";
+import ArticleSidebar from "@/app/components/ArticleSidebar";
 
 const Advertisement = dynamic(() => import("@/app/components/Advertisement"), {
   loading: () => <Loader />,
@@ -38,10 +40,170 @@ const LatestArticles = dynamic(
     ssr: false,
   }
 );
-const Comments = dynamic(() => import("@/app/components/Comments/Comments"), {
-  loading: () => <Loader cssClass="h-[250px] w-full" />,
-  ssr: false,
-});
+
+async function fetchLimitedComments(article: number) {
+  try {
+    const token = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
+    const path = `/comments`;
+    const urlParamsObject = {
+      filters: {
+        article: {
+          id: {
+            $eq: article,
+          },
+        },
+        $or: [
+          {
+            approvalStatus: {
+              $eq: "approved",
+            },
+          },
+          {
+            approvalStatus: {
+              $eq: "ignored",
+            },
+          },
+        ],
+        removed: {
+          $eq: false,
+        },
+        thread_of: {
+          id: {
+            $null: true,
+          },
+        },
+        reply_to: {
+          id: {
+            $null: true,
+          },
+        },
+        user: {
+          id: {
+            $notNull: true,
+          },
+        },
+      },
+      fields: [
+        "blockedThread",
+        "content",
+        "createdAt",
+        "dislike",
+        "like",
+        "flag",
+        "approvalStatus",
+      ],
+      populate: {
+        user: {
+          fields: [
+            "about",
+            "name",
+            "surname",
+            "username",
+            "blocked",
+            "confirmed",
+          ],
+          populate: {
+            avatar: {
+              populate: "*",
+            },
+            SystemAvatar: {
+              populate: {
+                image: {
+                  populate: "*",
+                },
+              },
+              fields: ["*"],
+            },
+            city: {
+              populate: ["title"],
+            },
+            role: {
+              populate: ["name"],
+            },
+          },
+        },
+        thread_ons: {
+          field: ["id"],
+          populate: {
+            user: {
+              fields: [
+                "about",
+                "name",
+                "surname",
+                "username",
+                "blocked",
+                "confirmed",
+              ],
+              populate: {
+                avatar: {
+                  populate: "*",
+                },
+                SystemAvatar: {
+                  populate: {
+                    image: {
+                      populate: "*",
+                    },
+                  },
+                  fields: ["*"],
+                },
+                city: {
+                  populate: ["title"],
+                },
+                role: {
+                  populate: ["name"],
+                },
+              },
+            },
+          },
+        },
+        reply_froms: {
+          field: ["id"],
+          populate: {
+            user: {
+              fields: [
+                "about",
+                "name",
+                "surname",
+                "username",
+                "blocked",
+                "confirmed",
+              ],
+              populate: {
+                avatar: {
+                  populate: "*",
+                },
+                SystemAvatar: {
+                  populate: {
+                    image: {
+                      populate: "*",
+                    },
+                  },
+                  fields: ["*"],
+                },
+                city: {
+                  populate: ["title"],
+                },
+                role: {
+                  populate: ["name"],
+                },
+              },
+            },
+          },
+        },
+      },
+      sort: ["id:desc"],
+      pagination: {
+        start: 0,
+        limit: 10,
+      },
+    };
+    const options = { headers: { Authorization: `Bearer ${token}` } };
+    const responseData = await fetchAPI(path, urlParamsObject, options);
+    return responseData;
+  } catch (error) {
+    console.error(error);
+  }
+}
 
 async function fetchCommentCount(article: number) {
   try {
@@ -126,13 +288,14 @@ export default async function Post({ data: article }: { data: Article }) {
     publishedAt,
     updatedAt,
     view,
-    comments,
     reactions,
   } = article.attributes;
   const { url: imageURL, alternativeText: imageALT } = image.data?.attributes;
   const imageUrl = getStrapiMedia(imageURL);
   const { data: reactionTypes } = (await fetchReactionTypes()) || [];
   const { data: commentCount } = (await fetchCommentCount(article.id)) || [];
+  const { data: comments } = (await fetchLimitedComments(article.id)) || [];
+
   const breadcrumbElement = [
     {
       title: "FINDIK TV",
@@ -240,9 +403,10 @@ export default async function Post({ data: article }: { data: Article }) {
               article={article.id}
               slug={`${process.env.NEXT_PUBLIC_SITE_URL}/haber/${article.id}/${slug}`}
               count={commentCount.length}
-              data={comments.data}
+              data={comments}
             />
           </div>
+          <ArticleSidebar article={article.id} />
         </div>
       </main>
     </div>

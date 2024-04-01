@@ -16,44 +16,12 @@ import { FcApproval } from "react-icons/fc";
 import { BsDot } from "react-icons/bs";
 import { GoCommentDiscussion } from "react-icons/go";
 import { CgProfile } from "react-icons/cg";
+import { CommentsProp } from "@/app/utils/model";
 
 const UserInteractions = dynamic(() => import("./UserInteractions"), {
   loading: () => <span>...</span>,
   ssr: false,
 });
-interface City {
-  attributes: {
-    title: string;
-  };
-}
-interface CommentsProp {
-  id: string;
-  attributes: {
-    user: {
-      data: {
-        id: number;
-        attributes: {
-          about: string;
-          name: string;
-          surname: string;
-          username: string;
-          blocked: boolean;
-          confirmed: Boolean;
-          role: {
-            data: {
-              attributes: {
-                name: string;
-              };
-            };
-          };
-          city: {
-            data: City;
-          };
-        };
-      };
-    };
-  };
-}
 interface ProfileCardProp {
   comment: CommentsProp;
   children: React.ReactNode;

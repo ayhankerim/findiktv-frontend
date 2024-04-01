@@ -1,21 +1,13 @@
-"use client";
 import classNames from "classnames";
-import { useState } from "react";
 import { TbPoint } from "react-icons/tb";
+import { commentLimits } from "@/app/utils/comment-api";
 
-interface CommentCountChangerProp {
+const CommentCountChanger: React.FC<{
   count: number;
+  commentLimit: number;
+  commentLimitFunc: (limit: number) => void;
   children: React.ReactNode;
-}
-
-const CommentCountChanger: React.FC<CommentCountChangerProp> = ({
-  count,
-  children,
-}: CommentCountChangerProp) => {
-  const [commentLimit, setCommentLimit] = useState(5);
-  const commentLimitFunc = (limit: number) => {
-    setCommentLimit(limit);
-  };
+}> = ({ count, commentLimit, commentLimitFunc, children }) => {
   return (
     <div className="flex flex-col md:flex-row justify-between items-end border-b border-midgray">
       {children}
@@ -24,7 +16,7 @@ const CommentCountChanger: React.FC<CommentCountChangerProp> = ({
           <div className="flex flex-row gap-2 mr-4 font-light text-sm text-midgray">
             Son
             <ul className="flex items-center gap-1 text-secondary">
-              {[5, 15, 25, 50, 100]
+              {commentLimits.limits
                 .filter((limits) => count >= limits)
                 .map((limit: number, i: number, limits: any) => (
                   <li className="flex items-center gap-2" key={limit}>
