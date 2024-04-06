@@ -2,16 +2,8 @@
 import React, { Fragment } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { Menu, Popover, Transition } from "@headlessui/react";
-import classNames from "classnames";
-import {
-  MdClose,
-  MdComment,
-  MdFlag,
-  MdKeyboardArrowDown,
-  MdKeyboardArrowUp,
-  MdPerson,
-} from "react-icons/md";
+import { Popover, Transition } from "@headlessui/react";
+import { MdClose, MdFlag } from "react-icons/md";
 import { FcApproval } from "react-icons/fc";
 import { BsDot } from "react-icons/bs";
 import { GoCommentDiscussion } from "react-icons/go";

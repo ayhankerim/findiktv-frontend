@@ -154,37 +154,11 @@ async function fetchLimitedComments(article: number) {
                 },
               },
             },
-          },
-        },
-        reply_froms: {
-          field: ["id"],
-          populate: {
-            user: {
-              fields: [
-                "about",
-                "name",
-                "surname",
-                "username",
-                "blocked",
-                "confirmed",
-              ],
+            reply_to: {
+              field: ["id"],
               populate: {
-                avatar: {
-                  populate: "*",
-                },
-                SystemAvatar: {
-                  populate: {
-                    image: {
-                      populate: "*",
-                    },
-                  },
-                  fields: ["*"],
-                },
-                city: {
-                  populate: ["title"],
-                },
-                role: {
-                  populate: ["name"],
+                user: {
+                  fields: ["name", "surname", "username"],
                 },
               },
             },

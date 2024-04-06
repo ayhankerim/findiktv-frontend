@@ -138,37 +138,11 @@ export const fetchComments = (article: number, commentLimit: number) => {
                 },
               },
             },
-          },
-        },
-        reply_froms: {
-          field: ["id"],
-          populate: {
-            user: {
-              fields: [
-                "about",
-                "name",
-                "surname",
-                "username",
-                "blocked",
-                "confirmed",
-              ],
+            reply_to: {
+              field: ["id"],
               populate: {
-                avatar: {
-                  populate: "*",
-                },
-                SystemAvatar: {
-                  populate: {
-                    image: {
-                      populate: "*",
-                    },
-                  },
-                  fields: ["*"],
-                },
-                city: {
-                  populate: ["title"],
-                },
-                role: {
-                  populate: ["name"],
+                user: {
+                  fields: ["name", "surname", "username"],
                 },
               },
             },
@@ -277,7 +251,7 @@ export const addComments = (
           article: article,
           product: product,
           city: city,
-          threadOf: threadOf ? threadOf : null,
+          thread_of: threadOf ? threadOf : null,
           reply_to: replyto ? replyto : null,
           user: user,
           content: values.content,

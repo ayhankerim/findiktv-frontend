@@ -29,9 +29,16 @@ const CommentHeader = () => {
   return (
     <div className="flex flex-row items-center justify-between border-b relative">
       <h3 className="font-semibold text-base text-midgray">
-        YORUM YAZIN! {session ? "" : "(Üye olmadan da yorum yazabilirsiniz)"}
+        YORUM YAZIN!{" "}
+        {session ? (
+          ""
+        ) : (
+          <span className="block lg:inline-block">
+            (Üye olmadan da yorum yazabilirsiniz)
+          </span>
+        )}
       </h3>
-      <div className="flex gap-2">
+      <div className="inline-flex gap-2">
         {session ? (
           <Menu as="div" className="relative ml-3">
             {({ open }) => (

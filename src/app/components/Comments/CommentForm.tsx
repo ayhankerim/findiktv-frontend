@@ -29,6 +29,7 @@ const CommentForm = ({
   threadOf,
   commentLimit,
   commentLimitFunc,
+  commentReply,
 }: {
   cancelButton: boolean | false;
   article: number;
@@ -38,9 +39,11 @@ const CommentForm = ({
   threadOf: number | null;
   commentLimit: number;
   commentLimitFunc: (limit: number) => void;
+  commentReply: () => void;
 }) => {
   const [loading, setLoading] = useState(false);
   const [show, setShow] = useState(false);
+  const [sent, setSent] = useState(false);
   const { data } = useSession();
   const session = data as Session | null;
   const [isShowing, setIsShowing] = useState(false);
@@ -183,249 +186,269 @@ const CommentForm = ({
       .bool()
       .oneOf([true], "Yorum yazma kurallarını onaylamanız gereklidir!"),
   });
+  function CommentSent(comment: number) {
+    setSent(true);
+    const element = document.querySelector(`#comment-${String(comment)}`);
+    setTimeout(() => {
+      commentReply();
+      setSent(false);
+      if (element instanceof HTMLElement) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
+    }, 5000);
+  }
   useEffect(() => {
     session && setUserId(session.id);
   }, [session, setUserId]);
   return (
     <>
       <Toaster position="top-right" reverseOrder={false} />
-      <Formik
-        initialValues={{
-          content: "",
-          email: session ? session.user.data.email : "",
-          name: session ? session.user.data.name : "",
-          surname: session ? session.user.data.surname : "",
-          password: "",
-          term: false,
-          api: "",
-        }}
-        enableReinitialize
-        validationSchema={session ? loggedInSchema : anonymousSchema}
-        //validateOnChange={false}
-        onSubmit={async (
-          values: CommentFormValues,
-          { setSubmitting, setErrors, resetForm }
-        ) => {
-          setLoading(true);
-          setErrors({ api: "" });
-          const response = await fetch("/api/client");
-          const clientIP = await response.json();
-          try {
+      {sent ? (
+        <div className="flex justify-center items-center w-full text-center h-[100px] rounded outline outline-offset-4 outline-1 outline-success text-success bg-success/10 border-success my-4">
+          <p>Gönderildi</p>
+        </div>
+      ) : (
+        <Formik
+          initialValues={{
+            content: "",
+            email: session ? session.user.data.email : "",
+            name: session ? session.user.data.name : "",
+            surname: session ? session.user.data.surname : "",
+            password: "",
+            term: false,
+            api: "",
+          }}
+          enableReinitialize
+          validationSchema={session ? loggedInSchema : anonymousSchema}
+          //validateOnChange={false}
+          onSubmit={async (
+            values: CommentFormValues,
+            { setSubmitting, setErrors, resetForm }
+          ) => {
+            setLoading(true);
             setErrors({ api: "" });
-            const registeredUser =
-              (!userId && (await registerUser(values))) || [];
-            setUserId(userId ? userId : registeredUser.user.id);
-            (await addComments(
-              values,
-              article,
-              product,
-              city,
-              threadOf,
-              replyto,
-              userId ? userId : registeredUser.user.id,
-              clientIP.ip
-            )) || [];
-            notify("success", "Yorumunuz eklendi.");
-            commentLimitFunc(commentLimit);
-            resetForm();
-          } catch (err: any) {
-            console.error(err);
-            setErrors({ api: err.message });
-          }
-          setLoading(false);
-          setSubmitting(false);
-        }}
-      >
-        {({ errors, touched, isSubmitting, setFieldValue }) => (
-          <Form className="flex flex-col gap-4 p-4 bg-lightgray">
-            <div className="flex flex-col gap-2 mt-2">
-              <Field
-                component="textarea"
-                name="content"
-                placeholder="Yorumunuz..."
-                rows={3}
-                onClick={() => {
-                  setIsShowing(true);
-                }}
-                className={classNames(
-                  errors.content && touched.content
-                    ? "border-danger"
-                    : "border-midgray",
-                  "text-base focus:outline-none p-2 border"
-                )}
-              />
-              {errors.content && (
-                <>
-                  <p className="text-danger">{errors.content}</p>
-                </>
-              )}
-            </div>
-            <Transition
-              show={isShowing}
-              enter="transition ease-out duration-100"
-              enterFrom="transform opacity-0 scale-95"
-              enterTo=""
-              leave="transition ease-in duration-75"
-              leaveFrom="transform opacity-100 scale-100"
-              leaveTo="transform opacity-0 scale-95"
-            >
-              <div className="flex flex-col w-3/3 gap-2 mb-2">
-                <div
+            const response = await fetch("/api/client");
+            const clientIP = await response.json();
+            try {
+              setErrors({ api: "" });
+              const registeredUser =
+                (!userId && (await registerUser(values))) || [];
+              setUserId(userId ? userId : registeredUser.user.id);
+              const addedComment =
+                (await addComments(
+                  values,
+                  article,
+                  product,
+                  city,
+                  threadOf,
+                  replyto,
+                  userId ? userId : registeredUser.user.id,
+                  clientIP.ip
+                )) || [];
+              notify("success", "Yorumunuz eklendi.");
+              commentLimitFunc(commentLimit);
+              CommentSent(addedComment.data.id);
+              resetForm();
+              console.log(addedComment);
+            } catch (err: any) {
+              console.error(err);
+              setErrors({ api: err.message });
+            }
+            setLoading(false);
+            setSubmitting(false);
+          }}
+        >
+          {({ errors, touched, isSubmitting, setFieldValue }) => (
+            <Form className="flex flex-col gap-4 p-4 bg-lightgray">
+              <div className="flex flex-col gap-2 mt-2">
+                <Field
+                  component="textarea"
+                  name="content"
+                  placeholder="Yorumunuz..."
+                  rows={3}
+                  onClick={() => {
+                    setIsShowing(true);
+                  }}
                   className={classNames(
-                    errors.term && touched.term ? "text-danger" : "",
-                    "flex flex-row items-center"
+                    errors.content && touched.content
+                      ? "border-danger"
+                      : "border-midgray",
+                    "text-base focus:outline-none p-2 border"
                   )}
-                >
-                  <Field
-                    type="checkbox"
-                    name="term"
-                    className={classNames(
-                      errors.term && touched.term
-                        ? "border-gray"
-                        : "border-danger",
-                      "h-4 w-4 mr-2 text-midgray rounded"
-                    )}
-                  />
-                  <Dialog
-                    title={"Yorum Yazma Kuralları"}
-                    content={
-                      "Üye/Üyeler suç teşkil edecek, yasal açıdan takip gerektirecek, yasaların ya da uluslararası anlaşmaların ihlali sonucunu doğuran ya da böyle durumları teşvik eden, yasadışı, tehditkar, rahatsız edici, hakaret ve küfür içeren, aşağılayıcı, küçük düşürücü, kaba, pornografik ya da ahlaka aykırı, toplumca genel kabul görmüş kurallara aykırı, kişilik haklarına zarar verici ya da benzeri niteliklerde hiçbir içeriği bu web sitesinin hiçbir sayfasında ya da subdomain olarak oluşturulan diğer sayfalarında paylaşamaz. Bu tür içeriklerden doğan her türlü mali, hukuki, cezai, idari sorumluluk münhasıran, içeriği gönderen Üye/Üyeler’e aittir. FINDIK TV, Üye/Üyeler tarafından paylaşılan içerikler arasından uygun görmediklerini herhangi bir gerekçe belirtmeksizin kendi web sayfalarında yayınlamama veya yayından kaldırma hakkına sahiptir. FINDIK TV, başta yukarıda sayılan hususlar olmak üzere emredici kanun hükümlerine aykırılık gerekçesi ile her türlü adli makam tarafından başlatılan soruşturma kapsamında kendisinden Ceza Muhakemesi Kanunu’nun 332.maddesi doğrultusunda istenilen Üye/Üyeler’e ait kişisel bilgileri paylaşabileceğini beyan eder. "
-                    }
-                    onConfirm={() => setFieldValue("term", true)}
-                    buttons={[
-                      {
-                        role: "confirm",
-                        toClose: true,
-                        classes:
-                          "bg-secondary text-white px-4 py-2 rounded-lg hover:bg-white border border-transparent hover:border-secondary hover:text-secondary transition-all duration-200",
-                        label: "Kabul ediyorum",
-                      },
-                    ]}
-                  >
-                    <button
-                      type="button"
-                      className="underline underline-offset-1 mr-1"
-                    >
-                      Yorum yazma kurallarını
-                    </button>
-                    <span>okudum ve kabul ediyorum.</span>
-                  </Dialog>
-                </div>
+                />
+                {errors.content && (
+                  <>
+                    <p className="text-danger">{errors.content}</p>
+                  </>
+                )}
               </div>
-              {!session && (
-                <div className="grid md:grid-cols-2 gap-2 mb-2">
-                  <div className="flex flex-col gap-2">
-                    <Field
-                      className={classNames(
-                        errors.name && touched.name
-                          ? "border-danger"
-                          : "border-midgray",
-                        "text-base focus:outline-none py-1 px-2 border"
-                      )}
-                      type="text"
-                      name="name"
-                      placeholder="Adınız *"
-                    />
-                    {errors.name && touched.name && (
-                      <p className="text-danger">{errors.name}</p>
+              <Transition
+                show={isShowing}
+                enter="transition ease-out duration-100"
+                enterFrom="transform opacity-0 scale-95"
+                enterTo=""
+                leave="transition ease-in duration-75"
+                leaveFrom="transform opacity-100 scale-100"
+                leaveTo="transform opacity-0 scale-95"
+              >
+                <div className="flex flex-col w-3/3 gap-2 mb-2">
+                  <div
+                    className={classNames(
+                      errors.term && touched.term ? "text-danger" : "",
+                      "flex flex-row items-center"
                     )}
-                  </div>
-                  <div className="flex flex-col gap-2">
+                  >
                     <Field
+                      type="checkbox"
+                      name="term"
                       className={classNames(
-                        errors.surname && touched.surname
-                          ? "border-danger"
-                          : "border-midgray",
-                        "text-base focus:outline-none py-1 px-2 border"
+                        errors.term && touched.term
+                          ? "border-gray"
+                          : "border-danger",
+                        "h-4 w-4 mr-2 text-midgray rounded"
                       )}
-                      type="text"
-                      name="surname"
-                      placeholder="Soyadınız"
                     />
-                    {errors.surname && touched.surname && (
-                      <p className="text-danger">{errors.surname}</p>
-                    )}
+                    <Dialog
+                      title={"Yorum Yazma Kuralları"}
+                      content={
+                        "Üye/Üyeler suç teşkil edecek, yasal açıdan takip gerektirecek, yasaların ya da uluslararası anlaşmaların ihlali sonucunu doğuran ya da böyle durumları teşvik eden, yasadışı, tehditkar, rahatsız edici, hakaret ve küfür içeren, aşağılayıcı, küçük düşürücü, kaba, pornografik ya da ahlaka aykırı, toplumca genel kabul görmüş kurallara aykırı, kişilik haklarına zarar verici ya da benzeri niteliklerde hiçbir içeriği bu web sitesinin hiçbir sayfasında ya da subdomain olarak oluşturulan diğer sayfalarında paylaşamaz. Bu tür içeriklerden doğan her türlü mali, hukuki, cezai, idari sorumluluk münhasıran, içeriği gönderen Üye/Üyeler’e aittir. FINDIK TV, Üye/Üyeler tarafından paylaşılan içerikler arasından uygun görmediklerini herhangi bir gerekçe belirtmeksizin kendi web sayfalarında yayınlamama veya yayından kaldırma hakkına sahiptir. FINDIK TV, başta yukarıda sayılan hususlar olmak üzere emredici kanun hükümlerine aykırılık gerekçesi ile her türlü adli makam tarafından başlatılan soruşturma kapsamında kendisinden Ceza Muhakemesi Kanunu’nun 332.maddesi doğrultusunda istenilen Üye/Üyeler’e ait kişisel bilgileri paylaşabileceğini beyan eder. "
+                      }
+                      onConfirm={() => setFieldValue("term", true)}
+                      buttons={[
+                        {
+                          role: "confirm",
+                          toClose: true,
+                          classes:
+                            "bg-secondary text-white px-4 py-2 rounded-lg hover:bg-white border border-transparent hover:border-secondary hover:text-secondary transition-all duration-200",
+                          label: "Kabul ediyorum",
+                        },
+                      ]}
+                    >
+                      <button
+                        type="button"
+                        className="underline underline-offset-1 mr-1"
+                      >
+                        Yorum yazma kurallarını
+                      </button>
+                      <span>okudum ve kabul ediyorum.</span>
+                    </Dialog>
                   </div>
-                  <div className="flex flex-col gap-2">
-                    <Field
-                      className={classNames(
-                        errors.email && touched.email
-                          ? "border-danger"
-                          : "border-midgray",
-                        "text-base focus:outline-none py-1 px-2 border"
-                      )}
-                      type="email"
-                      name="email"
-                      placeholder="E-Posta *"
-                    />
-                    {errors.email && touched.email && (
-                      <p
-                        className="text-danger"
-                        dangerouslySetInnerHTML={{
-                          __html: errors.email,
-                        }}
-                      />
-                    )}
-                  </div>
-                  {!errors.email && (touched.email || show) && (
+                </div>
+                {!session && (
+                  <div className="grid md:grid-cols-2 gap-2 mb-2">
                     <div className="flex flex-col gap-2">
-                      <div className="flex flex-col">
-                        <Field
-                          className={classNames(
-                            errors.password && touched.password
-                              ? "border-danger"
-                              : "border-midgray",
-                            "text-base focus:outline-none py-1 px-2 border"
-                          )}
-                          type="password"
-                          name="password"
-                          placeholder="Şifre"
-                        />
-                        <p className="mt-2 text-sm text-gray-500">
-                          Sadece şifre girerek hesabını oluşturabilirsin.
-                        </p>
-                      </div>
-                      {errors.password && touched.email && (
-                        <p className="text-danger">{errors.password}</p>
+                      <Field
+                        className={classNames(
+                          errors.name && touched.name
+                            ? "border-danger"
+                            : "border-midgray",
+                          "text-base focus:outline-none py-1 px-2 border"
+                        )}
+                        type="text"
+                        name="name"
+                        placeholder="Adınız *"
+                      />
+                      {errors.name && touched.name && (
+                        <p className="text-danger">{errors.name}</p>
                       )}
                     </div>
-                  )}
-                </div>
-              )}
-              {errors.api && (
-                <p className="text-red-500 h-12 text-sm mt-1 ml-2 text-left">
-                  {errors.api}
-                </p>
-              )}
-              <div className="flex flex-row gap-2">
-                {cancelButton && (
-                  <button
-                    className="w-full border border-midgray hover:border-dark text-midgray hover:text-dark  rounded p-4 text-base transition duration-150 ease-out md:ease-in"
-                    type="button"
-                  >
-                    Vazgeç
-                  </button>
+                    <div className="flex flex-col gap-2">
+                      <Field
+                        className={classNames(
+                          errors.surname && touched.surname
+                            ? "border-danger"
+                            : "border-midgray",
+                          "text-base focus:outline-none py-1 px-2 border"
+                        )}
+                        type="text"
+                        name="surname"
+                        placeholder="Soyadınız"
+                      />
+                      {errors.surname && touched.surname && (
+                        <p className="text-danger">{errors.surname}</p>
+                      )}
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <Field
+                        className={classNames(
+                          errors.email && touched.email
+                            ? "border-danger"
+                            : "border-midgray",
+                          "text-base focus:outline-none py-1 px-2 border"
+                        )}
+                        type="email"
+                        name="email"
+                        placeholder="E-Posta *"
+                      />
+                      {errors.email && touched.email && (
+                        <p
+                          className="text-danger"
+                          dangerouslySetInnerHTML={{
+                            __html: errors.email,
+                          }}
+                        />
+                      )}
+                    </div>
+                    {!errors.email && (touched.email || show) && (
+                      <div className="flex flex-col gap-2">
+                        <div className="flex flex-col">
+                          <Field
+                            className={classNames(
+                              errors.password && touched.password
+                                ? "border-danger"
+                                : "border-midgray",
+                              "text-base focus:outline-none py-1 px-2 border"
+                            )}
+                            type="password"
+                            name="password"
+                            placeholder="Şifre"
+                          />
+                          <p className="mt-2 text-sm text-gray-500">
+                            Sadece şifre girerek hesabını oluşturabilirsin.
+                          </p>
+                        </div>
+                        {errors.password && touched.email && (
+                          <p className="text-danger">{errors.password}</p>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 )}
-                <button
-                  className="disabled:opacity-75 w-full bg-secondary hover:bg-secondary/90 text-white rounded p-4 text-base transition duration-150 ease-out md:ease-in"
-                  type="submit"
-                  disabled={loading}
-                >
-                  {loading ? (
-                    <span role="status">
-                      <BiLoaderCircle className="mr-2 inline-block align-middle w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" />
-                      <span className="sr-only">Gönderiliyor...</span>
-                      <span>Gönderiliyor...</span>
-                    </span>
-                  ) : (
-                    <span>Gönder</span>
+                {errors.api && (
+                  <p className="text-red-500 h-12 text-sm mt-1 ml-2 text-left">
+                    {errors.api}
+                  </p>
+                )}
+                <div className="flex flex-row gap-2">
+                  {cancelButton && (
+                    <button
+                      className="w-full border border-midgray hover:border-dark text-midgray hover:text-dark  rounded p-4 text-base transition duration-150 ease-out md:ease-in"
+                      type="button"
+                    >
+                      Vazgeç
+                    </button>
                   )}
-                </button>
-              </div>
-            </Transition>
-          </Form>
-        )}
-      </Formik>
+                  <button
+                    className="disabled:opacity-75 w-full bg-secondary hover:bg-secondary/90 text-white rounded p-4 text-base transition duration-150 ease-out md:ease-in"
+                    type="submit"
+                    disabled={loading}
+                  >
+                    {loading ? (
+                      <span role="status">
+                        <BiLoaderCircle className="mr-2 inline-block align-middle w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" />
+                        <span className="sr-only">Gönderiliyor...</span>
+                        <span>Gönderiliyor...</span>
+                      </span>
+                    ) : (
+                      <span>Gönder</span>
+                    )}
+                  </button>
+                </div>
+              </Transition>
+            </Form>
+          )}
+        </Formik>
+      )}
     </>
   );
 };

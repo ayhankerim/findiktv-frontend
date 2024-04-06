@@ -41,6 +41,7 @@ const Comments: React.FC<ArticleCommentsProps> = ({
       console.error("Error fetching comments:", error);
     }
   };
+  const commentReply = () => {};
   useEffect(() => {
     setComments(commentsInitial);
   }, [setComments]);
@@ -56,6 +57,7 @@ const Comments: React.FC<ArticleCommentsProps> = ({
         threadOf={null}
         commentLimit={commentLimit}
         commentLimitFunc={commentLimitFunc}
+        commentReply={commentReply}
       />
       <div className="flex flex-col gap-2 mt-4">
         <CommentCountChanger

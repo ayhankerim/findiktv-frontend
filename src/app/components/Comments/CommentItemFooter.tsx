@@ -7,12 +7,13 @@ import {
   MdThumbDownOffAlt,
   MdThumbUp,
   MdThumbUpOffAlt,
+  MdOutlineReplyAll,
+  MdClose,
 } from "react-icons/md";
 import Tooltip from "../Tooltip";
 import { fetchAPI } from "@/app/utils/fetch-api";
 import { CommentsProp } from "@/app/utils/model";
 import Loader from "@/app/components/Loader";
-//import CommentForm from "./CommentForm";
 
 const CommentForm = dynamic(
   () => import("@/app/components/Comments/CommentForm"),
@@ -91,8 +92,8 @@ const CommentReaction = ({ item, comment }: { item: any; comment: any }) => {
         onClick={() => commentReact(item.id)}
         type="button"
         className={classNames(
-          checked ? "text-dark border-dark font-semibold" : "",
-          "flex justify-between items-center gap-2 py-1 px-2 border rounded hover:text-dark"
+          checked ? "text-white border-dark font-semibold bg-dark" : "",
+          "flex justify-between items-center gap-2 py-1 px-2 border rounded min-w-[55px]"
         )}
       >
         {checked ? item.iconFull : item.icon}
@@ -104,11 +105,13 @@ const CommentReaction = ({ item, comment }: { item: any; comment: any }) => {
 
 const CommentItemFooter = ({
   comment,
+  parent,
   article,
   commentLimit,
   commentLimitFunc,
 }: {
   comment: CommentsProp;
+  parent: number | null;
   article: number;
   commentLimit: number;
   commentLimitFunc: (limit: number) => void;
@@ -122,8 +125,20 @@ const CommentItemFooter = ({
       <section className="flex items-center justify-between gap-2 text-midgray mb-2">
         {comment.attributes.approvalStatus != "ignored" &&
           comment.attributes.blockedThread != true && (
-            <button type="button" onClick={() => commentReply()}>
-              {reply ? "Vazgeç" : "Yanıtla"}
+            <button
+              type="button"
+              className="flex items-center gap-1 hover:underline"
+              onClick={() => commentReply()}
+            >
+              {reply ? (
+                <>
+                  <MdClose /> Vazgeç
+                </>
+              ) : (
+                <>
+                  <MdOutlineReplyAll /> Yanıtla
+                </>
+              )}
             </button>
           )}
         {comment.attributes.approvalStatus != "ignored" && (
@@ -135,16 +150,19 @@ const CommentItemFooter = ({
         )}
       </section>
       {reply && (
-        <CommentForm
-          cancelButton={false}
-          article={article}
-          product={null}
-          city={null}
-          replyto={comment.id}
-          threadOf={comment.id}
-          commentLimit={commentLimit}
-          commentLimitFunc={commentLimitFunc}
-        />
+        <div className="-ml-12">
+          <CommentForm
+            cancelButton={false}
+            article={article}
+            product={null}
+            city={null}
+            replyto={comment.id}
+            threadOf={parent || comment.id}
+            commentLimit={commentLimit}
+            commentLimitFunc={commentLimitFunc}
+            commentReply={commentReply}
+          />
+        </div>
       )}
     </>
   );

@@ -6,11 +6,11 @@ import { Menu, Transition } from "@headlessui/react";
 import toast, { Toaster } from "react-hot-toast";
 import Moment from "moment";
 import "moment/locale/tr";
-import { MdClose, MdOutlineDateRange } from "react-icons/md";
 import Tooltip from "../Tooltip";
 import ProfileCard from "./ProfileCard";
 import { TbDots } from "react-icons/tb";
 import { AiOutlineDelete } from "react-icons/ai";
+import { MdClose, MdOutlineDateRange, MdCalendarMonth } from "react-icons/md";
 import { fetchAPI } from "@/app/utils/fetch-api";
 import { CommentsProp, Session } from "@/app/utils/model";
 
@@ -97,132 +97,145 @@ const CommentItemHeader: React.FC<
 > = (comment: CommentsProp & { slug: string; position: string }) => {
   const { data } = useSession();
   const session = data as Session | null;
-  const { attributes: user } = comment.attributes.user.data;
+  const { reply_to, user: userData } = comment.attributes;
+  const { attributes: user } = userData.data;
   return (
-    <header className="flex justify-between items-center gap-2 mb-2">
+    <header className="flex flex-col">
       <Toaster position="top-right" reverseOrder={false} />
-      <div className="flex gap-2">
-        <div className="flex-none">
-          {comment.attributes.user.data ? (
-            <ProfileCard comment={comment}>
-              <cite className="not-italic">
-                {user.name && user.name} {user.surname && user.surname}
-              </cite>
-            </ProfileCard>
-          ) : (
-            <span>Ziyaretçi</span>
+      <div className="flex justify-between items-center gap-2">
+        <div className="flex gap-2">
+          <div className="flex-none">
+            {user ? (
+              <ProfileCard comment={comment}>
+                <cite className="not-italic">
+                  {user.name && user.name} {user.surname && user.surname}
+                </cite>
+              </ProfileCard>
+            ) : (
+              <span>Ziyaretçi</span>
+            )}
+          </div>
+        </div>
+        <div className="flex">
+          <div
+            className="text-midgray"
+            title={Moment(comment.attributes.createdAt).format("LLLL")}
+          >
+            <Tooltip
+              orientation="left"
+              tooltipText={Moment(comment.attributes.createdAt).format("LLL")}
+            >
+              <time
+                className="flex items-center"
+                dateTime={Moment(comment.attributes.createdAt).format("LLLL")}
+              >
+                {comment.position === "sidebar" ? (
+                  <>
+                    <MdOutlineDateRange className="mr-2 inline-block" />
+                    {Moment(comment.attributes.createdAt).format("ll")}
+                  </>
+                ) : (
+                  <>
+                    {Moment(comment.attributes.createdAt).fromNow(true)}
+                    <span className="ml-1">önce</span>
+                    <MdCalendarMonth className="ml-2 inline-block" />
+                  </>
+                )}
+              </time>
+            </Tooltip>
+          </div>
+          {comment.attributes.approvalStatus != "ignored" && (
+            <nav className="flex items-center">
+              <Menu as="div" className="relative ml-3">
+                {({ open }) => (
+                  <>
+                    <div>
+                      <Menu.Button className="flex text-sm text-darkgray hover:text-secondary">
+                        <span className="sr-only">Menü aç</span>
+                        <span className="flex items-center">
+                          {open ? (
+                            <MdClose className="text-midgray" />
+                          ) : (
+                            <TbDots className="text-midgray" />
+                          )}
+                        </span>
+                      </Menu.Button>
+                    </div>
+                    <Transition
+                      as={Fragment}
+                      enter="transition ease-out duration-100"
+                      enterFrom="transform opacity-0 scale-95"
+                      enterTo="transform opacity-100 scale-100"
+                      leave="transition ease-in duration-75"
+                      leaveFrom="transform opacity-100 scale-100"
+                      leaveTo="transform opacity-0 scale-95"
+                    >
+                      <Menu.Items className="absolute right-0 z-10 mt-2 w-52 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                        {session &&
+                          session.id === comment.attributes.user.data?.id && (
+                            <Menu.Item>
+                              <button
+                                onClick={() => {
+                                  deleteComment(comment.id);
+                                }}
+                                className="block w-full text-left hover:bg-lightgray px-4 py-2 text-sm text-danger"
+                              >
+                                <AiOutlineDelete className="inline-block align-text-bottom mr-2" />{" "}
+                                Kaldır
+                              </button>
+                            </Menu.Item>
+                          )}
+                        <Menu.Item>
+                          <Link
+                            href={`https://api.whatsapp.com/send?text=Şu%20yoruma%20bir%20bak%20${comment.slug}?comment=${comment.id}&url=${comment.slug}?comment=${comment.id}`}
+                            className="block w-full text-left hover:bg-lightgray px-4 py-2 text-sm text-midgray"
+                            target="_blank"
+                            rel="nofollow"
+                          >
+                            Whatsapp`ta paylaş
+                          </Link>
+                        </Menu.Item>
+                        <Menu.Item>
+                          <button
+                            onClick={() => {
+                              notify("success", "Yorum bağlantısı kopyalandı!");
+                              navigator.clipboard.writeText(
+                                `${comment.slug}?comment=${comment.id}`
+                              );
+                            }}
+                            className="block w-full text-left hover:bg-lightgray px-4 py-2 text-sm text-midgray"
+                          >
+                            Yorum bağlantısını kopyala
+                          </button>
+                        </Menu.Item>
+                        <Menu.Item>
+                          <button
+                            onClick={() => {
+                              flagComment(comment.id, comment.attributes.flag);
+                            }}
+                            className="block w-full text-left hover:bg-lightgray px-4 py-2 text-sm text-warning"
+                          >
+                            Şikayet et
+                          </button>
+                        </Menu.Item>
+                      </Menu.Items>
+                    </Transition>
+                  </>
+                )}
+              </Menu>
+            </nav>
           )}
         </div>
       </div>
-      <div className="flex">
-        <div
-          className="text-midgray"
-          title={Moment(comment.attributes.createdAt).format("LLLL")}
-        >
-          <Tooltip
-            orientation="left"
-            tooltipText={Moment(comment.attributes.createdAt).format("LLL")}
-          >
-            <time
-              className="flex items-center"
-              dateTime={Moment(comment.attributes.createdAt).format("LLLL")}
-            >
-              {comment.position === "sidebar" ? (
-                <>
-                  <MdOutlineDateRange className="mr-2 inline-block" />
-                  {Moment(comment.attributes.createdAt).format("ll")}
-                </>
-              ) : (
-                <>
-                  {Moment(comment.attributes.createdAt).fromNow(true)}
-                  <span className="ml-1">önce</span>
-                </>
-              )}
-            </time>
-          </Tooltip>
+      {reply_to && (
+        <div className="text-midgray">
+          <span className="font-medium">
+            {reply_to.data.attributes.user.data.attributes.name + " " || ""}
+            {reply_to.data.attributes.user.data.attributes.surname || ""}
+          </span>{" "}
+          tarafından yapılan yoruma cevap olarak:
         </div>
-        {comment.attributes.approvalStatus != "ignored" && (
-          <nav className="flex items-center">
-            <Menu as="div" className="relative ml-3">
-              {({ open }) => (
-                <>
-                  <div>
-                    <Menu.Button className="flex text-sm text-darkgray hover:text-secondary">
-                      <span className="sr-only">Menü aç</span>
-                      <span className="flex items-center">
-                        {open ? (
-                          <MdClose className="text-midgray" />
-                        ) : (
-                          <TbDots className="text-midgray" />
-                        )}
-                      </span>
-                    </Menu.Button>
-                  </div>
-                  <Transition
-                    as={Fragment}
-                    enter="transition ease-out duration-100"
-                    enterFrom="transform opacity-0 scale-95"
-                    enterTo="transform opacity-100 scale-100"
-                    leave="transition ease-in duration-75"
-                    leaveFrom="transform opacity-100 scale-100"
-                    leaveTo="transform opacity-0 scale-95"
-                  >
-                    <Menu.Items className="absolute right-0 z-10 mt-2 w-52 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                      {session &&
-                        session.id === comment.attributes.user.data?.id && (
-                          <Menu.Item>
-                            <button
-                              onClick={() => {
-                                deleteComment(comment.id);
-                              }}
-                              className="block w-full text-left hover:bg-lightgray px-4 py-2 text-sm text-danger"
-                            >
-                              <AiOutlineDelete className="inline-block align-text-bottom mr-2" />{" "}
-                              Kaldır
-                            </button>
-                          </Menu.Item>
-                        )}
-                      <Menu.Item>
-                        <Link
-                          href={`https://api.whatsapp.com/send?text=Şu%20yoruma%20bir%20bak%20${comment.slug}?comment=${comment.id}&url=${comment.slug}?comment=${comment.id}`}
-                          className="block w-full text-left hover:bg-lightgray px-4 py-2 text-sm text-midgray"
-                          target="_blank"
-                          rel="nofollow"
-                        >
-                          Whatsapp`ta paylaş
-                        </Link>
-                      </Menu.Item>
-                      <Menu.Item>
-                        <button
-                          onClick={() => {
-                            notify("success", "Yorum bağlantısı kopyalandı!");
-                            navigator.clipboard.writeText(
-                              `${comment.slug}?comment=${comment.id}`
-                            );
-                          }}
-                          className="block w-full text-left hover:bg-lightgray px-4 py-2 text-sm text-midgray"
-                        >
-                          Yorum bağlantısını kopyala
-                        </button>
-                      </Menu.Item>
-                      <Menu.Item>
-                        <button
-                          onClick={() => {
-                            flagComment(comment.id, comment.attributes.flag);
-                          }}
-                          className="block w-full text-left hover:bg-lightgray px-4 py-2 text-sm text-warning"
-                        >
-                          Şikayet et
-                        </button>
-                      </Menu.Item>
-                    </Menu.Items>
-                  </Transition>
-                </>
-              )}
-            </Menu>
-          </nav>
-        )}
-      </div>
+      )}
     </header>
   );
 };

@@ -191,8 +191,17 @@ export interface CommentsProp {
     like: number;
     flag: number;
     approvalStatus: string;
+    reply_froms: {
+      data: CommentsProp[];
+    };
+    thread_of: {
+      data: CommentsProp;
+    };
     thread_ons: {
       data: CommentsProp[];
+    };
+    reply_to: {
+      data: CommentsProp;
     };
     user: {
       data: CommentUser;
