@@ -1,50 +1,40 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import classNames from "classnames";
 import { getStrapiMedia } from "../utils/api-helpers";
 import { categoryColor } from "@/app/utils/category-color";
 import styles from "@/app/styles/latest-articles.module.scss";
 import Advertisement from "@/app/components/Advertisement";
 import Moment from "moment";
 import "moment/locale/tr";
-
-interface Article {
-  id: number;
-  attributes: {
-    title: string;
-    description: string;
-    slug: string;
-    createdAt: string;
-    updatedAt: string;
-    publishedAt: string;
-    image: {
-      data: {
-        attributes: {
-          url: string;
-        };
-      };
-    };
-    category: {
-      data: {
-        attributes: {
-          name: string;
-          slug: string;
-        };
-      };
-    };
-  };
-}
+import { Article } from "../utils/model";
 
 export default function PostList({
   data: articles,
+  position,
   children,
 }: {
   data: Article[];
+  position: string;
   children?: React.ReactNode;
 }) {
   return (
-    <section className="container p-6 mx-auto space-y-6 sm:space-y-12 bg-white">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 xl:grid-cols-3 w-full gap-2">
+    <section
+      className={classNames(
+        position === "sidebar" && "py-4",
+        position === "bottom" && "md:p-6 mx-auto space-y-6 sm:space-y-12"
+      )}
+    >
+      <div
+        className={classNames(
+          "grid grid-cols-1",
+          position === "sidebar" && "",
+          position === "bottom" &&
+            "sm:grid-cols-2 md:grid-cols-2 xl:grid-cols-3",
+          "w-full gap-2"
+        )}
+      >
         {articles.map((article, index) => {
           const imageUrl = getStrapiMedia(
             article.attributes.image.data?.attributes.url

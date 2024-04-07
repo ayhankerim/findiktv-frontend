@@ -125,7 +125,7 @@ export default async function TagRoute({
         text=""
       />
       {sliderPosts.length > 1 && <ArticleSlider data={sliderPosts} />}
-      <BlogList data={data} />
+      <BlogList data={data} position="bottom" />
       <ArticlesInfinite slug={params.slug} offset={used} />
     </main>
   );

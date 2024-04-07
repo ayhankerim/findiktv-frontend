@@ -1,3 +1,4 @@
+import Image from "next/image";
 import classNames from "classnames";
 import Moment from "moment";
 import CommentItemHeader from "@/app/components/Comments/CommentItemHeader";
@@ -92,19 +93,33 @@ const CommentView: React.FC<{
 }> = ({ comments, slug, article, commentLimit, commentLimitFunc }) => {
   return (
     <div className="flex flex-col divide-y mt-4">
-      {comments.map((comment: CommentsProp, i: number) => {
-        return (
-          <CommentItemView
-            comment={comment}
-            parent={null}
-            slug={slug}
-            article={article}
-            commentLimit={commentLimit}
-            commentLimitFunc={commentLimitFunc}
-            key={i}
+      {comments.length > 0 ? (
+        comments.map((comment: CommentsProp, i: number) => {
+          return (
+            <CommentItemView
+              comment={comment}
+              parent={null}
+              slug={slug}
+              article={article}
+              commentLimit={commentLimit}
+              commentLimitFunc={commentLimitFunc}
+              key={i}
+            />
+          );
+        })
+      ) : (
+        <div className="flex flex-col items-center gap-2 mt-4 text-center">
+          <Image
+            width="72"
+            height="72"
+            src={`${process.env.NEXT_PUBLIC_CLOUD_IMAGE_CORE_URL}8980237d-c760-48b3-c06d-baec1e74e700/format=auto,width=144`}
+            alt="İlk Yorumu sen yaz"
+            placeholder="blur"
+            blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8/OhZPQAIhwMsJ60FNgAAAABJRU5ErkJggg=="
           />
-        );
-      })}
+          <h4 className="text-base">İlk yorumu siz yapın!</h4>
+        </div>
+      )}
     </div>
   );
 };

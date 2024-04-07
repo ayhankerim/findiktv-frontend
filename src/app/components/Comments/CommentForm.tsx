@@ -347,6 +347,7 @@ const CommentForm = ({
                         type="text"
                         name="name"
                         placeholder="Adınız *"
+                        autoComplete="given-name"
                       />
                       {errors.name && touched.name && (
                         <p className="text-danger">{errors.name}</p>
@@ -363,6 +364,7 @@ const CommentForm = ({
                         type="text"
                         name="surname"
                         placeholder="Soyadınız"
+                        autoComplete="family-name"
                       />
                       {errors.surname && touched.surname && (
                         <p className="text-danger">{errors.surname}</p>
@@ -379,6 +381,7 @@ const CommentForm = ({
                         type="email"
                         name="email"
                         placeholder="E-Posta *"
+                        autoComplete="email"
                       />
                       {errors.email && touched.email && (
                         <p

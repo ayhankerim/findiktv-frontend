@@ -79,7 +79,7 @@ export default function ArticlesInfinite({
   if (data.length === 0) return "";
   return (
     <div>
-      <Blog data={data}>
+      <Blog data={data} position="bottom">
         {meta!.pagination.start + meta!.pagination.limit <
           meta!.pagination.total && (
           <div className="flex justify-center">

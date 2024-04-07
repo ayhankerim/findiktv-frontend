@@ -9,7 +9,7 @@ const CommentCountChanger: React.FC<{
   children: React.ReactNode;
 }> = ({ count, commentLimit, commentLimitFunc, children }) => {
   return (
-    <div className="flex flex-col md:flex-row justify-between items-end border-b border-midgray">
+    <div className="flex flex-col md:flex-row justify-between items-end border-b border-secondary/20">
       {children}
       <div className="flex flex-col md:flex-row text-center">
         {count > 5 && (

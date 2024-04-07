@@ -1,6 +1,8 @@
 import { fetchAPI } from "../utils/fetch-api";
 import BlogList from "../views/blog-list";
 import Advertisement from "./Advertisement";
+import classNames from "classnames";
+
 async function fetchLatestPosts(
   current: number | null,
   product: number | null,
@@ -78,10 +80,15 @@ export default async function LatestArticles({
     (await fetchLatestPosts(current, product, city, count, offset)) || [];
   return (
     <>
-      <div className="-mx-6">
-        <BlogList data={data} />
+      <div
+        className={classNames(
+          position === "sidebar" && "",
+          position === "bottom" && "md:-mx-6"
+        )}
+      >
+        <BlogList data={data} position={position} />
       </div>
-      <div className="w-full h-[300px] -mx-2 sm:mx-0">
+      <div className="w-full h-[300px] mx-auto mt-2 md:mt-0">
         <Advertisement
           position={
             position === "bottom"

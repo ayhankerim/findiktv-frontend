@@ -27,7 +27,7 @@ const CommentHeader = () => {
   const { data } = useSession();
   const session = data as Session | null;
   return (
-    <div className="flex flex-row items-center justify-between border-b relative">
+    <div className="flex flex-col md:flex-row text-center md:text-left items-center justify-between border-b relative">
       <h3 className="font-semibold text-base text-midgray">
         YORUM YAZIN!{" "}
         {session ? (
