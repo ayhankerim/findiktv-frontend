@@ -21,9 +21,9 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/components/LoadMorePosts.tsx", "src/app/blog-3/page.tsx", "src/app/components/ErrorBoundry.jsx", "src/app/components/ErrorBoundary.tsx", "src/app/global-error.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "components/LoadMorePosts.tsx", "app/blog-3/page.tsx", "components/ErrorBoundry.jsx", "components/ErrorBoundary.tsx", "app/global-error.tsx"],
   "exclude": ["node_modules"]
 }

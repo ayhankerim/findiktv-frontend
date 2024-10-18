@@ -125,7 +125,7 @@ const nextConfig = {
     formats: ["image/avif", "image/webp"],
     domains: ["imagedelivery.net"],
     loader: "custom",
-    loaderFile: "./src/app/utils/imageLoader.ts",
+    loaderFile: "./utils/imageLoader.ts",
   },
   swcMinify: true,
   productionBrowserSourceMaps: true,

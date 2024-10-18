@@ -9,7 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@ckeditor/ckeditor5-react": "^6.2.0",
     "@formatjs/intl-localematcher": "^0.5.4",
     "@headlessui/react": "^1.7.18",
     "@heroicons/react": "^2.1.1",
@@ -25,7 +24,6 @@
     "@types/react-slick": "^0.23.13",
     "@types/slick-carousel": "^1.6.40",
     "axios": "^1.6.7",
-    "ckeditor5-custom-build": "file:./ckeditor5",
     "classnames": "^2.5.1",
     "formik": "^2.4.5",
     "highcharts": "^11.3.0",
