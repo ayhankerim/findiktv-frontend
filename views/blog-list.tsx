@@ -4,7 +4,7 @@ import Link from "next/link";
 import classNames from "classnames";
 import { getStrapiMedia } from "../utils/api-helpers";
 import { categoryColor } from "@/utils/category-color";
-import styles from "@/app/styles/latest-articles.module.scss";
+import styles from "@/styles/latest-articles.module.scss";
 import Advertisement from "@/components/Advertisement";
 import Moment from "moment";
 import "moment/locale/tr";
@@ -19,6 +19,7 @@ export default function PostList({
   position: string;
   children?: React.ReactNode;
 }) {
+  console.log("articles:", articles);
   return (
     <section
       className={classNames(
@@ -36,11 +37,9 @@ export default function PostList({
         )}
       >
         {articles.map((article, index) => {
-          const imageUrl = getStrapiMedia(
-            article.attributes.image.data?.attributes.url
-          );
+          const imageUrl = getStrapiMedia(article.image?.url);
 
-          const category = article.attributes.category.data?.attributes;
+          const category = article.category;
 
           return (
             <React.Fragment key={index}>
@@ -54,13 +53,13 @@ export default function PostList({
               )}
               <article className="flex-1">
                 <Link
-                  href={`/haber/${article.id}/${article.attributes.slug}`}
+                  href={`/haber/${article.id}/${article.slug}`}
                   className={`${styles.cCard} block bg-lightgray rounded overflow-hidden`}
                 >
                   <div className="relative h-[260px] md:h-[220px] lg:h-[264px] overflow-hidden">
                     {imageUrl && (
                       <Image
-                        alt={article.attributes.title}
+                        alt={article.title}
                         className="absolute inset-0 h-full w-full object-cover"
                         priority={false}
                         fill
@@ -74,17 +73,15 @@ export default function PostList({
                       <div
                         className="absolute top-[-1rem] text-white right-2 rounded px-1"
                         style={{
-                          backgroundColor: categoryColor(category.slug),
+                          backgroundColor: categoryColor(category?.slug),
                         }}
                       >
-                        {Moment(article.attributes.publishedAt)
+                        {Moment(article.publishedAt)
                           .fromNow(true)
                           .toLocaleUpperCase("tr")}{" "}
                         ÖNCE
                       </div>
-                      <h3 className="font-semibold">
-                        {article.attributes.title}
-                      </h3>
+                      <h3 className="font-semibold">{article.title}</h3>
                     </div>
                   </div>
                 </Link>

@@ -25,12 +25,12 @@ export default function PageView({ viewId }: { viewId: number }) {
                   },
                   body: JSON.stringify({
                     data: {
-                      view: data.data.attributes.view + 1,
+                      view: data.data.view + 1,
                     },
                   }),
                 }
               ).then((data) => {
-                setView(data.data.attributes.view + 1);
+                setView(data.data.view + 1);
               });
             } catch (error) {
               console.log(error);

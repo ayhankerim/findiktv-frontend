@@ -1,8 +1,6 @@
 interface Feature {
   id: string;
-  attributes: {
-    name: string;
-  };
+  name: string;
 }
 
 interface Plan {
@@ -95,7 +93,7 @@ export default function Pricing({ data }: PriceProps) {
                           clipRule="evenodd"
                         ></path>
                       </svg>
-                      <span>{feature.attributes.name}</span>
+                      <span>{feature.name}</span>
                     </li>
                   ))}
                 </ul>

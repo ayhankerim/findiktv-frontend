@@ -67,7 +67,7 @@ export async function generateMetadata({
   params: { slug: string };
 }): Promise<Metadata> {
   const meta = await getMetaData(params.slug);
-  const metadata = meta[0]?.attributes || [];
+  const metadata = meta[0] || [];
 
   return {
     title: metadata.title || "",
@@ -98,11 +98,9 @@ export async function generateStaticParams() {
     options
   );
   return articleResponse.data.map(
-    (article: {
-      id: number;
-      attributes: {
-        slug: string;
-      };
-    }) => ({ id: article.id.toString(), slug: article.attributes.slug })
+    (article: { id: number; slug: string }) => ({
+      id: article.id.toString(),
+      slug: article.slug,
+    })
   );
 }

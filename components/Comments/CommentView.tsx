@@ -25,7 +25,7 @@ export const CommentItemView = ({
   commentLimit,
   commentLimitFunc,
 }: CommentItemViewProps) => {
-  const { user, createdAt } = comment.attributes;
+  const { user, createdAt } = comment;
   const pointedCommentId = pointedComment();
   pointedCommentId && scrollToComment(pointedCommentId);
   return (
@@ -33,7 +33,7 @@ export const CommentItemView = ({
       <article
         id={`comment-${comment.id}`}
         className={classNames(
-          user.data?.attributes.blocked ? "line-through text-danger/50" : "",
+          user.data?.blocked ? "line-through text-danger/50" : "",
           pointedCommentId == String(comment.id) ||
             Moment(createdAt).isAfter(Moment().subtract(10, "minutes"))
             ? "bg-point/20 py-4"
@@ -44,7 +44,7 @@ export const CommentItemView = ({
         <CommentAvatar {...comment} />
         <div className="flex-auto">
           <CommentItemHeader {...comment} slug={slug} position="footer" />
-          {comment.attributes.approvalStatus === "ignored" ? (
+          {comment.approvalStatus === "ignored" ? (
             <div
               className="line-through text-darkgray/60 text-base my-2"
               dangerouslySetInnerHTML={{
@@ -55,7 +55,7 @@ export const CommentItemView = ({
             <div
               className="text-darkgray text-base my-2"
               dangerouslySetInnerHTML={{
-                __html: comment.attributes.content,
+                __html: comment.content,
               }}
             />
           )}
@@ -66,10 +66,10 @@ export const CommentItemView = ({
             commentLimit={commentLimit}
             commentLimitFunc={commentLimitFunc}
           />
-          {comment.attributes.thread_ons?.data.length > 0 && (
+          {comment.thread_ons?.data.length > 0 && (
             <div className="flex flex-col divide-y border-t mt-4">
               <CommentSubView
-                comments={comment.attributes.thread_ons.data}
+                comments={comment.thread_ons.data}
                 parent={comment.id}
                 slug={slug}
                 article={article}

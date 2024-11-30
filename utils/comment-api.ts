@@ -187,12 +187,12 @@ export const reactionComment = async (
       },
       body: JSON.stringify({
         data: {
-          [type]: old.data.attributes[type] + (checked ? -1 : 1),
+          [type]: old.data[type] + (checked ? -1 : 1),
         },
       }),
     }
   );
-  return result.data.attributes[type];
+  return result.data[type];
 };
 
 export const registerUser = (values: CommentFormValues) => {

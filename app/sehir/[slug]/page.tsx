@@ -17,9 +17,8 @@ const SLIDER_SIZE = 5;
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const page = await fetchPostsByCity(params.slug, []);
 
-  if (!page?.data[0]?.attributes?.cities.data[0]?.attributes.metadata)
-    return FALLBACK_SEO;
-  const metadata = page.data[0].attributes.cities.data[0]?.attributes.metadata;
+  if (!page?.data[0]?.cities.data[0]?.metadata) return FALLBACK_SEO;
+  const metadata = page.data[0].cities.data[0]?.metadata;
 
   return {
     title: metadata.metaTitle + " Haberleri | " + FALLBACK_SEO.siteName,
@@ -117,7 +116,7 @@ export default async function CityRoute({
     )) || [];
   if (data.length === 0) return notFound();
   const used = sliderPosts.concat(data).map((item: any) => item.id);
-  const { title } = data[0]?.attributes.cities.data[0].attributes;
+  const { title } = data[0]?.cities.data[0];
   return (
     <main>
       <PageHeader
@@ -150,11 +149,7 @@ export async function generateStaticParams() {
     options
   );
 
-  return citiesResponse.data.map(
-    (city: {
-      attributes: {
-        slug: string;
-      };
-    }) => ({ slug: city.attributes.slug })
-  );
+  return citiesResponse.data.map((city: { slug: string }) => ({
+    slug: city.slug,
+  }));
 }

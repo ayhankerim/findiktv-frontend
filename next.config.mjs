@@ -1,8 +1,4 @@
 // This file sets a custom webpack configuration to use your Next.js app
-//const { withSentryConfig } = require("@sentry/nextjs")
-const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: process.env.ANALYZE === 'true',
-})
 /**
  * @type {import('next').NextConfig}
  */
@@ -73,7 +69,7 @@ const nextConfig = {
       },
       {
         source: "/uploads/:path*",
-        destination: `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/uploads/:path*`,
+        destination: `${process.env.STRAPI_API_URL}/uploads/:path*`,
       },
       {
         source: "/api/views/:path*",
@@ -81,23 +77,23 @@ const nextConfig = {
       },
       {
         source: "/api/auth/local/register",
-        destination: `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/auth/local/register`,
+        destination: `${process.env.STRAPI_API_URL}/api/auth/local/register`,
       },
       {
         source: "/api/auth/forgot-password",
-        destination: `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/auth/forgot-password`,
+        destination: `${process.env.STRAPI_API_URL}/api/auth/forgot-password`,
       },
       {
         source: "/api/auth/change-password",
-        destination: `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/auth/change-password`,
+        destination: `${process.env.STRAPI_API_URL}/api/auth/change-password`,
       },
       {
         source: "/api/auth/email-confirmation",
-        destination: `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/auth/email-confirmation`,
+        destination: `${process.env.STRAPI_API_URL}/api/auth/email-confirmation`,
       },
       {
         source: "/api/auth/send-email-confirmation",
-        destination: `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/auth/send-email-confirmation`,
+        destination: `${process.env.STRAPI_API_URL}/api/auth/send-email-confirmation`,
       },
       {
         source: "/api/auth/:path*",
@@ -105,7 +101,7 @@ const nextConfig = {
       },
       {
         source: "/api/:path*",
-        destination: `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/:path*`,
+        destination: `${process.env.STRAPI_API_URL}/api/:path*`,
       },
     ]
   },
@@ -127,12 +123,11 @@ const nextConfig = {
     loader: "custom",
     loaderFile: "./utils/imageLoader.ts",
   },
-  swcMinify: true,
-  productionBrowserSourceMaps: true,
+  //swcMinify: true,
+  //productionBrowserSourceMaps: true,
 }
 
-//module.exports = nextConfig
-module.exports = withBundleAnalyzer(nextConfig)
+export default nextConfig
 // module.exports = withSentryConfig(
 //   module.exports,
 //   {

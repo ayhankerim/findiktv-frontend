@@ -260,8 +260,8 @@ export default async function Post({ data: article }: { data: Article }) {
     updatedAt,
     view,
     reactions,
-  } = article.attributes;
-  const { url: imageURL, alternativeText: imageALT } = image.data?.attributes;
+  } = article;
+  const { url: imageURL, alternativeText: imageALT } = image.data;
   const imageUrl = getStrapiMedia(imageURL);
   const { data: reactionTypes } = (await fetchReactionTypes()) || [];
   const { data: commentCount } = (await fetchCommentCount(article.id)) || [];
@@ -273,8 +273,8 @@ export default async function Post({ data: article }: { data: Article }) {
       slug: "/",
     },
     {
-      title: category.data.attributes.title.toLocaleUpperCase("tr"),
-      slug: "/kategori/" + category.data.attributes.slug,
+      title: category.data.title.toLocaleUpperCase("tr"),
+      slug: "/kategori/" + category.data.slug,
     },
     {
       title: title.toLocaleUpperCase("tr"),

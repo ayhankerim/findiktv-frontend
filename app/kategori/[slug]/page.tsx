@@ -17,9 +17,8 @@ const SLIDER_SIZE = 5;
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const page = await fetchPostsByCategory(params.slug, []);
 
-  if (!page?.data[0]?.attributes?.category.data?.attributes.metadata)
-    return FALLBACK_SEO;
-  const metadata = page.data[0].attributes.category.data?.attributes.metadata;
+  if (!page?.data[0]?.category.data?.metadata) return FALLBACK_SEO;
+  const metadata = page.data[0].category.data?.metadata;
 
   return {
     title: metadata.metaTitle + " Haberleri | " + FALLBACK_SEO.siteName,
@@ -114,7 +113,7 @@ export default async function CategoryRoute({
     )) || [];
   if (data.length === 0) return notFound();
   const used = sliderPosts.concat(data).map((item: any) => item.id);
-  const { title } = data[0]?.attributes.category.data.attributes;
+  const { title } = data[0]?.category.data;
   return (
     <main>
       <PageHeader
@@ -146,11 +145,7 @@ export async function generateStaticParams() {
     },
     options
   );
-  return categoriesResponse.data.map(
-    (category: {
-      attributes: {
-        slug: string;
-      };
-    }) => ({ slug: category.attributes.slug })
-  );
+  return categoriesResponse.data.map((category: { slug: string }) => ({
+    slug: category.slug,
+  }));
 }

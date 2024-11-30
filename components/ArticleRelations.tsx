@@ -3,17 +3,13 @@ import ArticleShare from "./ArticleShare";
 import { MdOutlineLocationOn, MdOutlineTag } from "react-icons/md";
 interface Tags {
   id: string;
-  attributes: {
-    title: string;
-    slug: string;
-  };
+  title: string;
+  slug: string;
 }
 interface Cities {
   id: string;
-  attributes: {
-    title: string;
-    slug: string;
-  };
+  title: string;
+  slug: string;
 }
 interface ArticleRelationProps {
   cities: {
@@ -57,10 +53,10 @@ export default function ArticleRelations({
                 <li key={city.id}>
                   <Link
                     className="font-semibold text-secondary hover:underline"
-                    href={`/sehir/${city.attributes.slug}`}
-                    title={city.attributes.title}
+                    href={`/sehir/${city.slug}`}
+                    title={city.title}
                   >
-                    {city.attributes.title}
+                    {city.title}
                   </Link>
                 </li>
               ))}
@@ -85,10 +81,10 @@ export default function ArticleRelations({
               <li key={tag.id}>
                 <Link
                   className="block border border-lightgray hover:border-secondary hover:text-white hover:bg-secondary rounded px-2 py-1"
-                  href={`/etiket/${tag.attributes.slug}`}
-                  title={tag.attributes.title}
+                  href={`/etiket/${tag.slug}`}
+                  title={tag.title}
                 >
-                  {tag.attributes.title}
+                  {tag.title}
                 </Link>
               </li>
             ))}

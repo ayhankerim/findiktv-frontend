@@ -15,13 +15,10 @@ import { fetchAPI } from "@/utils/fetch-api";
 import { CommentsProp } from "@/utils/model";
 import Loader from "@/components/Loader";
 
-const CommentForm = dynamic(
-  () => import("@/components/Comments/CommentForm"),
-  {
-    loading: () => <Loader cssClass="h-[250px] w-full" />,
-    ssr: false,
-  }
-);
+const CommentForm = dynamic(() => import("@/components/Comments/CommentForm"), {
+  loading: () => <Loader cssClass="h-[250px] w-full" />,
+  ssr: false,
+});
 
 let commentReactions = [
   {
@@ -65,12 +62,12 @@ const reactionComment = async (
       },
       body: JSON.stringify({
         data: {
-          [type]: old.data.attributes[type] + (checked ? -1 : 1),
+          [type]: old.data[type] + (checked ? -1 : 1),
         },
       }),
     }
   );
-  return result.data.attributes[type];
+  return result.data[type];
 };
 
 const CommentReaction = ({ item, comment }: { item: any; comment: any }) => {
@@ -83,7 +80,7 @@ const CommentReaction = ({ item, comment }: { item: any; comment: any }) => {
     setChecked((checked) => !checked);
   };
   useEffect(() => {
-    setCount(comment.attributes[item.id]);
+    setCount(comment[item.id]);
   }, [setCount]);
 
   return (
@@ -123,8 +120,8 @@ const CommentItemFooter = ({
   return (
     <>
       <section className="flex items-center justify-between gap-2 text-midgray mb-2">
-        {comment.attributes.approvalStatus != "ignored" &&
-          comment.attributes.blockedThread != true && (
+        {comment.approvalStatus != "ignored" &&
+          comment.blockedThread != true && (
             <button
               type="button"
               className="flex items-center gap-1 hover:underline"
@@ -141,7 +138,7 @@ const CommentItemFooter = ({
               )}
             </button>
           )}
-        {comment.attributes.approvalStatus != "ignored" && (
+        {comment.approvalStatus != "ignored" && (
           <div className="flex gap-2">
             {commentReactions.map((item, i) => (
               <CommentReaction key={i} item={item} comment={comment} />

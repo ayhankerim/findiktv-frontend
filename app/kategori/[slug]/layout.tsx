@@ -43,11 +43,11 @@ export default async function layout({
   // TODO: CREATE A CUSTOM ERROR PAGE
   if (!global.data) return null;
 
-  const { notificationBanner, navbar, footer } = global.data.attributes;
+  const { notificationBanner, navbar, footer } = global.data;
 
-  const navbarLogoUrl = getStrapiMedia(navbar.logo.data.attributes.url);
+  const navbarLogoUrl = getStrapiMedia(navbar.logo.data.url);
 
-  const footerLogoUrl = getStrapiMedia(footer.logo.data.attributes.url);
+  const footerLogoUrl = getStrapiMedia(footer.logo.data.url);
 
   return (
     <div className="flex flex-col flex-grow justify-between min-h-screen">

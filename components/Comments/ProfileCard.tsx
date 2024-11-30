@@ -19,7 +19,7 @@ interface ProfileCardProp {
   children: React.ReactNode;
 }
 const ProfileCard = async ({ comment, children }: ProfileCardProp) => {
-  const { id, attributes: user } = comment.attributes.user.data;
+  const { data: user } = comment.user;
   return (
     <div className="font-bold">
       {user.confirmed === true ? (
@@ -60,12 +60,12 @@ const ProfileCard = async ({ comment, children }: ProfileCardProp) => {
                           {user.city.data && (
                             <>
                               <span className="not-italic">
-                                {user.city.data.attributes.title}
+                                {user.city.data.title}
                               </span>
                               <BsDot />
                             </>
                           )}
-                          <span>{user.role?.data.attributes.name}</span>
+                          <span>{user.role?.data.name}</span>
                         </p>
                         <p className="mb-4 text-sm font-light">{user.about}</p>
                         <div className="flex items-center mb-4 text-sm font-light">
@@ -75,7 +75,7 @@ const ProfileCard = async ({ comment, children }: ProfileCardProp) => {
                           <div>
                             toplam{" "}
                             <strong className="font-semibold">
-                              {open && <UserInteractions user={id} />}
+                              {open && <UserInteractions user={user.id} />}
                             </strong>{" "}
                             yorum ve etkileşim
                           </div>

@@ -10,20 +10,16 @@ interface Session {
 }
 interface ReactionTypes {
   id: string;
-  attributes: {
-    title: string;
-    slug: string;
-    sort: number;
-    image: any;
-  };
+  title: string;
+  slug: string;
+  sort: number;
+  image: any;
 }
 interface Reactions {
   id: string;
-  attributes: {
-    Value: number;
-    ReactionType: {
-      data: ReactionTypes;
-    };
+  Value: number;
+  ReactionType: {
+    data: ReactionTypes;
   };
 }
 interface ArticleReactionProps {
@@ -55,7 +51,7 @@ async function getPostReactions(id: number) {
   };
   const options = { headers: { Authorization: `Bearer ${token}` } };
   const response = await fetchAPI(path, urlParamsObject, options);
-  return response.data[0].attributes.reactions;
+  return response.data[0].reactions;
 }
 const ReactionButton = ({
   emoji,
@@ -77,16 +73,16 @@ const ReactionButton = ({
           : "border-midgray bg-lightgray"
       } border border-b-2 hover:bg-white rounded`}
       onClick={() => {
-        onCheck(emoji.id, emoji.attributes.slug);
+        onCheck(emoji.id, emoji.slug);
       }}
     >
-      <Tooltip orientation="bottom" tooltipText={emoji.attributes.title}>
+      <Tooltip orientation="bottom" tooltipText={emoji.title}>
         <Image
           width="44"
           height="44"
           className="w-full"
-          src={emoji.attributes.image.data.attributes.url}
-          alt={`${emoji.attributes.title} ifade eden emoji`}
+          src={emoji.image.data.url}
+          alt={`${emoji.title} ifade eden emoji`}
           style={{
             objectFit: "cover",
           }}
@@ -132,7 +128,7 @@ const ArticleReaction: React.FC<ArticleReactionProps> = ({
   };
   let total = 0;
   reactions?.data?.forEach((reaction: Reactions) => {
-    total += reaction.attributes.Value;
+    total += reaction.Value;
   });
 
   return (
@@ -142,11 +138,10 @@ const ArticleReaction: React.FC<ArticleReactionProps> = ({
         reactions?.data
           ?.filter(
             (reaction: Reactions) =>
-              reaction.attributes.ReactionType.data.attributes.slug ===
-              emoji.attributes.slug
+              reaction.ReactionType.data.slug === emoji.slug
           )
           .forEach((reaction: Reactions) => {
-            sum += reaction.attributes.Value;
+            sum += reaction.Value;
           });
 
         return (

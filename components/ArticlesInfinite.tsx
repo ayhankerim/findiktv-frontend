@@ -33,6 +33,9 @@ export default function ArticlesInfinite({
           id: {
             $notIn: offset,
           },
+          category: {
+            $notNull: true,
+          },
           cities: {
             slug: {
               $eq: slug,
@@ -58,7 +61,6 @@ export default function ArticlesInfinite({
       } else {
         setData((prevData: any[]) => [...prevData, ...responseData.data]);
       }
-
       setMeta(responseData.meta);
     } catch (error) {
       console.error(error);
@@ -75,8 +77,8 @@ export default function ArticlesInfinite({
   useEffect(() => {
     fetchData(0, 3);
   }, [fetchData]);
-  if (data.length === 0 && isLoading) return <Loader />;
-  if (data.length === 0) return "";
+  if (!data || (data.length === 0 && isLoading)) return <Loader />;
+  if (!data || data.length === 0) return "";
   return (
     <div>
       <Blog data={data} position="bottom">

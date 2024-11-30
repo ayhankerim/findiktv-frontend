@@ -17,9 +17,8 @@ const SLIDER_SIZE = 5;
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const page = await fetchPostsByTag(params.slug, []);
 
-  if (!page?.data[0]?.attributes?.tags.data[0]?.attributes.metadata)
-    return FALLBACK_SEO;
-  const metadata = page.data[0].attributes.tags.data[0]?.attributes.metadata;
+  if (!page?.data[0]?.metadata) return FALLBACK_SEO;
+  const metadata = page.data[0]?.metadata;
 
   return {
     title: metadata.metaTitle + " Haberleri | " + FALLBACK_SEO.siteName,
@@ -41,10 +40,14 @@ async function fetchSliderByTag(filter: string) {
         featured: {
           $eq: true,
         },
+        category: {
+          $notNull: true,
+        },
       },
       fields: ["title", "slug", "publishedAt"],
       populate: {
         homepage_image: { fields: ["url"] },
+        image: { fields: ["url"] },
         category: { fields: ["slug"] },
       },
       pagination: {
@@ -75,21 +78,11 @@ async function fetchPostsByTag(filter: string, sliderPosts: any) {
             $eq: filter,
           },
         },
-      },
-      populate: {
-        image: { fields: ["url"] },
-        tags: {
-          filters: {
-            slug: {
-              $eq: filter,
-            },
-          },
-          populate: ["title", "slug"],
-        },
         category: {
-          populate: ["title", "slug"],
+          $notNull: true,
         },
       },
+      populate: ["tags", "image", "homepage_image", "category"],
       pagination: {
         page: 1,
         pageSize: process.env.NEXT_PUBLIC_PAGE_LIMIT,
@@ -115,9 +108,9 @@ export default async function TagRoute({
       filter,
       sliderPosts.length > 1 ? sliderPosts : []
     )) || [];
-  if (data.length === 0) return notFound();
+  if (!data || data.length === 0) return notFound();
   const used = sliderPosts.concat(data).map((item: any) => item.id);
-  const { title } = data[0]?.attributes.tags.data[0].attributes;
+  const { title } = data[0];
   return (
     <main>
       <PageHeader
@@ -150,11 +143,5 @@ export async function generateStaticParams() {
     options
   );
 
-  return tagsResponse.data.map(
-    (tag: {
-      attributes: {
-        slug: string;
-      };
-    }) => ({ slug: tag.attributes.slug })
-  );
+  return tagsResponse.data.map((tag: { slug: string }) => ({ slug: tag.slug }));
 }

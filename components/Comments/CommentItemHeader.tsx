@@ -49,7 +49,7 @@ const flagComment = (comment: number, flag: number) => {
             },
             body: JSON.stringify({
               data: {
-                flag: data.data.attributes.flag + 1,
+                flag: data.data.flag + 1,
               },
             }),
           }
@@ -97,8 +97,8 @@ const CommentItemHeader: React.FC<
 > = (comment: CommentsProp & { slug: string; position: string }) => {
   const { data } = useSession();
   const session = data as Session | null;
-  const { reply_to, user: userData } = comment.attributes;
-  const { attributes: user } = userData.data;
+  const { reply_to, user } = comment;
+  //const { user } = userData.data;
   return (
     <header className="flex flex-col">
       <Toaster position="top-right" reverseOrder={false} />
@@ -108,7 +108,8 @@ const CommentItemHeader: React.FC<
             {user ? (
               <ProfileCard comment={comment}>
                 <cite className="not-italic">
-                  {user.name && user.name} {user.surname && user.surname}
+                  {user.data.name && user.data.name}{" "}
+                  {user.data.surname && user.data.surname}
                 </cite>
               </ProfileCard>
             ) : (
@@ -119,24 +120,24 @@ const CommentItemHeader: React.FC<
         <div className="flex">
           <div
             className="text-midgray"
-            title={Moment(comment.attributes.createdAt).format("LLLL")}
+            title={Moment(comment.createdAt).format("LLLL")}
           >
             <Tooltip
               orientation="left"
-              tooltipText={Moment(comment.attributes.createdAt).format("LLL")}
+              tooltipText={Moment(comment.createdAt).format("LLL")}
             >
               <time
                 className="flex items-center"
-                dateTime={Moment(comment.attributes.createdAt).format("LLLL")}
+                dateTime={Moment(comment.createdAt).format("LLLL")}
               >
                 {comment.position === "sidebar" ? (
                   <>
                     <MdOutlineDateRange className="mr-2 inline-block" />
-                    {Moment(comment.attributes.createdAt).format("ll")}
+                    {Moment(comment.createdAt).format("ll")}
                   </>
                 ) : (
                   <>
-                    {Moment(comment.attributes.createdAt).fromNow(true)}
+                    {Moment(comment.createdAt).fromNow(true)}
                     <span className="ml-1">önce</span>
                     <MdCalendarMonth className="ml-2 inline-block" />
                   </>
@@ -144,7 +145,7 @@ const CommentItemHeader: React.FC<
               </time>
             </Tooltip>
           </div>
-          {comment.attributes.approvalStatus != "ignored" && (
+          {comment.approvalStatus != "ignored" && (
             <nav className="flex items-center">
               <Menu as="div" className="relative ml-3">
                 {({ open }) => (
@@ -171,20 +172,19 @@ const CommentItemHeader: React.FC<
                       leaveTo="transform opacity-0 scale-95"
                     >
                       <Menu.Items className="absolute right-0 z-10 mt-2 w-52 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                        {session &&
-                          session.id === comment.attributes.user.data?.id && (
-                            <Menu.Item>
-                              <button
-                                onClick={() => {
-                                  deleteComment(comment.id);
-                                }}
-                                className="block w-full text-left hover:bg-lightgray px-4 py-2 text-sm text-danger"
-                              >
-                                <AiOutlineDelete className="inline-block align-text-bottom mr-2" />{" "}
-                                Kaldır
-                              </button>
-                            </Menu.Item>
-                          )}
+                        {session && session.id === comment.user.data?.id && (
+                          <Menu.Item>
+                            <button
+                              onClick={() => {
+                                deleteComment(comment.id);
+                              }}
+                              className="block w-full text-left hover:bg-lightgray px-4 py-2 text-sm text-danger"
+                            >
+                              <AiOutlineDelete className="inline-block align-text-bottom mr-2" />{" "}
+                              Kaldır
+                            </button>
+                          </Menu.Item>
+                        )}
                         <Menu.Item>
                           <Link
                             href={`https://api.whatsapp.com/send?text=Şu%20yoruma%20bir%20bak%20${comment.slug}?comment=${comment.id}&url=${comment.slug}?comment=${comment.id}`}
@@ -211,7 +211,7 @@ const CommentItemHeader: React.FC<
                         <Menu.Item>
                           <button
                             onClick={() => {
-                              flagComment(comment.id, comment.attributes.flag);
+                              flagComment(comment.id, comment.flag);
                             }}
                             className="block w-full text-left hover:bg-lightgray px-4 py-2 text-sm text-warning"
                           >
@@ -230,8 +230,8 @@ const CommentItemHeader: React.FC<
       {reply_to && (
         <div className="text-midgray">
           <span className="font-medium">
-            {reply_to.data.attributes.user.data.attributes.name + " " || ""}
-            {reply_to.data.attributes.user.data.attributes.surname || ""}
+            {reply_to.data.user.data.name + " " || ""}
+            {reply_to.data.user.data.surname || ""}
           </span>{" "}
           tarafından yapılan yoruma cevap olarak:
         </div>

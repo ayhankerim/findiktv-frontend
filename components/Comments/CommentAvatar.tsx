@@ -3,11 +3,10 @@ import { MdPerson } from "react-icons/md";
 import { CommentsProp } from "@/utils/model";
 
 const CommentAvatar: React.FC<CommentsProp> = (comment: CommentsProp) => {
-  const { user } = comment.attributes;
+  const { user } = comment;
   return (
     <div className="flex-none w-[55px] h-[55px] relative">
-      {user.data?.attributes.avatar.data ||
-      user.data?.attributes.SystemAvatar.data ? (
+      {user.data?.avatar.data || user.data?.SystemAvatar.data ? (
         <Image
           className="rounded"
           fill
@@ -16,12 +15,10 @@ const CommentAvatar: React.FC<CommentsProp> = (comment: CommentsProp) => {
             objectFit: "cover",
           }}
           src={
-            user.data.attributes.avatar.data?.attributes.formats.thumbnail
-              .url ||
-            user.data.attributes.SystemAvatar.data?.attributes.image.data
-              .attributes.url
+            user.data.avatar.data?.formats.thumbnail.url ||
+            user.data.SystemAvatar.data?.image.data.url
           }
-          alt={user.data.attributes.username}
+          alt={user.data.username}
         />
       ) : (
         <MdPerson style={{ width: 55, height: 55 }} />

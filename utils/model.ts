@@ -13,7 +13,11 @@ export interface Attribute {
 
 export interface Data {
   id: number;
-  attributes: Attribute;
+  url: string;
+  alternativeText?: any;
+  caption?: any;
+  width: number;
+  height: number;
 }
 
 export interface Picture {
@@ -51,7 +55,11 @@ export interface Attribute {
 
 export interface Data {
   id: number;
-  attributes: Attribute;
+  url: string;
+  alternativeText?: any;
+  caption?: any;
+  width: number;
+  height: number;
 }
 
 export interface Pagination {
@@ -85,127 +93,103 @@ export interface Session {
 
 export interface Article {
   id: number;
-  attributes: {
-    title: string;
-    summary: string;
-    slug: string;
-    content: string;
-    image: {
-      data: {
-        attributes: {
-          url: string;
-          alternativeText: string;
-        };
-      };
-    };
-    category: {
-      data: {
-        attributes: {
-          title: string;
-          slug: string;
-        };
-      };
-    };
-    cities: { data: Cities[] };
-    tags: { data: Tags[] };
-    view: {
-      data: {
-        id: number;
-      };
-    };
-    comments: { data: CommentsProp[] };
-    reactions: { data: Reactions[] };
-    contentSections: any[];
-    publishedAt: Date;
-    updatedAt: Date;
+  title: string;
+  summary: string;
+  slug: string;
+  content: string;
+  image: {
+    url: string;
+    alternativeText: string;
   };
+  homepage_image: {
+    url: string;
+    alternativeText: string;
+  };
+  category: {
+    title: string;
+    slug: string;
+  };
+  cities: { data: Cities[] };
+  tags: { data: Tags[] };
+  view: {
+    id: number;
+  };
+  comments: { data: CommentsProp[] };
+  reactions: { data: Reactions[] };
+  contentSections: any[];
+  publishedAt: Date;
+  updatedAt: Date;
 }
 export interface CommentUser {
   id: number;
-  attributes: {
-    about: string;
-    name: string;
-    surname: string;
-    username: string;
-    blocked: boolean;
-    confirmed: Boolean;
-    avatar: any;
-    SystemAvatar: any;
-    role: {
-      data: {
-        attributes: {
-          name: string;
-        };
-      };
+  about: string;
+  name: string;
+  surname: string;
+  username: string;
+  blocked: boolean;
+  confirmed: Boolean;
+  avatar: any;
+  SystemAvatar: any;
+  role: {
+    data: {
+      name: string;
     };
-    city: {
-      data: City;
-    };
+  };
+  city: {
+    data: City;
   };
 }
 
 interface ReactionType {
-  id: string;
-  attributes: {
-    title: string;
-    slug: string;
-    sort: number;
-    image: any;
-  };
+  id: number;
+  title: string;
+  slug: string;
+  sort: number;
+  image: any;
 }
 interface Reactions {
-  id: string;
-  attributes: {
-    Value: number;
-    ReactionType: {
-      data: ReactionType;
-    };
+  id: number;
+  Value: number;
+  ReactionType: {
+    data: ReactionType;
   };
 }
 interface Tags {
-  id: string;
-  attributes: {
-    title: string;
-    slug: string;
-  };
+  id: number;
+  title: string;
+  slug: string;
 }
 interface Cities {
-  id: string;
-  attributes: {
-    title: string;
-    slug: string;
-  };
+  id: number;
+  title: string;
+  slug: string;
 }
 export interface City {
-  attributes: {
-    title: string;
-  };
+  title: string;
 }
 export interface CommentsProp {
   id: number;
-  attributes: {
-    blockedThread: boolean;
-    content: string;
-    createdAt: Date;
-    dislike: number;
-    like: number;
-    flag: number;
-    approvalStatus: string;
-    reply_froms: {
-      data: CommentsProp[];
-    };
-    thread_of: {
-      data: CommentsProp;
-    };
-    thread_ons: {
-      data: CommentsProp[];
-    };
-    reply_to: {
-      data: CommentsProp;
-    };
-    user: {
-      data: CommentUser;
-    };
+  blockedThread: boolean;
+  content: string;
+  createdAt: Date;
+  dislike: number;
+  like: number;
+  flag: number;
+  approvalStatus: string;
+  reply_froms: {
+    data: CommentsProp[];
+  };
+  thread_of: {
+    data: CommentsProp;
+  };
+  thread_ons: {
+    data: CommentsProp[];
+  };
+  reply_to: {
+    data: CommentsProp;
+  };
+  user: {
+    data: CommentUser;
   };
 }
 

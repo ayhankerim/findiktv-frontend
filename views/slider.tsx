@@ -9,28 +9,18 @@ import "slick-carousel/slick/slick.css";
 
 interface Article {
   id: number;
-  attributes: {
-    title: string;
-    description: string;
+  title: string;
+  description: string;
+  slug: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+  homepage_image: {
+    url: string;
+  };
+  category: {
+    name: string;
     slug: string;
-    createdAt: string;
-    updatedAt: string;
-    publishedAt: string;
-    homepage_image: {
-      data: {
-        attributes: {
-          url: string;
-        };
-      };
-    };
-    category: {
-      data: {
-        attributes: {
-          name: string;
-          slug: string;
-        };
-      };
-    };
   };
 }
 function SampleNextArrow(props: CustomArrowProps): React.JSX.Element {
@@ -111,15 +101,13 @@ export default function ArticleSlider({ data: articles }: { data: Article[] }) {
       <div className="Slider md:-mx-8">
         <SliderComponent {...settings}>
           {articles.map((article, i) => {
-            const imageUrl = getStrapiMedia(
-              article.attributes.homepage_image.data?.attributes.url
-            );
+            const imageUrl = getStrapiMedia(article.homepage_image?.url);
             return (
               <article key={article.id}>
-                <Link href={`/haber/${article.id}/${article.attributes.slug}`}>
+                <Link href={`/haber/${article.id}/${article.slug}`}>
                   {imageUrl && (
                     <Image
-                      alt={article.attributes.title}
+                      alt={article.title}
                       className="px-2"
                       width="600"
                       height="350"

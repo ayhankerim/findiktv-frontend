@@ -15,18 +15,18 @@ async function getGlobal(lang: string): Promise<any> {
 
   const urlParamsObject = {
     populate: [
+      "metadata",
       "metadata.shareImage",
       "favicon",
-      "notificationBanner.link",
+      "notificationBanner",
+      "navbar",
       "navbar.links",
       "navbar.button",
       "navbar.logo",
+      "footer",
       "footer.logo",
-      "footer.button",
       "footer.columns",
       "footer.columns.links",
-      "footer.smallText",
-      "footer.copyright",
     ],
     locale: lang,
   };
@@ -43,29 +43,29 @@ export default async function layout({
   // TODO: CREATE A CUSTOM ERROR PAGE
   if (!global.data) return null;
 
-  const { notificationBanner, navbar, footer } = global.data.attributes;
+  const { notificationBanner, navbar, footer } = global.data;
 
-  const navbarLogoUrl = getStrapiMedia(navbar.logo.data.attributes.url);
+  const navbarLogoUrl = getStrapiMedia(navbar.logo.url);
 
-  const footerLogoUrl = getStrapiMedia(footer.logo.data.attributes.url);
+  const footerLogoUrl = getStrapiMedia(footer.logo.url);
 
   return (
     <div className="flex flex-col flex-grow justify-between min-h-screen">
       <div className="flex flex-col">
-        <Navbar
+        {/* <Navbar
           links={navbar.links}
           logoUrl={navbarLogoUrl}
           button={navbar.button}
-        />
+        /> */}
         <>{children}</>
         <Banner data={notificationBanner} />
       </div>
-      <Footer
+      {/* <Footer
         logoUrl={footerLogoUrl}
         columns={footer.columns || []}
         smallText={footer.smallText || ""}
         copyright={footer.copyright || ""}
-      />
+      /> */}
     </div>
   );
 }

@@ -15,11 +15,9 @@ interface Button {
 interface Picture {
   data: {
     id: string;
-    attributes: {
-      url: string;
-      name: string;
-      alternativeText: string;
-    };
+    url: string;
+    name: string;
+    alternativeText: string;
   };
 }
 
@@ -34,7 +32,7 @@ interface HeroProps {
 }
 
 export default function Hero({ data }: HeroProps) {
-  const imgUrl = getStrapiMedia(data.picture.data.attributes.url);
+  const imgUrl = getStrapiMedia(data.picture.data.url);
 
   return (
     <section className="dark:bg-black dark:text-gray-100">
@@ -69,9 +67,7 @@ export default function Hero({ data }: HeroProps) {
         <div className="flex items-center justify-center p-6 mt-8 lg:mt-0 h-72 sm:h-80 lg:h-96 xl:h-112 2xl:h-128">
           <Image
             src={imgUrl || ""}
-            alt={
-              data.picture.data.attributes.alternativeText || "none provided"
-            }
+            alt={data.picture.data.alternativeText || "none provided"}
             className="object-contain h-72 sm:h-80 lg:h-96 xl:h-112 2xl:h-128 "
             width={600}
             height={600}
