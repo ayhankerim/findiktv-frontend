@@ -18,6 +18,7 @@ export async function fetchAPI(path, urlParamsObject = {}, options = {}) {
   const mergedOptions = {
     headers: {
       "Content-Type": "application/json",
+      "Strapi-Response-Format": "v4",
       Authorization: `Bearer ${process.env.NEXT_PUBLIC_SECRET_TOKEN}`,
     },
     ...options,
@@ -57,22 +58,19 @@ export async function getPageData({ slug, locale, preview }) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "Strapi-Response-Format": "v4",
       Authorization: `Bearer ${process.env.NEXT_PUBLIC_SECRET_TOKEN}`,
     },
     body: JSON.stringify({
       query: `
-        fragment FileParts on UploadFileEntityResponse {
-          data {
-            id
-            attributes {
-              alternativeText
-              width
-              height
-              mime
-              url
-              formats
-            }
-          }
+       fragment FileParts on UploadFile {
+          documentId
+          alternativeText
+          width
+          height
+          mime
+          url
+          formats
         }
         query GetPages(
           $slug: String!
@@ -284,24 +282,20 @@ export async function getArticleData({ slug, locale, id, preview }) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "Strapi-Response-Format": "v4",
       Authorization: `Bearer ${process.env.NEXT_PUBLIC_SECRET_TOKEN}`,
     },
     body: JSON.stringify({
       query: `
-        fragment FileParts on UploadFileEntityResponse {
-          data {
-            id
-            attributes {
-              alternativeText
-              width
-              height
-              mime
-              url
-              formats
-            }
-          }
+       fragment FileParts on UploadFile {
+          documentId
+          alternativeText
+          width
+          height
+          mime
+          url
+          formats
         }
-
         query GetArticles (
           $slug: String!
           $id: ID!
@@ -441,24 +435,20 @@ export async function getCategoryData({ slug, locale, preview }) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "Strapi-Response-Format": "v4",
       Authorization: `Bearer ${process.env.NEXT_PUBLIC_SECRET_TOKEN}`,
     },
     body: JSON.stringify({
       query: `
-        fragment FileParts on UploadFileEntityResponse {
-          data {
-            id
-            attributes {
-              alternativeText
-              width
-              height
-              mime
-              url
-              formats
-            }
-          }
+       fragment FileParts on UploadFile {
+          documentId
+          alternativeText
+          width
+          height
+          mime
+          url
+          formats
         }
-
         query GetCategories($slug: String!, $locale: I18NLocaleCode!) {
           categories(
             filters: {
@@ -523,22 +513,20 @@ export async function getCategoryArticlesData({ category, locale, preview }) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "Strapi-Response-Format": "v4",
       Authorization: `Bearer ${process.env.NEXT_PUBLIC_SECRET_TOKEN}`,
     },
     body: JSON.stringify({
       query: `
-        fragment FileParts on UploadFileEntityResponse {
-          data {
-            id
-            attributes {
-              alternativeText
-              width
-              height
-              formats
-            }
-          }
+       fragment FileParts on UploadFile {
+          documentId
+          alternativeText
+          width
+          height
+          mime
+          url
+          formats
         }
-
         query GetArticles(
           $category: String!
           $locale: I18NLocaleCode!
@@ -602,24 +590,20 @@ export async function getCityData({ slug, locale, preview }) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "Strapi-Response-Format": "v4",
       Authorization: `Bearer ${process.env.NEXT_PUBLIC_SECRET_TOKEN}`,
     },
     body: JSON.stringify({
       query: `
-        fragment FileParts on UploadFileEntityResponse {
-          data {
-            id
-            attributes {
-              alternativeText
-              width
-              height
-              mime
-              url
-              formats
-            }
-          }
+       fragment FileParts on UploadFile {
+          documentId
+          alternativeText
+          width
+          height
+          mime
+          url
+          formats
         }
-
         query getCities($slug: String!, $locale: I18NLocaleCode!) {
           cities(
             filters: {
@@ -683,6 +667,7 @@ export async function getTagData({ slug, locale, preview }) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "Strapi-Response-Format": "v4",
       Authorization: `Bearer ${process.env.NEXT_PUBLIC_SECRET_TOKEN}`,
     },
     body: JSON.stringify({
@@ -738,6 +723,7 @@ export async function getAdsData(active) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "Strapi-Response-Format": "v4",
       Authorization: `Bearer ${process.env.NEXT_PUBLIC_SECRET_TOKEN}`,
     },
     body: JSON.stringify({
@@ -749,17 +735,12 @@ export async function getAdsData(active) {
             filters: { active: { eq: $active } }
             pagination: {limit: 100}
             ) {
-            data {
-              id
-              attributes {
-                active
-                placeholder
-                adsense
-                adslot
-                adsenseFormat
-                code
-              }
-            }
+            active
+            placeholder
+            adsense
+            adslot
+            adsenseFormat
+            code
           }
         }   
       `,
@@ -779,22 +760,19 @@ export async function getCommentsData(article) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "Strapi-Response-Format": "v4",
       Authorization: `Bearer ${process.env.NEXT_PUBLIC_SECRET_TOKEN}`,
     },
     body: JSON.stringify({
       query: `
-        fragment FileParts on UploadFileEntityResponse {
-          data {
-            id
-            attributes {
-              alternativeText
-              width
-              height
-              mime
-              url
-              formats
-            }
-          }
+       fragment FileParts on UploadFile {
+          documentId
+          alternativeText
+          width
+          height
+          mime
+          url
+          formats
         }
         query CommentLimited($article: ID!) {
           comments(
@@ -903,6 +881,7 @@ export async function createReaction(active) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "Strapi-Response-Format": "v4",
       Authorization: `Bearer ${process.env.NEXT_PUBLIC_SECRET_TOKEN}`,
     },
     body: JSON.stringify({
@@ -971,24 +950,20 @@ export async function getProductData({ product, locale }) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "Strapi-Response-Format": "v4",
       Authorization: `Bearer ${process.env.NEXT_PUBLIC_SECRET_TOKEN}`,
     },
     body: JSON.stringify({
       query: `
-        fragment FileParts on UploadFileEntityResponse {
-          data {
-            id
-            attributes {
-              alternativeText
-              width
-              height
-              mime
-              url
-              formats
-            }
-          }
+       fragment FileParts on UploadFile {
+          documentId
+          alternativeText
+          width
+          height
+          mime
+          url
+          formats
         }
-
         query GetProducts(
           $product: String!
           $locale: I18NLocaleCode!
@@ -1058,24 +1033,20 @@ export async function getProductCityData({ city, product, locale }) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "Strapi-Response-Format": "v4",
       Authorization: `Bearer ${process.env.NEXT_PUBLIC_SECRET_TOKEN}`,
     },
     body: JSON.stringify({
       query: `
-        fragment FileParts on UploadFileEntityResponse {
-          data {
-            id
-            attributes {
-              alternativeText
-              width
-              height
-              mime
-              url
-              formats
-            }
-          }
+       fragment FileParts on UploadFile {
+          documentId
+          alternativeText
+          width
+          height
+          mime
+          url
+          formats
         }
-
         query getCities($city: String!, $product: String!, $locale: I18NLocaleCode!) {
           cities(
             filters: {
@@ -1158,6 +1129,7 @@ export async function getProductAllCitiesData({ product, locale }) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "Strapi-Response-Format": "v4",
       Authorization: `Bearer ${process.env.NEXT_PUBLIC_SECRET_TOKEN}`,
     },
     body: JSON.stringify({
@@ -1204,6 +1176,7 @@ export async function getAllPricesData({ product, type, limit }) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "Strapi-Response-Format": "v4",
       Authorization: `Bearer ${process.env.NEXT_PUBLIC_SECRET_TOKEN}`,
     },
     body: JSON.stringify({
@@ -1265,24 +1238,20 @@ export async function getUserData({ username }) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "Strapi-Response-Format": "v4",
       Authorization: `Bearer ${process.env.NEXT_PUBLIC_SECRET_TOKEN}`,
     },
     body: JSON.stringify({
       query: `
-        fragment FileParts on UploadFileEntityResponse {
-          data {
-            id
-            attributes {
-              alternativeText
-              width
-              height
-              mime
-              url
-              formats
-            }
-          }
+       fragment FileParts on UploadFile {
+          documentId
+          alternativeText
+          width
+          height
+          mime
+          url
+          formats
         }
-
         query getUsers($username: String!) {
           usersPermissionsUsers(filters: { username: { eq: $username }, confirmed: {eq: true} }) {
             data {
@@ -1449,6 +1418,7 @@ export async function getEditors({ user }) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "Strapi-Response-Format": "v4",
       Authorization: `Bearer ${process.env.NEXT_PUBLIC_SECRET_TOKEN}`,
     },
     body: JSON.stringify({
@@ -1498,6 +1468,7 @@ export async function userFirmCheck(user) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "Strapi-Response-Format": "v4",
       Authorization: `Bearer ${process.env.NEXT_PUBLIC_SECRET_TOKEN}`,
     },
     body: JSON.stringify({
@@ -1540,24 +1511,17 @@ export async function getGlobalData(locale) {
     },
     body: JSON.stringify({
       query: `
-        fragment FileParts on UploadFileEntityResponse {
-          data {
-            id
-            attributes {
-              alternativeText
-              width
-              height
-              mime
-              url
-              formats
-            }
-          }
+       fragment FileParts on UploadFile {
+          documentId
+          alternativeText
+          width
+          height
+          mime
+          url
+          formats
         }
         query GetGlobal($locale: I18NLocaleCode!) {
           global(locale: $locale) {
-            data {
-              id
-              attributes {
                 favicon {
                   ...FileParts
                 }
@@ -1611,10 +1575,8 @@ export async function getGlobalData(locale) {
                     }
                   }
                 }
-              }
-            }
           }
-        }      
+        }     
       `,
       variables: {
         locale,

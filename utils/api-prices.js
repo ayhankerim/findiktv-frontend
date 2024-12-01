@@ -37,6 +37,7 @@ export async function getLastPriceDate({
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "Strapi-Response-Format": "v4",
       Authorization: `Bearer ${process.env.NEXT_PUBLIC_SECRET_TOKEN}`,
     },
     body: JSON.stringify({
@@ -109,6 +110,7 @@ export async function getPreviousPriceDate({
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "Strapi-Response-Format": "v4",
       Authorization: `Bearer ${process.env.NEXT_PUBLIC_SECRET_TOKEN}`,
     },
     body: JSON.stringify({
@@ -184,6 +186,7 @@ export async function getPriceValues({
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "Strapi-Response-Format": "v4",
       Authorization: `Bearer ${process.env.NEXT_PUBLIC_SECRET_TOKEN}`,
     },
     body: JSON.stringify({
