@@ -6,7 +6,7 @@ import React, { useState } from "react";
 export const BlurImage = (props: React.ComponentProps<typeof Image>) => {
   const [isLoading, setLoading] = useState(true);
 
-  const { src, width, height, alt, layout, ...rest } = props;
+  const { src, width, height, alt, priority, layout, ...rest } = props;
   return (
     <Image
       className={cn(
@@ -18,11 +18,12 @@ export const BlurImage = (props: React.ComponentProps<typeof Image>) => {
       src={src}
       width={width}
       height={height}
-      loading="lazy"
+      loading={priority ? undefined : "lazy"}
       decoding="async"
       blurDataURL={src as string}
       layout={layout}
       alt={alt ? alt : "Avatar"}
+      priority={priority ? priority : false}
       {...rest}
     />
   );

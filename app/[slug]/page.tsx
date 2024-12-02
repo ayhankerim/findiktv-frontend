@@ -1,9 +1,9 @@
-import { Metadata } from 'next';
-import qs from 'qs';
-
-import PageContent from '@/lib/shared/PageContent';
-import fetchContentType from '@/lib/strapi/fetchContentType';
-import { generateMetadataObject } from '@/lib/shared/metadata';
+import { Metadata } from "next";
+import qs from "qs";
+import { notFound } from 'next/navigation'
+import PageContent from "@/lib/shared/PageContent";
+import fetchContentType from "@/lib/strapi/fetchContentType";
+import { generateMetadataObject } from "@/lib/shared/metadata";
 
 export async function generateMetadata({
   params,
@@ -17,17 +17,13 @@ export async function generateMetadata({
           $eq: params.slug,
         },
       },
-      populate: ["metadata"]
+      populate: ["metadata"],
     },
     {
       encodeValuesOnly: true,
     }
   );
-  const pageData = await fetchContentType(
-    'pages',
-    query,
-    true
-  );
+  const pageData = await fetchContentType("pages", query, true);
 
   const seo = pageData?.metadata;
   const metadata = generateMetadataObject(seo);
@@ -42,19 +38,15 @@ export default async function Page({ params }: { params: { slug: string } }) {
           $eq: params.slug,
         },
       },
-      populate: ["contentSections"]
+      populate: ["contentSections"],
     },
     {
       encodeValuesOnly: true,
     }
   );
-  const pageData = await fetchContentType(
-    'pages',
-    query,
-    true
-  );
-
-  return (
-    <PageContent pageData={pageData} />
-  );
+  const pageData = await fetchContentType("pages", query, true);
+  if(!pageData) {
+    notFound()
+  }
+  return <PageContent pageData={pageData} />;
 }

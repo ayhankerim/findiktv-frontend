@@ -54,3 +54,34 @@ export default async function fetchContentType(
     console.error('FetchContentTypeError', error);
   }
 }
+
+export async function fetchAPI(
+  contentType: string,
+  params: string,
+  options: any
+): Promise<any> {
+  try {
+    // Construct the full URL for the API request
+    const url = new URL(`api/${contentType}`, process.env.NEXT_PUBLIC_API_URL);
+
+    // Perform the fetch request with the provided query parameters
+    const response = await fetch(`${url.href}?${params}`, {
+      method: 'GET',
+      cache: 'no-store',
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.NEXT_PUBLIC_SECRET_TOKEN}`,
+      },
+      ...options,
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch data from Strapi (url=${url.toString()}, status=${response.status})`);
+    }
+    const jsonData: StrapiResponse = await response.json();
+    return jsonData;
+  } catch (error) {
+    // Log any errors that occur during the fetch process
+    console.error('FetchContentTypeError', error);
+  }
+}

@@ -54,7 +54,7 @@ export default async function RootLayout({
 }) {
   const query = qs.stringify(
     {
-      populate: ["navbar", "navbar.logo", "footer", "footer.logo", "footer.columns", "footer.columns.links"]
+      populate: ["navbar", "navbar.links", "navbar.button", "navbar.logo", "footer", "footer.logo", "footer.columns", "footer.columns.links"]
     },
     {
       encodeValuesOnly: true,
