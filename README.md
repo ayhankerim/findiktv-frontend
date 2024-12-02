@@ -1,42 +1,45 @@
-# Next frontend
+# 🌟 Next.js Multilingual Blog Template
 
-This frontend relies on Next's [Static Generation](https://nextjs.org/docs/basic-features/pages) using [Strapi](https://strapi.io/) as the data source. Make sure Strapi is running in parallel when you run this app.
+Welcome to our cutting-edge Next.js Multilingual Blog Template! This powerful and flexible template is designed to help you create stunning, multilingual blogs with ease.
 
-## Routes
+## ✨ Features
 
-**pages/[[...slug]].js**
+- 🌐 Multilingual support (English and French)
+- 📱 Fully responsive design
+- 🎨 Customizable themes
+- 🖼️ Image optimization
+- 🔍 SEO-friendly
+- 🚀 Fast performance with Next.js
 
-This file generates all the app's route. First, it fetches all the pages entries in Strapi. Then, it creates one route per page found. These routes can look like this:
+## 🚀 Getting Started
 
-* yoursite.com
-* yoursite.com/page
-* yoursite.com/page/nested/route
+1. Clone this repository
+2. Install dependencies: `npm install`
+3. Copy `.env.sample` to `.env.local` and update the variables
+4. Run the development server: `npm run dev`
+5. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-Notice that the path of the page can be several layers deep, or it can be the root of the site. This is possible thanks to Next's [optional catch-all routes](https://nextjs.org/docs/routing/dynamic-routes#optional-catch-all-routes).
+## 🛠️ Customization
 
-To see how to build these nested routes, see [the Strapi project's Readme](../backend/README.md).
+- Modify `config.ts` to change language settings
+- Update `next.config.mjs` for advanced configurations
+- Add your own MDX files in the `blog` page directly
 
-## Available Scripts
+## 🤝 Contributing
 
-In the project directory, you can run:
+We welcome contributions! Please see our [contributing guidelines](link-to-contributing-guidelines) for more information.
 
-**`yarn dev`**
+## 📄 License
 
-Runs the app in the development mode.  
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-The page will reload if you make edits.  
-You will also see any errors in the console.
+---
 
-**`yarn build`**
+<footer>
+<p align="center">
+  Made by <a href="https://aceternity.com">Aceternity</a><br>
+  Powered by <a href="https://nextjs.org/">Next.js</a> | <a href="https://tailwindcss.com/">Tailwind CSS</a> | <a href="https://framer.com/motion">Framer Motion</a> | <a href="https://ui.aceternity.com">Aceternity UI</a>
+</p>
+</footer>
 
-Builds the app for production to the `.next` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-**`yarn start`**
-
-Starts the application in production mode.
-The application should be compiled with \`next build\` first.
-
-See the section in Next docs about [deployment](https://nextjs.org/docs/deployment) for more
-information.
+++ Deploy
